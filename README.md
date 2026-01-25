@@ -1,36 +1,418 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Numina - Spiritual Intelligence Platform
 
-## Getting Started
+A premium spiritual assessment platform combining astrology, psychology, numerology, and wellness guidance. Built with Next.js, Clerk, MongoDB, Stripe, and AI.
 
-First, run the development server:
+## 🌟 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Complete Onboarding Flow
+
+1. **Welcome Screen** - Beautiful landing with "Discover your unique soul map. Powered by AI, psychology & mysticism."
+2. **Birth Date Collection** - Stored as metadata for personalization
+3. **User Registration** - Name, email, password via Clerk
+4. **Onboarding Info** - Learn about the 5 energy pillars and features
+5. **First Test** - Immediate engagement with "Cosmic Alignment" test
+
+### 16 Comprehensive Tests
+
+Organized in 4 mystical categories:
+
+**Cosmic Identity** ✨
+
+- Birth Chart Reading (FREE)
+- Moon Sign Decoder (FREE)
+- Venus Influence (PREMIUM)
+- Planetary Transits (PREMIUM)
+
+**Psychological Profile** 🧠
+
+- MBTI Test (FREE)
+- Big Five Personality (FREE)
+- Emotional Intelligence (PREMIUM)
+- Attachment Style (PREMIUM)
+
+**Energy & Wellbeing** ⚡
+
+- Chakra Assessment (FREE)
+- Aura Energy Map (FREE)
+- Wellness Profile (PREMIUM)
+- Life Force Vitality (PREMIUM)
+
+**Soul Path & Karma** 🌙
+
+- Numerology Profile (FREE)
+- Life Path Calculator (FREE)
+- Karmic Patterns (PREMIUM)
+- Soul Purpose Guide (PREMIUM)
+
+### Intelligent Results
+
+Each test returns AI-generated insights:
+
+- **Personality Type** - Unique archetype (e.g., "The Cosmic Dreamer")
+- **Key Insights** - 4 personalized insights specific to the test
+- **Recommendations** - 4 actionable next steps
+- **Score** - Overall assessment score (1-100)
+
+### Premium Features
+
+- Unlimited test access
+- Advanced synthesis analysis
+- Deep insights and patterns
+- Priority support
+- Stripe integration with flexible billing (monthly/annual)
+
+### Dashboard & Navigation
+
+- **My Soul** - View completed tests and personality profile
+- **Explore** - Discover and take tests by category
+- **Synthesis** - Premium page with unified insights
+- **Drawer Menu** - My Tests, My Synthesis, Manage Subscription, Help & FAQ, Contact Support, Terms, Privacy Policy, Logout
+
+## 🏗️ Architecture
+
+### Frontend (Next.js + React)
+
+- **App Router** - Modern file-based routing
+- **TypeScript** - Full type safety
+- **Tailwind CSS** - Utility-first styling
+- **Shadcn/UI** - Beautiful, accessible components
+- **Client Components** - Interactive experiences
+
+### Backend (Next.js API Routes)
+
+- **Clerk** - User authentication and sessions
+- **MongoDB** - Data persistence
+- **Stripe** - Payment processing
+- **Mock AI Service** - Personality generation (extensible)
+
+### Security
+
+- Clerk middleware for protected routes
+- Stripe webhook signature verification
+- Environment variables for secrets
+- User data isolation
+- Type-safe database queries
+
+## 📊 Database Schema
+
+### Users Collection
+
+```typescript
+{
+  clerkId: string,           // Clerk user ID
+  email: string,             // Email address
+  name: string,              // Full name
+  dateOfBirth: string,       // ISO date (YYYY-MM-DD)
+  isPremium: boolean,        // Subscription status
+  subscriptionStatus: string, // 'free' | 'active' | 'cancelled'
+  stripeCustomerId: string,  // Stripe customer ID
+  subscriptionId: string,    // Stripe subscription ID
+  createdAt: Date,
+  updatedAt: Date
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Test Results Collection
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```typescript
+{
+  userId: string,                    // User ID
+  testId: number,                    // Test ID (1-16)
+  testTitle: string,                 // Test name
+  category: string,                  // Category name
+  completedAt: Date,                 // Completion timestamp
+  answers: Record<string, number | string>, // User answers
+  score: number,                     // Overall score
+  personalityType: string,           // AI-generated type
+  insights: string[],                // Array of insights
+  recommendations: string[]          // Array of recommendations
+}
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### User Test Records Collection
 
-## Learn More
+```typescript
+{
+  clerkId: string,    // Clerk user ID
+  testId: number,     // Test ID
+  completed: boolean, // Completion status
+  completedAt: Date   // When completed
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🔌 Integrations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Clerk Authentication
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Email/password signup
+- Session management
+- Built-in security
+- User metadata support
 
-## Deploy on Vercel
+```typescript
+// Automatic middleware protection
+const isProtectedRoute = createRouteMatcher([
+  "/api/users(.*)",
+  "/api/tests(.*)",
+  "/api/checkout(.*)",
+]);
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### MongoDB
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Atlas cloud database
+- Automatic indexing
+- Scalable collections
+- Full ACID support
+
+### Stripe Payment
+
+- Monthly ($19.99) and Annual ($119) plans
+- Webhook event handling
+- Automatic subscription updates
+- Test mode support
+
+### Mock AI Service
+
+Extensible personality generation:
+
+```typescript
+// Current: Mock with pre-defined responses
+// Future: Replace with real AI
+const response = await generateTestInsights({
+  testId: 1,
+  testTitle: 'Birth Chart Reading',
+  category: 'Cosmic Identity',
+  answers: { 1: 5, 2: 'Logic', ... }
+})
+// Returns: { personalityType, insights, recommendations, score }
+```
+
+## 🚀 Quick Start
+
+### 1. Environment Setup
+
+```bash
+# Add to Vercel project settings → Environment Variables
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
+CLERK_SECRET_KEY=...
+MONGODB_URI=...
+STRIPE_SECRET_KEY=...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=...
+NEXT_PUBLIC_STRIPE_PRICE_MONTHLY=price_...
+NEXT_PUBLIC_STRIPE_PRICE_ANNUAL=price_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_APP_URL=https://numina.vercel.app
+```
+
+### 2. Create Services
+
+1. **Clerk**: https://clerk.com → Create app → Copy keys
+2. **MongoDB**: https://atlas.mongodb.com → Create cluster → Copy URI
+3. **Stripe**: https://stripe.com → Create products → Copy IDs and webhook secret
+
+### 3. Deploy
+
+```bash
+# Push to GitHub
+git push origin main
+
+# Vercel auto-deploys
+# Set environment variables in Vercel dashboard
+# Done!
+```
+
+### 4. Test the Flow
+
+1. Visit your app
+2. Click "Start Your Journey"
+3. Enter birth date
+4. Sign up with email
+5. Complete onboarding
+6. Take first test
+7. View AI-generated results
+8. Try premium test to trigger subscription
+
+## 📁 Project Structure
+
+```
+numina/
+├── app/
+│   ├── layout.tsx              # Root layout with Clerk
+│   ├── page.tsx                # Auth flow & routing
+│   ├── globals.css             # Tailwind + design tokens
+│   └── api/
+│       ├── users/profile/      # User CRUD
+│       ├── tests/submit/       # Test submission
+│       ├── tests/results/      # Result fetching
+│       ├── checkout/           # Stripe checkout
+│       └── webhooks/stripe/    # Stripe events
+├── components/
+│   ├── app-container.tsx       # Main app wrapper
+│   ├── pages/
+│   │   ├── my-soul-page.tsx
+│   │   ├── explore-page.tsx
+│   │   └── synthesis-page.tsx
+│   ├── auth/
+│   │   ├── welcome-screen.tsx
+│   │   ├── dob-screen.tsx
+│   │   ├── register-screen.tsx
+│   │   └── onboarding-info-screen.tsx
+│   ├── test/
+│   │   ├── test-flow.tsx
+│   │   ├── test-results.tsx
+│   │   └── test-result-view.tsx
+│   ├── navigation/
+│   │   ├── bottom-navigation.tsx
+│   │   └── app-drawer.tsx
+│   ├── modals/
+│   │   └── subscription-modal.tsx
+│   └── ui/                     # Shadcn components
+├── lib/
+│   ├── mongodb.ts              # DB connection
+│   ├── models/user.ts          # Type definitions
+│   ├── stripe-service.ts       # Payment logic
+│   └── ai-service.ts           # Personality generation
+├── middleware.ts               # Clerk protection
+├── SETUP.md                    # Setup guide
+├── IMPLEMENTATION.md           # Technical details
+├── CHECKLIST.md               # Completion checklist
+└── README.md                  # This file
+```
+
+## 🎨 Design System
+
+### Colors
+
+- **Primary**: #FFD84D (Warm Yellow)
+- **Background**: #000000 (Pure Black)
+- **Secondary**: #FFFFFF (White)
+- **Accent**: #FFD700 (Gold)
+- **Borders**: #1F2937 (Dark Gray)
+
+### Typography
+
+- **Headings**: Playfair Display (elegant serif)
+- **Body**: Inter (clean sans-serif)
+- **Mono**: Geist Mono (code)
+
+### Layout
+
+- **Mobile-first**: 450px fixed width
+- **Responsive**: Scales to larger screens
+- **Accessible**: WCAG compliant
+- **Dark mode**: Enabled by default
+
+## 🔐 Security Features
+
+1. **Authentication**
+   - Clerk handles all auth
+   - Secure password hashing
+   - Session management
+   - Email verification
+
+2. **API Protection**
+   - Middleware validates auth
+   - User data isolation
+   - Role-based access
+   - CORS configured
+
+3. **Payment Security**
+   - PCI compliance via Stripe
+   - Webhook signature verification
+   - Encrypted credentials
+   - Test mode available
+
+4. **Data Protection**
+   - MongoDB encryption
+   - Environment variable secrets
+   - No hardcoded values
+   - Audit logging
+
+## 🧪 Testing
+
+### Test Account
+
+```
+Email: test@numina.com
+Password: Test123!@#
+```
+
+### Test Stripe Card
+
+```
+Card: 4242 4242 4242 4242
+Exp: 12/25
+CVC: 123
+```
+
+### Test Scenarios
+
+1. ✅ User registration with DOB
+2. ✅ Free test completion
+3. ✅ Premium test paywall
+4. ✅ Stripe checkout
+5. ✅ Premium access after payment
+6. ✅ Test result persistence
+7. ✅ Logout and re-login
+
+## 🚀 Deployment
+
+### Vercel
+
+```bash
+# Automatic on git push
+# Set environment variables in dashboard
+# Monitor with Vercel Analytics
+```
+
+### Custom Domain
+
+```bash
+# Point domain to Vercel
+# Auto-generates SSL certificate
+# Automatic redirects
+```
+
+## 📈 Analytics
+
+Monitor with built-in Vercel Analytics:
+
+- User signups
+- Test completions
+- Subscription conversions
+- Performance metrics
+
+## 🎓 Learning Resources
+
+- [Next.js Docs](https://nextjs.org/docs)
+- [Clerk Docs](https://clerk.com/docs)
+- [MongoDB Docs](https://docs.mongodb.com)
+- [Stripe Docs](https://stripe.com/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+
+## 🤝 Contributing
+
+Contributions welcome! Areas for enhancement:
+
+- Real AI integration (OpenAI, Anthropic)
+- Additional tests and categories
+- Advanced analytics
+- Social sharing
+- Mobile app
+- Analytics dashboard
+
+## 📄 License
+
+MIT License - Feel free to use for personal or commercial projects.
+
+## 📞 Support
+
+For issues or questions:
+
+1. Check SETUP.md for configuration
+2. Review IMPLEMENTATION.md for technical details
+3. See CHECKLIST.md for feature status
+4. Contact: support@numina.app (configure in drawer menu)
+
+---

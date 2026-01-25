@@ -1,65 +1,166 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { AppContainer } from "@/components/app-container";
+import { WelcomeScreen } from "@/components/auth/welcome-screen";
+import { DOBScreen } from "@/components/auth/dob-screen";
+import { RegisterScreen } from "@/components/auth/register-screen";
+import { OnboardingInfoScreen } from "@/components/auth/onboarding-info-screen";
+import { TestFlow } from "@/components/test/test-flow";
+import AboutYourself from "@/components/auth/about-yourself";
+
+type AuthView =
+  | "welcome"
+  | "dob"
+  | "about"
+  | "register"
+  | "onboarding-info"
+  | "test-intro"
+  | "authenticated"
+  | "loading";
+
+interface UserData {
+  dob: string;
+  name: string;
+  email: string;
+}
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+  const { isLoaded, isSignedIn, user } = useUser();
+  const [authView, setAuthView] = useState<AuthView>("loading");
+  const [userData, setUserData] = useState<Partial<UserData>>({});
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  // Check if user is authenticated and has completed onboarding
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (!isSignedIn) {
+      setAuthView("welcome");
+      return;
+    }
+
+    // User is signed in, fetch their profile
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch("/api/users/profile");
+        if (res.ok) {
+          const profile = await res.json();
+          setUserProfile(profile);
+          setAuthView("authenticated");
+        } else {
+          // User exists but incomplete profile, ask for DOB
+          setAuthView("dob");
+        }
+      } catch (error) {
+        setAuthView("dob");
+      }
+    };
+
+    fetchProfile();
+  }, [isLoaded, isSignedIn]);
+
+  if (authView === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="text-center">
+          <div className="text-primary text-2xl mb-4">✨</div>
+          <p className="text-foreground">Loading your journey...</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+      </div>
+    );
+  }
+
+  // Welcome -> Start Your Journey button
+  if (authView === "welcome") {
+    return <WelcomeScreen onStartJourney={() => setAuthView("dob")} />;
+  }
+
+  // DOB collection
+  if (authView === "dob") {
+    return (
+      <DOBScreen
+        onContinue={async (dob) => {
+          setUserData((prev) => ({ ...prev, dob }));
+
+          // Save DOB and other user data
+          if (user?.emailAddresses[0]?.emailAddress) {
+            try {
+              await fetch("/api/users/profile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  email: user.emailAddresses[0].emailAddress,
+                  name: user.firstName || "User",
+                  dateOfBirth: dob,
+                }),
+              });
+            } catch (error) {
+              console.error("Error saving profile:", error);
+            }
+          }
+
+          setAuthView("about");
+        }}
+        onBack={() => setAuthView("welcome")}
+      />
+    );
+  }
+
+  if (authView === "about") {
+    return (
+      <AboutYourself
+        onContinue={async ({ name, email, password }) => {
+          setUserData((prev) => ({
+            ...prev,
+            name,
+            email,
+          }));
+
+          // Save profile once we have DOB + name
+          try {
+            await fetch("/api/users/profile", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name,
+                email: email || user?.emailAddresses[0]?.emailAddress,
+                dateOfBirth: userData.dob,
+              }),
+            });
+          } catch (error) {
+            console.error("Error saving profile:", error);
+          }
+
+          setAuthView("onboarding-info");
+        }}
+      />
+    );
+  }
+
+  // Onboarding info screen
+  if (authView === "onboarding-info") {
+    return (
+      <OnboardingInfoScreen
+        userName={user?.firstName || "Friend"}
+        onStartTest={() => setAuthView("test-intro")}
+      />
+    );
+  }
+
+  // First test flow
+  if (authView === "test-intro") {
+    return (
+      <TestFlow
+        testId={1}
+        testTitle="Cosmic Alignment"
+        category="Astrology"
+        onClose={() => setAuthView("authenticated")}
+      />
+    );
+  }
+
+  // Authenticated - show main app
+  return <AppContainer userProfile={userProfile} />;
 }
