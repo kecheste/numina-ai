@@ -1,45 +1,48 @@
-'use client'
+"use client";
 
-import { Lock, Check } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 interface TestCardProps {
   test: {
-    id: number
-    title: string
-    category: string
-    locked: boolean
-    questions: number
-    completed?: boolean
-  }
-  isSelected: boolean
-  onSelect: () => void
+    id: number;
+    title: string;
+    category: string;
+    locked: boolean;
+    questions: number;
+    completed?: boolean;
+    icon: ReactNode;
+  };
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
-export function TestCard({ test, isSelected, onSelect }: TestCardProps) {
+export function TestCard({ test, onSelect }: TestCardProps) {
   return (
     <button
       onClick={onSelect}
       disabled={test.locked}
       className={cn(
-        'relative rounded-lg p-3 text-left transition-all duration-300 border',
-        isSelected
-          ? 'bg-primary/10 border-primary shadow-lg shadow-primary/20'
-          : test.locked
-            ? 'bg-gray-900/40 border-gray-800 opacity-60 cursor-not-allowed'
-            : test.completed
-              ? 'bg-green-900/20 border-green-800/50 hover:border-green-700/50'
-              : 'bg-gray-900 border-gray-800 hover:border-primary/40 hover:bg-gray-850'
+        "relative rounded-[10px] h-[115px] p-2 text-left transition-all duration-300 border-[0.5px]",
+        test.locked
+          ? "border-[#F2D08C66] cursor-not-allowed"
+          : "border-[#F2D08C] cursor-pointer",
       )}
     >
       <div className="space-y-2">
-        <div className="flex items-start justify-between">
-          <h3 className="text-sm font-semibold text-secondary leading-tight">{test.title}</h3>
-          {test.locked && <Lock size={14} className="text-gray-600 flex-shrink-0 ml-1 mt-0.5" />}
-          {test.completed && <Check size={14} className="text-green-400 flex-shrink-0 ml-1 mt-0.5" />}
+        <div className="flex flex-col items-center">
+          {test.icon}
+          <h3
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "17px",
+            }}
+            className="text-[11px] font-[100] text-[#ffffff]"
+          >
+            {test.title}
+          </h3>
         </div>
-        <p className="text-xs text-muted-foreground">{test.category}</p>
       </div>
     </button>
-  )
+  );
 }

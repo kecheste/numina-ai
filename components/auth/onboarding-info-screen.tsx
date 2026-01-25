@@ -2,6 +2,11 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { SoulMapIcon } from "../icons/soul-map";
+import { PersonalityIcon } from "../icons/personality";
+import { AstrologyIcon } from "../icons/astrology";
+import { ChakraIcon } from "../icons/chakra";
+import { ReactNode } from "react";
 
 interface OnboardingInfoScreenProps {
   userName: string;
@@ -13,44 +18,72 @@ export function OnboardingInfoScreen({
   onStartTest,
 }: OnboardingInfoScreenProps) {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4">
-      <div className="w-full max-w-[450px] aspect-[9/20] bg-black border border-[#1f1f1f] px-[54px] py-10 flex flex-col">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+      <div
+        className="
+          w-full
+          h-screen
+          sm:h-auto
+          sm:max-w-[450px]
+          sm:aspect-[9/20]
+          bg-black
+          border
+          border-[#1f1f1f]
+          px-[32px]
+          sm:px-[54px]
+          py-10
+          flex
+          flex-col
+        "
+      >
         {/* Logo */}
         <div className="flex justify-center mb-10">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
         {/* Title */}
-        <h1 className="text-[20px] font-[600] text-white text-center mb-8">
+        <h1
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "33px",
+          }}
+          className="text-[21px] font-bold text-white text-center mb-8"
+        >
           What You’ll Receive
         </h1>
 
         {/* Cards */}
-        <div className="grid grid-cols-2 gap-4 mb-10">
+        <div className="grid grid-cols-2 gap-4 mb-10 place-items-center">
           <InfoCard
-            icon="/vectors/soul-map.png"
+            icon={<SoulMapIcon />}
             text="A preview of your unique Soul Map"
           />
           <InfoCard
-            icon="/vectors/personality.png"
+            icon={<PersonalityIcon />}
             text="Insight into personality & strengths"
           />
           <InfoCard
-            icon="/vectors/astrology.png"
+            icon={<AstrologyIcon />}
             text="Astrological & numerological highlights"
           />
           <InfoCard
-            icon="/vectors/chakra.png"
+            icon={<ChakraIcon />}
             text="Chakra balance & energetic alignment"
           />
         </div>
 
         {/* Extra info */}
-        <div className="text-center text-[15px] font-[100] text-[#FFFFFF] mb-10">
+        <div
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "22px",
+          }}
+          className="text-center text-[15px] opacity-[0.8] font-light text-white mb-6"
+        >
           <p className="mb-1">Want more?</p>
-          <p>Unlock your full profil anytime to reveal</p>
-          <p>📦 Career & relationship guidance</p>
-          <p>🧠 Deeper psychological layers</p>
+          <p>Unlock your full profile anytime to reveal</p>
+          <p>💼 Career & relationship guidance</p>
+          <p>🧬 Deeper psychological layers</p>
           <p>🌀 Past life & karmic insights</p>
           <p className="mt-3">All in just a few minutes</p>
         </div>
@@ -58,13 +91,34 @@ export function OnboardingInfoScreen({
         {/* CTA */}
         <Button
           onClick={onStartTest}
-          className="cursor-pointer mt-[39px] hover:bg-[#F2D08CC0] w-full h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
+          style={{
+            fontFamily: "var(--font-arp80)",
+            fontWeight: 400,
+            lineHeight: "33px",
+          }}
+          className="
+              cursor-pointer
+              hover:bg-[#F2D08CC0]
+              w-full
+              h-[67px]
+              bg-[#F2D08C]
+              text-black
+              rounded-[10px]
+              text-[21px]
+              transition-colors
+            "
         >
           Let’s start
         </Button>
 
         {/* Footer */}
-        <p className="mt-6 text-[11px] text-[#6b7280] text-center">
+        <p
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "22px",
+          }}
+          className="mt-auto text-[10px] font-light text-[#6b7280] text-center"
+        >
           By continuing, you agree to our Terms & Privacy Policy
         </p>
       </div>
@@ -72,17 +126,19 @@ export function OnboardingInfoScreen({
   );
 }
 
-function InfoCard({ icon, text }: { icon: string; text: string }) {
+function InfoCard({ icon, text }: { icon: ReactNode; text: string }) {
   return (
-    <div className="border border-[#F2D08CE0] rounded-[16px] w-[150px] h-[165px] p-4 flex flex-col items-center text-center">
-      <Image
-        src={icon}
-        alt=""
-        width={40}
-        height={50}
-        className="mb-4 object-fit max-w-[60px]"
-      />
-      <p className="text-[13px] text-[#e5e7eb] leading-[1.5]">{text}</p>
+    <div className="border border-[#F2D08CE0] rounded-[16px] w-[150px] h-[165px] p-4 flex flex-col items-center gap-3 text-center">
+      {icon}
+      <p
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "17px",
+        }}
+        className="text-[15px] text-white opacity-[0.8]"
+      >
+        {text}
+      </p>
     </div>
   );
 }

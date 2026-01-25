@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { Icon } from "@iconify/react";
 
 interface DOBScreenProps {
   onContinue: (dob: string) => void;
@@ -24,25 +25,60 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
   const isComplete = month && day && year;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4">
-      <div className="w-full max-w-[450px] aspect-[9/20] bg-black border border-[#1f1f1f] px-[54px] py-10 flex flex-col">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+      <div
+        className="
+          w-full
+          h-screen
+          sm:h-auto
+          sm:max-w-[450px]
+          sm:aspect-[9/20]
+          bg-black
+          border
+          border-[#1f1f1f]
+          px-[32px]
+          sm:px-[54px]
+          py-10
+          flex
+          flex-col
+        "
+      >
         {/* Logo */}
         <div className="flex justify-center mb-10">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
         {/* Headline */}
-        <h1 className="text-[21px] h-[57px] font-[600] text-white text-center mb-2">
+        <h1
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "33px",
+          }}
+          className="text-[21px] font-bold text-white text-center mb-2"
+        >
           Lets begin your self-discovery.
         </h1>
 
-        <p className="text-[15px] text-[#9ca3af] text-center leading-[1.6] mb-10">
+        <p
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "22px",
+          }}
+          className="text-[15px] font-light text-white text-center opacity-[0.9] mb-10"
+        >
           We’ll use your birth data and responses to create your personalized
-          Soul Map — powered by AI, astrology, psychology, and numerology.
+          Soul Map powered by AI, astrology, psychology, and numerology.
         </p>
 
         {/* Section title */}
-        <h2 className="text-[21px] text-[#F2D08C] text-center font-[400] mb-2">
+        <h2
+          style={{
+            fontFamily: "var(--font-arp80)",
+            fontWeight: 400,
+            lineHeight: "33px",
+          }}
+          className="text-[21px] text-[#F2D08C] text-center mb-4"
+        >
           Date of Birth
         </h2>
 
@@ -56,27 +92,50 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
         </div>
 
         {/* Button */}
-        <Button
-          disabled={!isComplete}
-          onClick={handleContinue}
-          className="cursor-pointer mt-[39px] hover:bg-[#F2D08CC0] w-full h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
-        >
-          Next Step
-        </Button>
+        <div className="mt-auto">
+          <Button
+            style={{
+              fontFamily: "var(--font-arp80)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            disabled={!isComplete}
+            onClick={handleContinue}
+            className="
+              cursor-pointer
+              mt-8
+              hover:bg-[#F2D08CC0]
+              w-full
+              h-[67px]
+              bg-[#F2D08CE0]
+              text-black
+              rounded-[10px]
+              text-[21px]
+              transition-colors
+            "
+          >
+            Next Step
+          </Button>
 
-        {/* Footer text */}
-        <p className="mt-[55px] text-[10px] font-[100] text-[#FFFFFF] text-center leading-[1.6]">
-          This information helps us calculate your astrological and energetic
-          profile. If you’re unsure of your exact birth time, choose “I don’t
-          know” — we’ll still give you accurate insights based on date and
-          place.
-        </p>
+          {/* Footer text */}
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: 325,
+              lineHeight: "14px",
+            }}
+            className="mt-6 text-[10px] text-white text-center opacity-[0.9]"
+          >
+            This information helps us calculate your astrological and energetic
+            profile. If you’re unsure of your exact birth time, choose “I don’t
+            know”. We’ll still give you accurate insights based on date and
+            place.
+          </p>
+        </div>
       </div>
     </div>
   );
 }
-
-/* ---------- Helper Input ---------- */
 
 function SelectLikeInput({
   label,
@@ -99,16 +158,28 @@ function SelectLikeInput({
           border
           border-[#F2D08CE0]
           rounded-[14px]
+          text-center
           px-4
           py-4
-          text-[14px]
+          text-[15px]
           text-white
           placeholder:text-[#9ca3af]
           focus:outline-none
+          font-light
         "
+        style={{
+          fontFamily: "var(--font-gotham)",
+          fontWeight: 300,
+          lineHeight: "22px",
+        }}
       />
-      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#F2D08CE0]">
-        ▾
+      <span className="absolute right-4 top-1/2 -translate-y-1/2">
+        <Icon
+          icon="teenyicons:down-outline"
+          color="#F2D08C66"
+          width={17}
+          height={17}
+        />
       </span>
     </div>
   );

@@ -4,12 +4,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-heading",
-});
-const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
+import { gotham, arp80, fangsong } from "@/app/fonts";
 
 export const metadata: Metadata = {
   title: "Numina - Spiritual Intelligence",
@@ -50,7 +45,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className="dark">
         <body
-          className={`${inter.variable} ${playfair.variable} font-body antialiased bg-black text-foreground`}
+          className={`${gotham.variable} ${arp80.variable} ${fangsong.variable}`}
         >
           {children}
           <Analytics />

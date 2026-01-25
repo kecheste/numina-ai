@@ -5,7 +5,6 @@ import { useUser } from "@clerk/nextjs";
 import { AppContainer } from "@/components/app-container";
 import { WelcomeScreen } from "@/components/auth/welcome-screen";
 import { DOBScreen } from "@/components/auth/dob-screen";
-import { RegisterScreen } from "@/components/auth/register-screen";
 import { OnboardingInfoScreen } from "@/components/auth/onboarding-info-screen";
 import { TestFlow } from "@/components/test/test-flow";
 import AboutYourself from "@/components/auth/about-yourself";

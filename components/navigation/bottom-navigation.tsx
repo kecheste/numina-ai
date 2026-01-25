@@ -25,8 +25,8 @@ export function BottomNavigation({
   ] as const;
 
   return (
-    <nav className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-black/95 border-t border-gray-800 px-4 py-3 flex justify-around items-center z-40">
-      {navItems.map(({ id, label, Icon }) => {
+    <nav className="absolute h-[72px] bottom-0 left-0 right-0 bg-gradient-to-t from-black to-black/95 border-t border-[#D9D9D999]/20 py-3 flex justify-around items-center z-40">
+      {navItems.map(({ id, label, Icon }, index) => {
         const isActive = activeTab === id;
         const color = isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
 
@@ -34,11 +34,18 @@ export function BottomNavigation({
           <button
             key={id}
             onClick={() => onTabChange(id)}
-            className="flex flex-col cursor-pointer items-center gap-1 px-4 py-2 rounded-lg transition-all duration-300"
+            className={`flex flex-col cursor-pointer ${index !== navItems.length - 1 && " border-r border-[#D9D9D999]/20 "} items-center gap-1 py-2 transition-all duration-300 w-full`}
             style={{ color }}
           >
             <Icon className="w-5 h-5" color={color} />
-            <span className="text-xs font-medium">{label}</span>
+            <span
+              style={{
+                fontFamily: "var(--font-gotham)",
+              }}
+              className="text-xs font-[100]"
+            >
+              {label}
+            </span>
           </button>
         );
       })}

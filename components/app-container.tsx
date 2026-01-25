@@ -27,14 +27,14 @@ export function AppContainer({ userProfile }: AppContainerProps) {
   const [showSubscription, setShowSubscription] = useState(false);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4">
+    <div className="flex min-h-screen bg-white sm:items-center sm:justify-center sm:px-4">
       {/* Mobile device frame */}
       <div
         ref={shellRef}
-        className="relative w-full max-w-[450px] aspect-[9/20] bg-black border border-[#1f1f1f] px-[28px] py-10 flex flex-col overflow-hidden"
+        className="relative w-full max-w-[450px] aspect-[9/20] bg-black border border-[#1f1f1f] px-[15px] flex flex-col overflow-hidden"
       >
         {/* Status bar */}
-        <div className="bg-black flex justify-between items-center text-xs text-gray-400 z-40">
+        <div className="bg-black flex justify-between items-center text-xs text-gray-400 py-[12px] z-40">
           <div></div>
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
           <AppDrawer
@@ -45,7 +45,7 @@ export function AppContainer({ userProfile }: AppContainerProps) {
         </div>
 
         {/* Page content */}
-        <div className="flex-1 no-scrollbar relative pb-20">
+        <div className="flex-1 relative overflow-y-auto no-scrollbar">
           {activeTab === "soul" && <MySoulPage isPremium={isPremium} />}
           {activeTab === "explore" && <ExplorePage isPremium={isPremium} />}
           {activeTab === "synthesis" && <SynthesisPage isPremium={isPremium} />}

@@ -9,20 +9,60 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4">
-      <div className="w-full max-w-[450px] aspect-[9/20] bg-black overflow-hidden flex flex-col justify-center items-center p-6 text-center gap-8">
-        <div className="flex items-center justify-center gap-2 mt-[100px]">
-          <Image src={"/logo.png"} width={191} height={44} alt="logo" />
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+      <div
+        className="
+          w-full
+          h-screen
+          sm:h-auto
+          sm:max-w-[450px]
+          sm:aspect-[9/20]
+          bg-black
+          overflow-hidden
+          flex
+          flex-col
+          items-center
+          text-center
+          px-[32px]
+          sm:px-[59px]
+        "
+      >
+        <div className="flex items-center justify-center mt-[200px] sm:mt-[248px]">
+          <Image src="/logo.png" width={191} height={44} alt="logo" />
         </div>
 
-        <p className="font-[200] mx-[20px] text-[21px] text-[#FFFFFF] mt-[70px]">
+        <p
+          className="text-[21px] text-white mt-[60px] sm:mt-[70px]"
+          style={{
+            fontFamily: "var(--font-fangsong)",
+            fontWeight: 400,
+            lineHeight: "33px",
+          }}
+        >
           Discover your unique soul map. Powered by AI, psychology & mysticism.
         </p>
 
-        <div className="w-full mt-[135px]">
+        <div className="w-full mt-auto mb-[48px] sm:mt-[135px] sm:mb-0">
           <Button
             onClick={onStartJourney}
-            className="cursor-pointer hover:bg-[#F2D08CC0] w-[309px] h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
+            style={{
+              fontFamily: "var(--font-arp80)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            className="
+              cursor-pointer
+              hover:bg-[#F2D08CC0]
+              w-full
+              h-[67px]
+              bg-[#F2D08CE0]
+              text-black
+              rounded-[10px]
+              text-[21px]
+              transition-colors
+              mb-[130px]
+              sm:mb-0
+            "
           >
             Start Your Journey
           </Button>

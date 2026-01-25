@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Menu,
   X,
   History,
   Sparkles,
@@ -21,6 +20,7 @@ import {
   DrawerPortal,
 } from "@/components/ui/drawer";
 import { RefObject } from "react";
+import { Icon } from "@iconify/react";
 
 interface AppDrawerProps {
   isPremium: boolean;
@@ -39,56 +39,81 @@ export function AppDrawer({
     { icon: History, label: "My Tests" },
     { icon: Sparkles, label: "My Synthesis" },
     { icon: Crown, label: "Manage Subscription" },
-    { icon: HelpCircle, label: "Help & FAQ" },
+    { icon: HelpCircle, label: "Help / FAQ" },
     { icon: Mail, label: "Contact Support" },
     { icon: FileText, label: "Terms & Conditions" },
     { icon: Shield, label: "Privacy Policy" },
   ];
 
   return (
-    <Drawer direction="left">
+    <Drawer direction="right">
+      {/* Trigger */}
       <DrawerTrigger asChild>
         <button className="cursor-pointer mt-2">
-          <Menu size={34} className="text-white" />
+          <Icon icon="material-symbols-light:menu" width={40} color="#ffffff" />
         </button>
       </DrawerTrigger>
 
       <DrawerPortal container={portalContainer.current}>
         <DrawerContent
           className="
-          fixed
-          left-0
-          top-0
-          h-full
-          w-[320px]
-          max-w-[80%]
-          bg-black
-          border-r
-          border-gray-800
-          rounded-none
-          z-50
-        "
+            fixed
+            top-0
+            right-0
+            h-full
+            w-[320px]
+            max-w-[85%]
+            bg-[#F2D08C]
+            rounded-none
+            z-50
+            opacity-[0.9]
+          "
         >
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full px-6 py-6">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-800">
-              <h2 className="text-xl font-semibold text-primary">Menu</h2>
+            <div className="flex items-center justify-between mb-8">
               <DrawerClose asChild>
-                <button className="p-2 rounded-lg hover:bg-gray-900">
-                  <X size={20} className="text-white" />
+                <button>
+                  <Icon
+                    icon={"material-symbols-light:close-rounded"}
+                    width={40}
+                    color="#000000"
+                  />
                 </button>
               </DrawerClose>
             </div>
 
-            {/* Items */}
-            <div className="flex-1 overflow-y-auto no-scrollbar py-4">
+            {/* Menu items */}
+            <div className="flex flex-col items-end">
               {menuItems.map((item) => {
-                const Icon = item.icon;
                 return (
                   <DrawerClose asChild key={item.label}>
-                    <button className="w-full px-6 py-3 flex items-center gap-4 text-left hover:bg-gray-900/60">
-                      <Icon size={20} className="text-primary" />
-                      <span className="text-sm text-white">{item.label}</span>
+                    <button
+                      className="
+                        relative
+                        flex items-center gap-4
+                        pb-3
+                        after:content-['']
+                        after:absolute
+                        after:left-0
+                        after:right-0
+                        after:bottom-0
+                        after:h-px
+                        after:bg-gradient-to-r
+                        after:from-[#A5A5A51A]
+                        after:via-[#5E5E5E]
+                        after:to-[#6868681A]
+                      "
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-gotham)",
+                          lineHeight: "47px",
+                        }}
+                        className="text-[16px]  font-medium text-black"
+                      >
+                        {item.label}
+                      </span>
                     </button>
                   </DrawerClose>
                 );
@@ -96,13 +121,18 @@ export function AppDrawer({
             </div>
 
             {/* Logout */}
-            <div className="border-t border-gray-800 p-4">
+            <div className="flex flex-col items-end">
               <button
                 onClick={() => signOut()}
-                className="w-full px-4 py-3 flex items-center gap-3 rounded-lg bg-gray-900/60 hover:bg-gray-900"
+                className="flex items-center gap-4"
               >
-                <LogOut size={18} className="text-red-400" />
-                <span className="text-sm text-red-400 font-medium">
+                <span
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                    lineHeight: "47px",
+                  }}
+                  className="text-[16px] font-medium text-black"
+                >
                   Log Out
                 </span>
               </button>
