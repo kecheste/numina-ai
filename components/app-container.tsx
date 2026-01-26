@@ -27,7 +27,7 @@ export function AppContainer({ userProfile }: AppContainerProps) {
   const [showSubscription, setShowSubscription] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-white sm:items-center sm:justify-center sm:px-4">
+    <div className="flex h-screen bg-white sm:items-center sm:justify-center sm:px-4">
       {/* Mobile device frame */}
       <div
         ref={shellRef}
