@@ -20,26 +20,29 @@ const GOLD = "#F2D08C";
 
 export function TestResults({ onClose }: TestResultsProps) {
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
         className="
           w-full
           h-screen
-          sm:h-auto
+          sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          overflow-hidden
+          overflow-y-auto
+          sm:overflow-hidden
           flex
           flex-col
           items-center
           text-center
           px-[32px]
           sm:px-[59px]
+          pt-10
+          pb-12
         "
       >
         {/* Logo */}
-        <div className="flex justify-center mb-6 mt-[18px]">
+        <div className="flex justify-center mb-6">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
@@ -109,7 +112,7 @@ export function TestResults({ onClose }: TestResultsProps) {
           style={{
             fontFamily: "var(--font-gotham)",
           }}
-          className="text-[13px] text-white px-10 text-center font-[325]"
+          className="text-[13px] text-white px-10 text-center font-[325] mb-4"
         >
           Your energy snapshot is only one layer of your self-discovery. Let’s
           now look deeper into your personality and patterns.
@@ -123,7 +126,7 @@ export function TestResults({ onClose }: TestResultsProps) {
             fontWeight: 400,
             lineHeight: "33px",
           }}
-          className="cursor-pointer mt-auto mb-2 hover:bg-[#F2D08CC0] w-full h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
+          className="cursor-pointer mt-auto hover:bg-[#F2D08CC0] w-full h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
         >
           Continue
         </Button>

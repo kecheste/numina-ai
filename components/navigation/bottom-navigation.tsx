@@ -25,7 +25,7 @@ export function BottomNavigation({
   ] as const;
 
   return (
-    <nav className="absolute h-[72px] bottom-0 left-0 right-0 bg-gradient-to-t from-black to-black/95 border-t border-[#D9D9D999]/20 py-3 flex justify-around items-center z-40">
+    <nav className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-black/95 border-t border-[#D9D9D999]/20 flex justify-around items-center z-40">
       {navItems.map(({ id, label, Icon }, index) => {
         const isActive = activeTab === id;
         const color = isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
@@ -42,7 +42,7 @@ export function BottomNavigation({
               style={{
                 fontFamily: "var(--font-gotham)",
               }}
-              className="text-xs font-[100]"
+              className="text-xs font-[100] pb-3"
             >
               {label}
             </span>

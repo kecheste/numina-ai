@@ -17,57 +17,61 @@ export default function AboutYourself({ onContinue }: AboutYourselfProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const isComplete = name.length > 0;
+  const isComplete = name.trim().length > 0;
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
         className="
           w-full
           h-screen
-          sm:h-auto
+          sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          border
-          border-[#1f1f1f]
-          px-[32px]
-          sm:px-[54px]
-          py-10
+          overflow-y-auto
+          sm:overflow-hidden
           flex
           flex-col
+          items-center
+          text-center
+          px-[32px]
+          sm:px-[59px]
+          pt-10
+          pb-12
         "
       >
         {/* Logo */}
-        <div className="flex justify-center mb-12">
+        <div className="flex justify-center">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
-        {/* Title */}
-        <h1
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "33px",
-          }}
-          className="text-[18px] font-bold text-white text-center mt-[80px] sm:mt-[110px] mb-3"
-        >
-          About yourself
-        </h1>
+        {/* Content */}
+        <div className="flex flex-col items-center text-center mt-auto sm:mt-24">
+          <h1
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "33px",
+            }}
+            className="text-[18px] font-bold text-white mb-3"
+          >
+            About yourself
+          </h1>
 
-        {/* Description */}
-        <p
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "22px",
-          }}
-          className="text-[15px] font-light opacity-[0.9] text-[#9ca3af] text-center mb-10"
-        >
-          Enter your name to personalize your experience. Email is optional but
-          enter it if you want to save your results or revisit them later.
-        </p>
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "22px",
+            }}
+            className="text-[15px] font-light text-[#9ca3af] max-w-[320px]"
+          >
+            Enter your name to personalize your experience. Email is optional
+            but enter it if you want to save your results or revisit them later.
+          </p>
+        </div>
 
         {/* Inputs */}
-        <div className="space-y-4">
+        <div className="mt-10 space-y-4">
           <GoldInput placeholder="Your Name" value={name} onChange={setName} />
           <GoldInput
             placeholder="Your E-mail"
@@ -83,30 +87,33 @@ export default function AboutYourself({ onContinue }: AboutYourselfProps) {
           />
         </div>
 
-        {/* Button */}
-        <Button
-          disabled={!isComplete}
-          style={{
-            fontFamily: "var(--font-arp80)",
-            fontWeight: 400,
-            lineHeight: "33px",
-          }}
-          onClick={() => onContinue({ name, email, password })}
-          className="
-              cursor-pointer
-              mt-8
-              hover:bg-[#F2D08CC0]
+        {/* CTA */}
+        <div className="mb-auto pt-10 w-full">
+          <Button
+            disabled={!isComplete}
+            style={{
+              fontFamily: "var(--font-arp80)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            onClick={() => onContinue({ name, email, password })}
+            className="
               w-full
               h-[67px]
               bg-[#F2D08CE0]
+              hover:bg-[#F2D08CC0]
+              cursor-pointer
               text-black
               rounded-[10px]
               text-[21px]
               transition-colors
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             "
-        >
-          Reveal My Path
-        </Button>
+          >
+            Reveal My Path
+          </Button>
+        </div>
       </div>
     </div>
   );

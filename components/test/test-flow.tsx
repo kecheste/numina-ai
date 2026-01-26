@@ -42,26 +42,29 @@ export function TestFlow({
   }
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
         className="
           w-full
           h-screen
-          sm:h-auto
+          sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          border
-          border-[#1f1f1f]
-          px-[32px]
-          sm:px-[54px]
-          py-10
+          overflow-y-auto
+          sm:overflow-hidden
           flex
           flex-col
+          items-center
+          text-center
+          px-[32px]
+          sm:px-[59px]
+          pt-10
+          pb-12
         "
       >
         {/* Top Bar */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="w-full flex items-center justify-between mb-12">
           <button onClick={onClose} className="cursor-pointer">
             <Icon icon={"icons8:left-arrow"} color="#D9D9D9" width={33} />
           </button>
@@ -84,13 +87,13 @@ export function TestFlow({
             fontFamily: "var(--font-gotham)",
             lineHeight: "33px",
           }}
-          className="text-center font-book text-white text-[21px] font-[300] mb-4"
+          className="w-full text-center font-book text-white text-[21px] font-[300] mb-4"
         >
           Discover Your Cognitive Blueprint
         </p>
 
         {/* Progress */}
-        <div className="mb-10">
+        <div className="mb-10 w-full">
           <div className="h-[15px] w-full relative rounded-full bg-transparent border-[0.5px] border-[#F2D08C] overflow-hidden">
             <div
               className="h-full rounded-full"
@@ -144,7 +147,7 @@ export function TestFlow({
         {/* Continue */}
         <Button
           disabled={!selected}
-          className="mt-auto mb-[107px] h-[54px] cursor-pointer rounded-[10px] text-lg font-medium"
+          className="mt-auto w-full mb-[107px] h-[54px] cursor-pointer rounded-[10px] text-lg font-medium"
           style={{
             backgroundColor: GOLD,
             color: "black",

@@ -9,30 +9,35 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
         className="
           w-full
           h-screen
-          sm:h-auto
+          sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          overflow-hidden
+          overflow-y-auto
+          sm:overflow-hidden
           flex
           flex-col
           items-center
           text-center
           px-[32px]
           sm:px-[59px]
+          pt-10
+          pb-12
         "
       >
-        <div className="flex items-center justify-center mt-[200px] sm:mt-[248px]">
+        {/* Logo */}
+        <div className="flex items-center justify-center mt-24 sm:mt-[248px]">
           <Image src="/logo.png" width={191} height={44} alt="logo" />
         </div>
 
+        {/* Tagline */}
         <p
-          className="text-[21px] text-white mt-[60px] sm:mt-[70px]"
+          className="text-[21px] text-white mt-12 sm:mt-[70px]"
           style={{
             fontFamily: "var(--font-fangsong)",
             fontWeight: 400,
@@ -42,7 +47,8 @@ export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           Discover your unique soul map. Powered by AI, psychology & mysticism.
         </p>
 
-        <div className="w-full mt-auto mb-[48px] sm:mt-[135px] sm:mb-0">
+        {/* CTA */}
+        <div className="w-full mb-auto pt-32">
           <Button
             onClick={onStartJourney}
             style={{
@@ -60,8 +66,6 @@ export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               rounded-[10px]
               text-[21px]
               transition-colors
-              mb-[130px]
-              sm:mb-0
             "
           >
             Start Your Journey

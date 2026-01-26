@@ -21,7 +21,6 @@ export function TestCard({ test, onSelect }: TestCardProps) {
   return (
     <button
       onClick={onSelect}
-      disabled={test.locked}
       className={cn(
         "relative rounded-[10px] h-[115px] p-2 text-left transition-all duration-300 border-[0.5px]",
         test.locked
@@ -39,7 +38,7 @@ export function TestCard({ test, onSelect }: TestCardProps) {
               fontFamily: "var(--font-gotham)",
               lineHeight: "17px",
             }}
-            className="text-[11px] text-center font-[100] text-[#ffffff]"
+            className="text-[10px] text-center font-[100] text-[#ffffff]"
           >
             {test.title}
           </h3>

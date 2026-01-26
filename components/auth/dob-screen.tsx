@@ -25,22 +25,25 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
   const isComplete = month && day && year;
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
         className="
           w-full
           h-screen
-          sm:h-auto
+          sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          border
-          border-[#1f1f1f]
-          px-[32px]
-          sm:px-[54px]
-          py-10
+          overflow-y-auto
+          sm:overflow-hidden
           flex
           flex-col
+          items-center
+          text-center
+          px-[32px]
+          sm:px-[59px]
+          pt-10
+          pb-12
         "
       >
         {/* Logo */}
@@ -54,7 +57,7 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
             fontFamily: "var(--font-gotham)",
             lineHeight: "33px",
           }}
-          className="text-[21px] font-bold text-white text-center mb-2"
+          className="text-[21px] font-bold text-white mb-2"
         >
           Lets begin your self-discovery.
         </h1>
@@ -64,7 +67,7 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
             fontFamily: "var(--font-gotham)",
             lineHeight: "22px",
           }}
-          className="text-[15px] font-light text-white text-center opacity-[0.9] mb-10"
+          className="text-[15px] font-light text-white opacity-[0.9] mb-10"
         >
           We’ll use your birth data and responses to create your personalized
           Soul Map powered by AI, astrology, psychology, and numerology.
@@ -77,13 +80,13 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
             fontWeight: 400,
             lineHeight: "33px",
           }}
-          className="text-[21px] text-[#F2D08C] text-center mb-4"
+          className="text-[21px] text-[#F2D08C] mb-4"
         >
           Date of Birth
         </h2>
 
         {/* Inputs */}
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           <SelectLikeInput label="Year" value={year} onChange={setYear} />
           <SelectLikeInput label="Month" value={month} onChange={setMonth} />
           <SelectLikeInput label="Day" value={day} onChange={setDay} />
@@ -91,23 +94,22 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
           <SelectLikeInput label="Place of Birth" />
         </div>
 
-        {/* Button */}
-        <div className="mt-auto">
+        {/* CTA + footer */}
+        <div className="mt-auto w-full pt-10">
           <Button
+            disabled={!isComplete}
+            onClick={handleContinue}
             style={{
               fontFamily: "var(--font-arp80)",
               fontWeight: 400,
               lineHeight: "33px",
             }}
-            disabled={!isComplete}
-            onClick={handleContinue}
             className="
               cursor-pointer
-              mt-8
-              hover:bg-[#F2D08CC0]
               w-full
               h-[67px]
               bg-[#F2D08CE0]
+              hover:bg-[#F2D08CC0]
               text-black
               rounded-[10px]
               text-[21px]
@@ -117,7 +119,6 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
             Next Step
           </Button>
 
-          {/* Footer text */}
           <p
             style={{
               fontFamily: "var(--font-gotham)",

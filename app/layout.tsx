@@ -31,8 +31,6 @@ export const metadata: Metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
   },
 };
 
@@ -45,7 +43,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className="dark">
         <body
-          className={`${gotham.variable} ${arp80.variable} ${fangsong.variable}`}
+          className={`${gotham.variable} ${arp80.variable} ${fangsong.variable} overflow-hidden`}
         >
           {children}
           <Analytics />

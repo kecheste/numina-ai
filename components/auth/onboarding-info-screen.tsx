@@ -18,22 +18,25 @@ export function OnboardingInfoScreen({
   onStartTest,
 }: OnboardingInfoScreenProps) {
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-screen">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
         className="
           w-full
           h-screen
-          sm:h-auto
+          sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          border
-          border-[#1f1f1f]
-          px-[32px]
-          sm:px-[54px]
-          py-10
+          overflow-y-auto
+          sm:overflow-hidden
           flex
           flex-col
+          items-center
+          text-center
+          px-[32px]
+          sm:px-[59px]
+          pt-10
+          pb-8
         "
       >
         {/* Logo */}
@@ -53,7 +56,7 @@ export function OnboardingInfoScreen({
         </h1>
 
         {/* Cards */}
-        <div className="grid grid-cols-2 gap-4 mb-10 place-items-center">
+        <div className="grid grid-cols-2 gap-4 mb-4 place-items-center">
           <InfoCard
             icon={<SoulMapIcon />}
             text="A preview of your unique Soul Map"
@@ -78,7 +81,7 @@ export function OnboardingInfoScreen({
             fontFamily: "var(--font-gotham)",
             lineHeight: "22px",
           }}
-          className="text-center text-[15px] opacity-[0.8] font-light text-white mb-6"
+          className="text-center text-[15px] opacity-[0.8] font-light text-white mb-4"
         >
           <p className="mb-1">Want more?</p>
           <p>Unlock your full profile anytime to reveal</p>
@@ -106,6 +109,7 @@ export function OnboardingInfoScreen({
               rounded-[10px]
               text-[21px]
               transition-colors
+              mb-auto
             "
         >
           Let’s start
@@ -117,7 +121,7 @@ export function OnboardingInfoScreen({
             fontFamily: "var(--font-gotham)",
             lineHeight: "22px",
           }}
-          className="mt-auto text-[10px] font-light text-[#6b7280] text-center"
+          className="text-[10px] font-light text-[#6b7280] text-center"
         >
           By continuing, you agree to our Terms & Privacy Policy
         </p>

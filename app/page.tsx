@@ -8,6 +8,7 @@ import { DOBScreen } from "@/components/auth/dob-screen";
 import { OnboardingInfoScreen } from "@/components/auth/onboarding-info-screen";
 import { TestFlow } from "@/components/test/test-flow";
 import AboutYourself from "@/components/auth/about-yourself";
+import Image from "next/image";
 
 type AuthView =
   | "welcome"
@@ -62,10 +63,23 @@ export default function Home() {
 
   if (authView === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-center">
-          <div className="text-primary text-2xl mb-4">✨</div>
-          <p className="text-foreground">Loading your journey...</p>
+      <div className="flex h-screen bg-white sm:items-center sm:justify-center">
+        <div
+          className="
+          relative w-full h-screen bg-black flex flex-col items-center justify-center
+          sm:h-auto sm:max-w-[450px] sm:aspect-[9/20]
+          sm:border sm:border-[#1f1f1f]
+        "
+        >
+          <Image
+            src="/logo.png"
+            alt="NuminaAI"
+            width={180}
+            height={40}
+            className="mb-10"
+          />
+
+          <div className="w-10 h-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin" />
         </div>
       </div>
     );
