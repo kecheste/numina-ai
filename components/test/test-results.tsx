@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { ChakraFullIcon } from "../icons/chakra-full";
 
 interface TestResultsProps {
   testTitle: string;
@@ -55,13 +56,7 @@ export function TestResults({ onClose }: TestResultsProps) {
 
         {/* Chakra Vector */}
         <div className="flex justify-center mb-8">
-          <Image
-            src="/vectors/chakra-full.png"
-            alt="Chakra Result"
-            width={220}
-            height={360}
-            priority
-          />
+          <ChakraFullIcon />
         </div>
 
         {/* Section title */}
@@ -114,7 +109,7 @@ export function TestResults({ onClose }: TestResultsProps) {
           style={{
             fontFamily: "var(--font-gotham)",
           }}
-          className="text-[13px] text-white px-10 mb-10 text-center font-[325]"
+          className="text-[13px] text-white px-10 text-center font-[325]"
         >
           Your energy snapshot is only one layer of your self-discovery. Let’s
           now look deeper into your personality and patterns.
@@ -128,7 +123,7 @@ export function TestResults({ onClose }: TestResultsProps) {
             fontWeight: 400,
             lineHeight: "33px",
           }}
-          className="cursor-pointer hover:bg-[#F2D08CC0] w-full h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
+          className="cursor-pointer mt-auto mb-2 hover:bg-[#F2D08CC0] w-full h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
         >
           Continue
         </Button>

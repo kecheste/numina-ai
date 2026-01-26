@@ -31,13 +31,15 @@ export function TestCard({ test, onSelect }: TestCardProps) {
     >
       <div className="space-y-2">
         <div className="flex flex-col items-center">
-          {test.icon}
+          <div className={`mb-1 ${test.locked ? "opacity-40" : ""}`}>
+            {test.icon}
+          </div>
           <h3
             style={{
               fontFamily: "var(--font-gotham)",
               lineHeight: "17px",
             }}
-            className="text-[11px] font-[100] text-[#ffffff]"
+            className="text-[11px] text-center font-[100] text-[#ffffff]"
           >
             {test.title}
           </h3>

@@ -37,7 +37,7 @@ export function OnboardingInfoScreen({
         "
       >
         {/* Logo */}
-        <div className="flex justify-center mb-10">
+        <div className="flex justify-center mb-8">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
@@ -47,7 +47,7 @@ export function OnboardingInfoScreen({
             fontFamily: "var(--font-gotham)",
             lineHeight: "33px",
           }}
-          className="text-[21px] font-bold text-white text-center mb-8"
+          className="text-[21px] font-bold text-white text-center mb-2"
         >
           What You’ll Receive
         </h1>

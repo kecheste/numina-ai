@@ -8,6 +8,30 @@ import { TestFlow } from "@/components/test/test-flow";
 import { TestResultView } from "@/components/test/test-result-view";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
 import { AstrologyIcon } from "../icons/astrology";
+import { AstrologyChartIcon } from "../icons/explore/astrologyCharIcon";
+import { NumerologyIcon } from "../icons/explore/numerologyIcon";
+import { StarseedIcon } from "../icons/explore/starseedIcon";
+import { HumanDesignIcon } from "../icons/explore/humanDesignIcon";
+import { TransitsIcon } from "../icons/explore/transitsIcon";
+import { ZodiacElementIcon } from "../icons/explore/zodiacElement";
+import { MBTITypeIcon } from "../icons/explore/mbtiTypeIcon";
+import { ShadowWorkIcon } from "../icons/explore/shadowWorkIcon";
+import { BigFiveIcon } from "../icons/explore/bigFiveIcon";
+import { CoreValuesIcon } from "../icons/explore/coreValuesIcon";
+import { CognitiveStyleIcon } from "../icons/explore/cognitiveStyle";
+import { MindMirrorIcon } from "../icons/explore/mindMirrorIcon";
+import { ChakraAlignmentIcon } from "../icons/explore/chakraAlignmentIcon";
+import { EnergyArchetypeIcon } from "../icons/explore/energyArchetypeIcon";
+import { EmotionalRegulationIcon } from "../icons/explore/emotionalRegulationIcon";
+import { StressBalanceIcon } from "../icons/explore/stressBalanceIcon";
+import { SomaticConnectionIcon } from "../icons/explore/somaticConnection";
+import { EnergySynthesisIcon } from "../icons/explore/energySynthesisIcon";
+import { LifePathIcon } from "../icons/explore/lifePathIcon";
+import { SoulUrgeIcon } from "../icons/explore/soulUrgeIcon";
+import { PastLifeIcon } from "../icons/explore/pastLifeIcon";
+import { KarmicLessonsIcon } from "../icons/explore/karmicLessonsIcon";
+import { SoulCompassIcon } from "../icons/explore/soulCompassIcon";
+import { InnerChildIcon } from "../icons/explore/InnerChildIcon";
 
 interface ExplorePageProps {
   isPremium: boolean;
@@ -34,7 +58,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 12,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <AstrologyChartIcon />,
   },
   {
     id: 2,
@@ -44,7 +68,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 10,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <NumerologyIcon />,
   },
   {
     id: 3,
@@ -54,7 +78,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 9,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <StarseedIcon />,
   },
   {
     id: 4,
@@ -64,17 +88,17 @@ const allTests: Test[] = [
     locked: true,
     questions: 15,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <HumanDesignIcon />,
   },
   {
     id: 5,
-    title: "Transis",
+    title: "Transits",
     category: "Cosmic Identity",
     categoryId: "cosmic",
     locked: true,
     questions: 15,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <TransitsIcon />,
   },
   {
     id: 6,
@@ -84,7 +108,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 15,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <ZodiacElementIcon />,
   },
 
   // Psychological Profile
@@ -96,7 +120,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 16,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <MBTITypeIcon />,
   },
   {
     id: 8,
@@ -106,7 +130,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 20,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <ShadowWorkIcon />,
   },
   {
     id: 9,
@@ -116,7 +140,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 20,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <BigFiveIcon />,
   },
   {
     id: 10,
@@ -126,7 +150,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 18,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <CoreValuesIcon />,
   },
   {
     id: 11,
@@ -136,17 +160,17 @@ const allTests: Test[] = [
     locked: true,
     questions: 14,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <CognitiveStyleIcon />,
   },
   {
     id: 12,
-    title: "Mind Mirrow",
+    title: "Mind Mirror",
     category: "Psychological Profile",
     categoryId: "psychological",
     locked: true,
     questions: 14,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <MindMirrorIcon />,
   },
 
   // Energy & Wellbeing
@@ -158,7 +182,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 8,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <ChakraAlignmentIcon />,
   },
   {
     id: 14,
@@ -168,7 +192,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 11,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <EnergyArchetypeIcon />,
   },
   {
     id: 15,
@@ -178,7 +202,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 13,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <EmotionalRegulationIcon />,
   },
   {
     id: 16,
@@ -188,7 +212,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 16,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <StressBalanceIcon />,
   },
   {
     id: 17,
@@ -198,7 +222,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 16,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <SomaticConnectionIcon />,
   },
   {
     id: 18,
@@ -208,7 +232,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 16,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <EnergySynthesisIcon />,
   },
 
   // Soul Path & Karma
@@ -220,7 +244,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 10,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <LifePathIcon />,
   },
   {
     id: 20,
@@ -230,7 +254,7 @@ const allTests: Test[] = [
     locked: false,
     questions: 15,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <SoulUrgeIcon />,
   },
   {
     id: 21,
@@ -240,7 +264,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 17,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <PastLifeIcon />,
   },
   {
     id: 22,
@@ -250,7 +274,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 19,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <KarmicLessonsIcon />,
   },
   {
     id: 23,
@@ -260,7 +284,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 19,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <InnerChildIcon />,
   },
   {
     id: 24,
@@ -270,7 +294,7 @@ const allTests: Test[] = [
     locked: true,
     questions: 19,
     completed: false,
-    icon: <AstrologyIcon />,
+    icon: <SoulCompassIcon />,
   },
 ];
 
