@@ -45,6 +45,7 @@ export function AppContainer({ userProfile }: AppContainerProps) {
           flex-col
           items-center
           text-center
+          pt-20
           px-[28px]
         "
       >
