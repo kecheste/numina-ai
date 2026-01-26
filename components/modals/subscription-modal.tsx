@@ -68,7 +68,8 @@ export function SubscriptionModal({
               bg-[#F2D08C]
               text-black
               rounded-[10px]
-              text-[18px]
+              text-[16px]
+              sm:text-[18px]
               cursor-pointer
               hover:bg-[#F2D08CC0]
               transition-colors
@@ -93,7 +94,8 @@ export function SubscriptionModal({
               bg-transparent
               rounded-[10px]
               text-[#F2D08C]
-              text-[18px]
+              text-[16px]
+              sm:text-[18px]
               hover:bg-[#F2D08C]/10
               transition-colors
             "

@@ -46,11 +46,10 @@ export function AppContainer({ userProfile }: AppContainerProps) {
           items-center
           text-center
           px-[28px]
-          sm:px-[34px]
         "
       >
         {/* Status bar */}
-        <div className="bg-black w-full flex justify-between items-center text-xs text-gray-400 py-[12px] z-40">
+        <div className="bg-black w-full flex justify-between items-center text-xs text-gray-400 py-[12px] z-40 absolute top-0 left-0 right-0 px-[28px] sm:px-[34px]">
           <div></div>
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
           <AppDrawer
@@ -61,7 +60,7 @@ export function AppContainer({ userProfile }: AppContainerProps) {
         </div>
 
         {/* Page content */}
-        <div className="flex-1 relative overflow-y-auto no-scrollbar">
+        <div className="flex-1 relative overflow-y-auto custom-scroll">
           {activeTab === "soul" && <MySoulPage isPremium={isPremium} />}
           {activeTab === "explore" && <ExplorePage isPremium={isPremium} />}
           {activeTab === "synthesis" && <SynthesisPage isPremium={isPremium} />}

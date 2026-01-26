@@ -383,7 +383,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   }
 
   return (
-    <div className="pb-28 px-2 space-y-10 bg-black">
+    <div className="pb-24 pt-20 pr-1 space-y-10 bg-black">
       {/* Header */}
       <div className="text-center pt-4">
         <h1

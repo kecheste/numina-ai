@@ -155,3 +155,21 @@ body {
   height: 100%;
   overflow: hidden;
 }
+
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #f2d08c #000;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 3px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #000;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #f2d08c;
+  border-radius: 999px;
+}
