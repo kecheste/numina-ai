@@ -42,12 +42,11 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
           text-center
           px-[32px]
           sm:px-[59px]
-          pt-10
           pb-12
         "
       >
         {/* Logo */}
-        <div className="flex justify-center mb-10">
+        <div className="flex justify-center my-10">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 

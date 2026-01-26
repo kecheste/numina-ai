@@ -417,7 +417,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
                 fontFamily: "var(--font-gotham)",
                 lineHeight: "22px",
               }}
-              className="text-[21px] text-[#F2D08C] font-[325]"
+              className="text-[21px] text-left text-[#F2D08C] font-[325]"
             >
               {cat.label}
             </h3>

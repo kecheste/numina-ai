@@ -37,12 +37,11 @@ export default function AboutYourself({ onContinue }: AboutYourselfProps) {
           text-center
           px-[32px]
           sm:px-[59px]
-          pt-10
           pb-12
         "
       >
         {/* Logo */}
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-10">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 

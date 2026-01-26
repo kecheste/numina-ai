@@ -22,7 +22,7 @@ export function TestCard({ test, onSelect }: TestCardProps) {
     <button
       onClick={onSelect}
       className={cn(
-        "relative rounded-[10px] h-[115px] p-2 text-left transition-all duration-300 border-[0.5px]",
+        "relative rounded-[10px] min-h-[115px] p-2 text-left transition-all duration-300 border",
         test.locked
           ? "border-[#F2D08C66] cursor-not-allowed"
           : "border-[#F2D08C] cursor-pointer",

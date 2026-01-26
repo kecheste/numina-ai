@@ -59,12 +59,11 @@ export function TestFlow({
           text-center
           px-[32px]
           sm:px-[59px]
-          pt-10
           pb-12
         "
       >
         {/* Top Bar */}
-        <div className="w-full flex items-center justify-between mb-12">
+        <div className="w-full flex items-center justify-between my-12">
           <button onClick={onClose} className="cursor-pointer">
             <Icon icon={"icons8:left-arrow"} color="#D9D9D9" width={33} />
           </button>
@@ -119,7 +118,7 @@ export function TestFlow({
         </h2>
 
         {/* Answers */}
-        <div className="space-y-4 mb-auto">
+        <div className="space-y-4 mb-4">
           {[
             "I like knowing what's expected and when",
             "I prefer keeping things flexible",

@@ -42,7 +42,7 @@ export function BottomNavigation({
               style={{
                 fontFamily: "var(--font-gotham)",
               }}
-              className="text-xs font-[100] pb-3"
+              className="text-xs font-[100]"
             >
               {label}
             </span>
