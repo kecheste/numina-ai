@@ -1,98 +1,171 @@
-'use client'
+"use client";
 
-import { Progress } from '@/components/ui/progress'
-import { Lock } from 'lucide-react'
-import { PillarCard } from '@/components/cards/pillar-card'
-import { InsightCard } from '@/components/cards/insight-card'
+import { RootChakraIcon } from "../icons/mysoul/chakra";
+import { InfjIcon } from "../icons/mysoul/infj";
+import { LifePathIcon } from "../icons/mysoul/lifepath";
+import { ScorpioIcon } from "../icons/zodiac/scorpio";
 
-interface MySoulPageProps {
-  isPremium: boolean
-}
-
-export function MySoulPage({ isPremium }: MySoulPageProps) {
-  const pillars = [
-    { name: 'Mind', percentage: 78, color: 'from-blue-500 to-cyan-400' },
-    { name: 'Body', percentage: 65, color: 'from-green-500 to-emerald-400' },
-    { name: 'Heart', percentage: 82, color: 'from-rose-500 to-pink-400' },
-    { name: 'Soul', percentage: 71, color: 'from-purple-500 to-violet-400' },
-    { name: 'Spirit', percentage: 88, color: 'from-yellow-500 to-orange-400' },
-  ]
-
-  const completedCards = [
-    { id: 1, title: 'MBTI Results', category: 'Psychology', status: 'completed' },
-    { id: 2, title: 'Birth Chart', category: 'Astrology', status: 'completed' },
-    { id: 3, title: 'Numerology Profile', category: 'Numerology', status: 'completed' },
-  ]
-
-  const lockedCards = [
-    { id: 4, title: 'Chakra Balance', category: 'Wellness', status: 'locked' },
-    { id: 5, title: 'Big Five Analysis', category: 'Psychology', status: 'locked' },
-    { id: 6, title: 'Relationship Forecast', category: 'Astrology', status: 'locked' },
-  ]
-
-  const dailyMessage =
-    'Today, your spiritual energy aligns with growth and introspection. Trust your intuition in matters of the heart.'
-
+export function SoulRevealScreen() {
   return (
-    <div className="p-4 pb-24 space-y-6">
-      {/* Header */}
-      <div className="text-center pt-4">
-        <h2 className="font-heading text-2xl text-primary">Your Soul</h2>
-        <p className="text-xs text-muted-foreground mt-1">Personal Energy Dashboard</p>
+    <div className="bg-black text-white pr-1 pb-24 space-y-6">
+      {/* Progress */}
+      <div className="mb-4 w-full relative">
+        <div className="h-[15px] w-full rounded-full bg-transparent border border-[#F2D08C]/50 overflow-hidden">
+          <div
+            className="h-full rounded-full"
+            style={{ width: "20.5%", backgroundColor: "#282828" }}
+          />
+        </div>
+
+        <p className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px] font-[400] z-10 pointer-events-none">
+          2/16
+        </p>
       </div>
+
+      {/* Identity */}
+      <div className="text-center space-y-2">
+        <h1 className="text-[21px] font-[700] text-center">
+          NIKOLOZ – SCORPIO
+        </h1>
+
+        <div className="flex items-center gap-[11px]">
+          <div className="h-[72px] w-[72px] p-2 border border-[#FFFFFF]/50 rounded-[7px]">
+            <ScorpioIcon />
+          </div>
+          <div
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: 350,
+            }}
+            className="border border-[#FFFFFF]/50 rounded-[7px] p-3 h-[72px] text-[15px] text-[#F2D08C]"
+          >
+            A grounded intuitive with cosmic insights
+          </div>
+        </div>
+      </div>
+
+      {/* Trinity Cards */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
+          <RootChakraIcon />
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: "325",
+              lineHeight: "17px",
+            }}
+            className="text-[13px] text-[#ffffff] font-book"
+          >
+            Root Chakra Srtong
+          </p>
+        </div>
+        <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
+          <InfjIcon />
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: "325",
+              lineHeight: "17px",
+            }}
+            className="text-[13px] text-[#ffffff] font-book"
+          >
+            INFJ The advocate
+          </p>
+        </div>
+        <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
+          <LifePathIcon />
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: "325",
+              lineHeight: "17px",
+            }}
+            className="text-[13px] text-[#ffffff] font-book"
+          >
+            Life <br /> Path
+          </p>
+        </div>
+      </div>
+
+      {/* Most Sure Things */}
+      <div className="space-y-2">
+        <p
+          style={{
+            fontFamily: "var(--font-gotham)",
+            fontWeight: "325",
+            lineHeight: "33px",
+          }}
+          className="text-[15px] text-[#ffffff] text-center"
+        >
+          MOST SURE THINGS
+        </p>
+
+        <div className="flex flex-wrap gap-[6px] justify-center">
+          {[
+            "Goals-oriented and disciplined",
+            "Connected to the earth",
+            "Deeply empathetic",
+            "You are a Visionary Empath",
+          ].map((tag) => (
+            <span
+              key={tag}
+              style={{
+                fontFamily: "var(--font-gotham)",
+                fontWeight: "325",
+              }}
+              className="p-1 rounded-[7px] border border-[#F2D08C]/40 text-[13px] text-[#F2D08C]"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <button
+        style={{
+          fontFamily: "var(--font-arp80)",
+          fontWeight: "400",
+          lineHeight: "33px",
+        }}
+        className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[54px] text-black"
+      >
+        Reveal my Full Synthesis
+      </button>
 
       {/* Daily Message */}
-      <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl p-4 space-y-2">
-        <p className="text-xs font-semibold text-gray-400 uppercase">Daily Message</p>
-        <p className="text-sm text-secondary leading-relaxed italic">{dailyMessage}</p>
-      </div>
+      <div className="relative z-0 rounded-[14px] bg-[#F2D08C33] border border-[#F2D08C]/50 p-4 pt-6 space-y-2">
+        <span className="absolute z-5 left-4 top-[-2] h-[2px] w-[130px] bg-black" />
 
-      {/* Five Pillars */}
-      <div className="space-y-3">
-        <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider">Energy Pillars</h3>
-        <div className="grid grid-cols-1 gap-3">
-          {pillars.map((pillar) => (
-            <PillarCard key={pillar.name} {...pillar} />
-          ))}
-        </div>
-      </div>
+        <p
+          className="absolute z-10 left-6 -top-[15px] text-[15px] text-white"
+          style={{
+            fontFamily: "var(--font-gotham)",
+            fontWeight: 325,
+            lineHeight: "33px",
+          }}
+        >
+          Nikoloz – Today
+        </p>
 
-      {/* Completed Tests */}
-      <div className="space-y-3">
-        <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider">Completed</h3>
-        <div className="space-y-2">
-          {completedCards.map((card) => (
-            <InsightCard key={card.id} {...card} />
-          ))}
-        </div>
+        <p
+          style={{
+            fontFamily: "var(--font-gotham)",
+            fontWeight: 325,
+          }}
+          className="text-[13px] text-left text-white"
+        >
+          ✨ Cosmic Energy:
+          <br />
+          Today is touched by the Solstice’s lingering energy — a turning point
+          of light and inner clarity. Scorpio's deep waters flow steadily under
+          this brightness, inviting reflection without isolation. You might feel
+          a quiet pull to observe more than act.
+        </p>
       </div>
-
-      {/* Locked Tests */}
-      <div className="space-y-3">
-        <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider">Locked</h3>
-        <div className="space-y-2">
-          {lockedCards.map((card) => (
-            <div
-              key={card.id}
-              className="bg-gray-900/50 border border-gray-800 rounded-lg p-3 flex items-center justify-between backdrop-blur-sm opacity-60"
-            >
-              <div>
-                <p className="text-sm font-medium text-gray-500">{card.title}</p>
-                <p className="text-xs text-gray-600">{card.category}</p>
-              </div>
-              <Lock size={16} className="text-gray-600" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Premium CTA */}
-      {!isPremium && (
-        <div className="bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-xl p-4 text-center space-y-2">
-          <p className="text-xs font-semibold text-primary">Unlock Full Access</p>
-          <p className="text-xs text-secondary">Explore all tests and comprehensive insights</p>
-        </div>
-      )}
+      <p className="text-xs italic text-[#F2D08C] text-center">
+        “Your silence speaks in sacred language.”
+      </p>
     </div>
-  )
+  );
 }

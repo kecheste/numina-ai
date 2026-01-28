@@ -38,10 +38,11 @@ export function TestResults({ onClose }: TestResultsProps) {
           px-[32px]
           sm:px-[59px]
           pb-12
+          pt-4
         "
       >
         {/* Logo */}
-        <div className="flex justify-center my-12">
+        <div className="flex justify-center mb-8">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
@@ -51,19 +52,19 @@ export function TestResults({ onClose }: TestResultsProps) {
             fontFamily: "var(--font-gotham)",
             lineHeight: "33px",
           }}
-          className="text-[21px] font-book text-center text-white mb-4"
+          className="text-[21px] font-book text-center text-white mb-3"
         >
           Chakra Result Preview
         </p>
 
         {/* Chakra Vector */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-6">
           <ChakraFullIcon />
         </div>
 
         {/* Section title */}
         <h2
-          className="text-[21px] font-bold text-center mb-6"
+          className="text-[21px] font-bold text-center mb-4"
           style={{
             color: GOLD,
             fontFamily: "var(--font-gotham)",
@@ -76,7 +77,7 @@ export function TestResults({ onClose }: TestResultsProps) {
 
         {/* Strongest chakra */}
         <div
-          className="mb-4 text-center"
+          className="mb-2 text-center"
           style={{
             fontFamily: "var(--font-gotham)",
           }}
@@ -95,7 +96,7 @@ export function TestResults({ onClose }: TestResultsProps) {
           style={{
             fontFamily: "var(--font-gotham)",
           }}
-          className="mb-8 text-center"
+          className="mb-6 text-center"
         >
           <p className="text-[12px] font-[350] text-gray-100 mb-2">
             Needs balancing:
@@ -125,7 +126,7 @@ export function TestResults({ onClose }: TestResultsProps) {
             fontWeight: 400,
             lineHeight: "33px",
           }}
-          className="cursor-pointer mt-auto mb-4 hover:bg-[#F2D08CC0] w-full h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
+          className="cursor-pointer mt-auto hover:bg-[#F2D08CC0] w-full h-[67px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[21px] transition-colors text-base"
         >
           Continue
         </Button>

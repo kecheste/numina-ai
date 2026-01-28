@@ -44,9 +44,9 @@ export function SubscriptionModal({
           <p
             style={{
               fontFamily: "var(--font-gotham)",
-              lineHeight: "22px",
+              lineHeight: "28px",
             }}
-            className="text-[15px] text-white opacity-80 mb-10"
+            className="text-[18px] text-white font-light mb-10"
           >
             Access all personality tests,
             <br />

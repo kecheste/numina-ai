@@ -35,18 +35,18 @@ export default function AboutYourself({ onContinue }: AboutYourselfProps) {
           flex-col
           items-center
           text-center
-          px-[32px]
-          sm:px-[59px]
+          px-[37px]
           pb-12
+          pt-4
         "
       >
         {/* Logo */}
-        <div className="flex justify-center mt-10">
+        <div className="flex justify-center mb-8">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
         {/* Content */}
-        <div className="flex flex-col items-center text-center mt-auto sm:mt-24">
+        <div className="flex flex-col items-center text-center mt-auto">
           <h1
             style={{
               fontFamily: "var(--font-gotham)",
@@ -98,13 +98,15 @@ export default function AboutYourself({ onContinue }: AboutYourselfProps) {
             onClick={() => onContinue({ name, email, password })}
             className="
               w-full
-              h-[67px]
+              h-[60px]
+              sm:h-[67px]
               bg-[#F2D08CE0]
               hover:bg-[#F2D08CC0]
               cursor-pointer
               text-black
               rounded-[10px]
-              text-[21px]
+              text-[18px]
+              sm:text-[21px]
               transition-colors
               disabled:opacity-50
               disabled:cursor-not-allowed
@@ -140,7 +142,7 @@ function GoldInput({
         bg-black
         border
         border-[#F2D08CE0]
-        rounded-[14px]
+        rounded-[10px]
         px-4
         py-4
         text-[15px]

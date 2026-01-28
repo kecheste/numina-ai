@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  X,
-  History,
-  Sparkles,
-  Crown,
-  HelpCircle,
-  Mail,
-  FileText,
-  Shield,
-  LogOut,
-} from "lucide-react";
 import { useClerk } from "@clerk/nextjs";
 import {
   Drawer,
@@ -18,6 +7,7 @@ import {
   DrawerTrigger,
   DrawerClose,
   DrawerPortal,
+  DrawerTitle,
 } from "@/components/ui/drawer";
 import { RefObject } from "react";
 import { Icon } from "@iconify/react";
@@ -36,13 +26,13 @@ export function AppDrawer({
   const { signOut } = useClerk();
 
   const menuItems = [
-    { icon: History, label: "My Tests" },
-    { icon: Sparkles, label: "My Synthesis" },
-    { icon: Crown, label: "Manage Subscription" },
-    { icon: HelpCircle, label: "Help / FAQ" },
-    { icon: Mail, label: "Contact Support" },
-    { icon: FileText, label: "Terms & Conditions" },
-    { icon: Shield, label: "Privacy Policy" },
+    { label: "My Tests" },
+    { label: "My Synthesis" },
+    { label: "Manage Subscription" },
+    { label: "Help / FAQ" },
+    { label: "Contact Support" },
+    { label: "Terms & Conditions" },
+    { label: "Privacy Policy" },
   ];
 
   return (
@@ -55,14 +45,15 @@ export function AppDrawer({
       </DrawerTrigger>
 
       <DrawerPortal container={portalContainer.current}>
+        <DrawerTitle></DrawerTitle>
         <DrawerContent
           className="
             fixed
             top-0
             right-0
             h-full
-            w-[320px]
-            max-w-[85%]
+            w-[280px]
+            max-w-[75%]
             bg-[#F2D08C]
             rounded-none
             z-50
@@ -91,8 +82,7 @@ export function AppDrawer({
                     <button
                       className="
                         relative
-                        flex items-center gap-4
-                        pb-3
+                        flex items-center gap-2
                         after:content-['']
                         after:absolute
                         after:left-0
@@ -108,9 +98,8 @@ export function AppDrawer({
                       <span
                         style={{
                           fontFamily: "var(--font-gotham)",
-                          lineHeight: "47px",
                         }}
-                        className="text-[16px]  font-medium text-black"
+                        className="text-[16px] py-[8px] font-medium text-black"
                       >
                         {item.label}
                       </span>
@@ -129,7 +118,7 @@ export function AppDrawer({
                 <span
                   style={{
                     fontFamily: "var(--font-gotham)",
-                    lineHeight: "47px",
+                    lineHeight: "42px",
                   }}
                   className="text-[16px] font-medium text-black"
                 >

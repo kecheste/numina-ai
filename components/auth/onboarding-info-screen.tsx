@@ -36,10 +36,11 @@ export function OnboardingInfoScreen({
           px-[32px]
           sm:px-[59px]
           pb-12
+          pt-4
         "
       >
         {/* Logo */}
-        <div className="flex justify-center my-10">
+        <div className="flex justify-center mb-8">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
@@ -80,7 +81,7 @@ export function OnboardingInfoScreen({
             fontFamily: "var(--font-gotham)",
             lineHeight: "22px",
           }}
-          className="text-center text-[15px] opacity-[0.8] font-light text-white mb-4"
+          className="text-center text-[15px] opacity-[0.9] font-light text-white mb-4"
         >
           <p className="mb-1">Want more?</p>
           <p>Unlock your full profile anytime to reveal</p>
@@ -120,7 +121,7 @@ export function OnboardingInfoScreen({
             fontFamily: "var(--font-gotham)",
             lineHeight: "22px",
           }}
-          className="text-[10px] font-light text-[#6b7280] text-center"
+          className="text-[10px] font-light text-[#FFFFFF] text-center"
         >
           By continuing, you agree to our Terms & Privacy Policy
         </p>
@@ -131,7 +132,7 @@ export function OnboardingInfoScreen({
 
 function InfoCard({ icon, text }: { icon: ReactNode; text: string }) {
   return (
-    <div className="border border-[#F2D08CE0] rounded-[16px] w-[150px] h-[165px] p-4 flex flex-col items-center gap-3 text-center">
+    <div className="border border-[#F2D08CE0] rounded-[10px] w-[150px] h-[165px] p-4 flex flex-col items-center justify-between pb-6 gap-3 text-center">
       {icon}
       <p
         style={{

@@ -383,9 +383,9 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   }
 
   return (
-    <div className="pb-24 pr-1 space-y-10 bg-black">
+    <div className="pb-24 pr-1 space-y-6 bg-black">
       {/* Header */}
-      <div className="text-center pt-4">
+      <div className="text-center">
         <h1
           style={{
             fontFamily: "var(--font-gotham)",

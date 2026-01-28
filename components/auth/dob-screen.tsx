@@ -11,176 +11,157 @@ interface DOBScreenProps {
 }
 
 export function DOBScreen({ onContinue }: DOBScreenProps) {
-  const [month, setMonth] = useState("");
-  const [day, setDay] = useState("");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState<string | null>(null);
+  const [month, setMonth] = useState<string | null>(null);
+  const [day, setDay] = useState<string | null>(null);
+  const [time, setTime] = useState<string | null>(null);
+  const [place, setPlace] = useState<string | null>(null);
+
+  const currentYear = new Date().getFullYear();
+  const minYear = currentYear - 21; // must be 21+
+
+  const years = Array.from({ length: 100 }, (_, i) => `${minYear - i}`);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
+  const times = ["I don’t know", "00:00", "06:00", "12:00", "18:00"];
+  const countries = [
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "India",
+    "Germany",
+    "France",
+  ];
 
   const handleContinue = () => {
-    if (month && day && year) {
-      const dob = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    if (year && month && day) {
+      const monthIndex = months.indexOf(month) + 1;
+      const dob = `${year}-${String(monthIndex).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       onContinue(dob);
     }
   };
 
-  const isComplete = month && day && year;
+  const isComplete = year && month && day;
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
-      <div
-        className="
-          w-full
-          h-screen
-          sm:min-h-0
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-black
-          overflow-y-auto
-          sm:overflow-hidden
-          flex
-          flex-col
-          items-center
-          text-center
-          px-[32px]
-          sm:px-[59px]
-          pb-12
-        "
-      >
-        {/* Logo */}
-        <div className="flex justify-center my-10">
+    <div className="flex items-center justify-center bg-white h-screen overflow-hidden">
+      <div className="w-full h-screen sm:max-w-[450px] bg-black overflow-y-auto flex flex-col items-center text-center px-[32px] pb-12 sm:pb-[4px] pt-4">
+        <div className="flex justify-center mb-8">
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
-        {/* Headline */}
-        <h1
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "33px",
-          }}
-          className="text-[21px] font-bold text-white mb-2"
-        >
+        <h1 className="text-[21px] font-bold text-white mb-2">
           Lets begin your self-discovery.
         </h1>
-
-        <p
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "22px",
-          }}
-          className="text-[15px] font-light text-white opacity-[0.9] mb-10"
-        >
-          We’ll use your birth data and responses to create your personalized
-          Soul Map powered by AI, astrology, psychology, and numerology.
+        <p className="text-[15px] text-white opacity-[0.9] mb-8">
+          We’ll use your birth data to create your personalized Soul Map.
         </p>
 
-        {/* Section title */}
-        <h2
-          style={{
-            fontFamily: "var(--font-arp80)",
-            fontWeight: 400,
-            lineHeight: "33px",
-          }}
-          className="text-[21px] text-[#F2D08C] mb-4"
-        >
-          Date of Birth
-        </h2>
+        <h2 className="text-[21px] text-[#F2D08C] mb-4">Date of Birth</h2>
 
-        {/* Inputs */}
-        <div className="space-y-4 w-full">
-          <SelectLikeInput label="Year" value={year} onChange={setYear} />
-          <SelectLikeInput label="Month" value={month} onChange={setMonth} />
-          <SelectLikeInput label="Day" value={day} onChange={setDay} />
-          <SelectLikeInput label="Time" />
-          <SelectLikeInput label="Place of Birth" />
+        <div className="space-y-4 w-full mb-4">
+          <Dropdown
+            label="Year"
+            value={year}
+            onChange={setYear}
+            options={years}
+          />
+          <Dropdown
+            label="Month"
+            value={month}
+            onChange={setMonth}
+            options={months}
+          />
+          <Dropdown label="Day" value={day} onChange={setDay} options={days} />
+          <Dropdown
+            label="Time"
+            value={time}
+            onChange={setTime}
+            options={times}
+          />
+          <Dropdown
+            label="Place of Birth"
+            value={place}
+            onChange={setPlace}
+            options={countries}
+          />
         </div>
 
-        {/* CTA + footer */}
-        <div className="mt-auto w-full pt-10">
+        <div className="mt-auto w-full">
           <Button
             disabled={!isComplete}
             onClick={handleContinue}
-            style={{
-              fontFamily: "var(--font-arp80)",
-              fontWeight: 400,
-              lineHeight: "33px",
-            }}
-            className="
-              cursor-pointer
-              w-full
-              h-[67px]
-              bg-[#F2D08CE0]
-              hover:bg-[#F2D08CC0]
-              text-black
-              rounded-[10px]
-              text-[21px]
-              transition-colors
-            "
+            className="w-full h-[67px] sm:h-[60px] bg-[#F2D08CE0] text-black rounded-[10px] text-[18px] sm:text-[21px]"
           >
             Next Step
           </Button>
-
-          <p
-            style={{
-              fontFamily: "var(--font-gotham)",
-              fontWeight: 325,
-              lineHeight: "14px",
-            }}
-            className="mt-6 text-[10px] text-white text-center opacity-[0.9]"
-          >
-            This information helps us calculate your astrological and energetic
-            profile. If you’re unsure of your exact birth time, choose “I don’t
-            know”. We’ll still give you accurate insights based on date and
-            place.
-          </p>
         </div>
       </div>
     </div>
   );
 }
 
-function SelectLikeInput({
+function Dropdown({
   label,
   value,
   onChange,
+  options,
 }: {
   label: string;
-  value?: string;
-  onChange?: (v: string) => void;
+  value: string | null;
+  onChange: (v: string) => void;
+  options: string[];
 }) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="relative">
-      <input
-        value={value}
-        onChange={(e) => onChange?.(e.target.value)}
-        placeholder={label}
-        className="
-          w-full
-          bg-black
-          border
-          border-[#F2D08CE0]
-          rounded-[14px]
-          text-center
-          px-4
-          py-4
-          text-[15px]
-          text-white
-          placeholder:text-[#9ca3af]
-          focus:outline-none
-          font-light
-        "
-        style={{
-          fontFamily: "var(--font-gotham)",
-          fontWeight: 300,
-          lineHeight: "22px",
-        }}
-      />
-      <span className="absolute right-4 top-1/2 -translate-y-1/2">
-        <Icon
-          icon="teenyicons:down-outline"
-          color="#F2D08C66"
-          width={17}
-          height={17}
-        />
-      </span>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full bg-black border border-[#F2D08CE0] rounded-[10px] px-4 py-4 text-[15px] text-white text-center flex justify-center items-center relative"
+      >
+        {value ?? label}
+        <span className="absolute right-4">
+          <Icon
+            icon="teenyicons:down-outline"
+            color="#F2D08C66"
+            width={17}
+            height={17}
+          />
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute left-0 right-0 mt-2 max-h-56 overflow-y-auto bg-black border border-[#F2D08CE0] rounded-[14px] z-50">
+          {options.map((opt) => (
+            <div
+              key={opt}
+              onClick={() => {
+                onChange(opt);
+                setOpen(false);
+              }}
+              className="px-4 py-3 text-white text-center hover:bg-[#F2D08C33] cursor-pointer"
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

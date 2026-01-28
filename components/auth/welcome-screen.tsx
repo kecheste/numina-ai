@@ -24,14 +24,14 @@ export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           flex-col
           items-center
           text-center
-          px-[32px]
+          px-[62px]
           sm:px-[59px]
           pt-10
           pb-12
         "
       >
         {/* Logo */}
-        <div className="flex items-center justify-center mt-24 sm:mt-[248px]">
+        <div className="flex items-center justify-center mt-auto">
           <Image src="/logo.png" width={191} height={44} alt="logo" />
         </div>
 
@@ -48,7 +48,7 @@ export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
         </p>
 
         {/* CTA */}
-        <div className="w-full mb-auto pt-32">
+        <div className="w-full mb-[130px] pt-[135px]">
           <Button
             onClick={onStartJourney}
             style={{
@@ -60,11 +60,13 @@ export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               cursor-pointer
               hover:bg-[#F2D08CC0]
               w-full
-              h-[67px]
+              h-[60px]
+              sm:h-[67px]
               bg-[#F2D08CE0]
               text-black
               rounded-[10px]
-              text-[21px]
+              text-[18px]
+              sm:text-[21px]
               transition-colors
             "
           >

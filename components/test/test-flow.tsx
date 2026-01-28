@@ -58,25 +58,25 @@ export function TestFlow({
           items-center
           text-center
           px-[32px]
-          sm:px-[59px]
           pb-12
+          pt-4
         "
       >
         {/* Top Bar */}
-        <div className="w-full flex items-center justify-between my-12">
-          <button onClick={onClose} className="cursor-pointer">
+        <div className="w-full flex items-center justify-between fixed w-full bg-black px-[24px] pb-2">
+          <button onClick={onClose} className="cursor-pointer ">
             <Icon icon={"icons8:left-arrow"} color="#D9D9D9" width={33} />
           </button>
 
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <Image src="/logo.png" alt="NuminaAI" width={150} height={36} />
+          <div className="">
+            <Image src="/logo.png" alt="NuminaAI" width={150} height={40} />
           </div>
 
           <Icon
             icon={"material-symbols-light:menu"}
             color="#D9D9D9"
             width={40}
-            className="cursor-pointer"
+            className="cursor-pointer "
           />
         </div>
 
@@ -86,22 +86,23 @@ export function TestFlow({
             fontFamily: "var(--font-gotham)",
             lineHeight: "33px",
           }}
-          className="w-full text-center font-book text-white text-[21px] font-[300] mb-4"
+          className="w-full mt-14 text-center font-book text-white text-[21px] font-[300] mb-4"
         >
           Discover Your Cognitive Blueprint
         </p>
 
         {/* Progress */}
-        <div className="mb-10 w-full">
-          <div className="h-[15px] w-full relative rounded-full bg-transparent border-[0.5px] border-[#F2D08C] overflow-hidden">
+        <div className="mb-10 w-full relative">
+          <div className="h-[15px] w-full rounded-full bg-transparent border-[0.5px] border-[#F2D08C] overflow-hidden">
             <div
               className="h-full rounded-full"
               style={{ width: "37.5%", backgroundColor: GOLD }}
             />
-            <p className="text-white text-[10px] font-[400] absolute right-0">
-              3/8
-            </p>
           </div>
+
+          <p className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px] font-[400] z-10 pointer-events-none">
+            3/8
+          </p>
         </div>
 
         {/* Question */}

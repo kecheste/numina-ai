@@ -3,11 +3,11 @@
 import { useRef, useState } from "react";
 import { BottomNavigation } from "./navigation/bottom-navigation";
 import { AppDrawer } from "./navigation/app-drawer";
-import { MySoulPage } from "./pages/my-soul-page";
 import { ExplorePage } from "./pages/explore-page";
 import { SynthesisPage } from "./pages/synthesis-page";
 import { SubscriptionModal } from "./modals/subscription-modal";
 import Image from "next/image";
+import { SoulRevealScreen } from "./pages/my-soul-page";
 
 type TabType = "soul" | "explore" | "synthesis";
 
@@ -45,12 +45,11 @@ export function AppContainer({ userProfile }: AppContainerProps) {
           flex-col
           items-center
           text-center
-          pt-20
           px-[28px]
         "
       >
         {/* Status bar */}
-        <div className="bg-black w-full flex justify-between items-center text-xs text-gray-400 py-[12px] z-40 absolute top-0 left-0 right-0 px-[28px] sm:px-[34px]">
+        <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-2 z-40 absolute top-0 left-0 right-0 px-[24px]">
           <div></div>
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
           <AppDrawer
@@ -61,8 +60,8 @@ export function AppContainer({ userProfile }: AppContainerProps) {
         </div>
 
         {/* Page content */}
-        <div className="flex-1 relative overflow-y-auto custom-scroll">
-          {activeTab === "soul" && <MySoulPage isPremium={isPremium} />}
+        <div className="flex-1 relative overflow-y-auto custom-scroll pt-19">
+          {activeTab === "soul" && <SoulRevealScreen />}
           {activeTab === "explore" && <ExplorePage isPremium={isPremium} />}
           {activeTab === "synthesis" && <SynthesisPage isPremium={isPremium} />}
         </div>
