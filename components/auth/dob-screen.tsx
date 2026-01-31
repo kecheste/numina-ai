@@ -64,14 +64,34 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
           <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
         </div>
 
-        <h1 className="text-[21px] font-bold text-white mb-2">
+        <h1
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "33px",
+          }}
+          className="text-[21px] font-[400] text-white mb-3"
+        >
           Lets begin your self-discovery.
         </h1>
-        <p className="text-[15px] text-white opacity-[0.9] mb-8">
+        <p
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "22px",
+          }}
+          className="text-[15px] font-[300] text-white mb-3"
+        >
           We’ll use your birth data to create your personalized Soul Map.
         </p>
 
-        <h2 className="text-[21px] text-[#F2D08C] mb-4">Date of Birth</h2>
+        <h2
+          style={{
+            fontFamily: "var(--font-arp80)",
+            lineHeight: "33px",
+          }}
+          className="text-[21px] font-[400] text-[#F2D08C] mb-4"
+        >
+          Date of Birth
+        </h2>
 
         <div className="space-y-4 w-full mb-4">
           <Dropdown
@@ -105,7 +125,24 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
           <Button
             disabled={!isComplete}
             onClick={handleContinue}
-            className="w-full h-[67px] sm:h-[60px] bg-[#F2D08CE0] text-black rounded-[10px] text-[18px] sm:text-[21px]"
+            style={{
+              fontFamily: "var(--font-arp80)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            className="
+              cursor-pointer
+              hover:bg-[#F2D08CC0]
+              w-full
+              h-[60px]
+              sm:h-[67px]
+              bg-[#F2D08CE0]
+              text-black
+              rounded-[10px]
+              text-[18px]
+              sm:text-[21px]
+              transition-colors
+            "
           >
             Next Step
           </Button>
@@ -132,8 +169,12 @@ function Dropdown({
     <div className="relative">
       <button
         type="button"
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "22px",
+        }}
         onClick={() => setOpen(!open)}
-        className="w-full bg-black border border-[#F2D08CE0] rounded-[10px] px-4 py-4 text-[15px] text-white text-center flex justify-center items-center relative"
+        className="w-full bg-black border border-[#F2D08CE0] rounded-[10px] px-4 py-4 text-[15px] font-[300] text-white text-center flex justify-center items-center relative"
       >
         {value ?? label}
         <span className="absolute right-4">
@@ -147,7 +188,13 @@ function Dropdown({
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 mt-2 max-h-56 overflow-y-auto bg-black border border-[#F2D08CE0] rounded-[14px] z-50">
+        <div
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "22px",
+          }}
+          className="absolute left-0 right-0 mt-2 max-h-56 overflow-y-auto bg-black border border-[#F2D08CE0] rounded-[14px] z-50"
+        >
           {options.map((opt) => (
             <div
               key={opt}
