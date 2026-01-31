@@ -108,6 +108,20 @@ export function TestFlow({
     }
   }, [current, answers]);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150,
+        tolerance: 5,
+      },
+    }),
+  );
+
   if (showResults) {
     return (
       <TestResults
@@ -123,20 +137,6 @@ export function TestFlow({
       />
     );
   }
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 150,
-        tolerance: 5,
-      },
-    }),
-  );
 
   return (
     <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
