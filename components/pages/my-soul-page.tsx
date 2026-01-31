@@ -1,11 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { RootChakraIcon } from "../icons/mysoul/chakra";
 import { InfjIcon } from "../icons/mysoul/infj";
 import { LifePathIcon } from "../icons/mysoul/lifepath";
 import { ScorpioIcon } from "../icons/zodiac/scorpio";
 
 export function SoulRevealScreen() {
+  const router = useRouter();
+
   return (
     <div className="bg-black text-white pr-1 pb-24 space-y-6">
       {/* Progress */}
@@ -128,6 +131,7 @@ export function SoulRevealScreen() {
           fontWeight: "400",
           lineHeight: "33px",
         }}
+        onClick={() => router.push("/home/synthesis")}
         className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[54px] text-black"
       >
         Reveal my Full Synthesis

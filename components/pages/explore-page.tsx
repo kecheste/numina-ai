@@ -299,6 +299,10 @@ const allTests: Test[] = [
 ];
 
 export function ExplorePage({ isPremium }: ExplorePageProps) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [selectedTest, setSelectedTest] = useState<number | null>(null);
   const [activeTest, setActiveTest] = useState<{
     id: number;
@@ -383,7 +387,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   }
 
   return (
-    <div className="pb-24 pr-1 space-y-6 bg-black">
+    <div className="pb-24 space-y-6">
       {/* Header */}
       <div className="text-center">
         <h1
@@ -422,7 +426,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
               {cat.label}
             </h3>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-[9px]">
               {categoryTests.map((test) => (
                 <TestCard
                   key={test.id}

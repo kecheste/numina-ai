@@ -19,7 +19,7 @@ export const LifePathIcon: React.FC<IconProps> = ({ color }) => {
         d="M26.5834 49L40.1714 21.996H23.6164V18.9H44.0414V21.437L30.3674 49H26.5834Z"
         fill="#F2D08C"
       />
-      <circle cx="32.5" cy="32.5" r="31.5" stroke="#F2D08C" stroke-width="2" />
+      <circle cx="32.5" cy="32.5" r="31.5" stroke="#F2D08C" strokeWidth="2" />
     </svg>
   );
 };

@@ -22,28 +22,62 @@ export function TestCard({ test, onSelect }: TestCardProps) {
     <button
       onClick={onSelect}
       className={cn(
-        "relative rounded-[10px] min-h-[115px] p-1 text-left transition-all duration-300 border",
+        `
+        relative
+        rounded-[10px]
+        border
+        transition-all
+        duration-300
+        flex
+        flex-col
+        items-center
+        gap-2
+
+        px-1.5
+        py-3
+        max-h-[120px]
+        min-w-[100px]
+        sm:min-w-[110px]
+        max-w-[125px]
+
+        min-h-[100px]
+        sm:min-h-[110px]
+        sm:px-3
+        sm:py-3
+
+        md:min-h-[120px]
+        md:px-4
+        `,
         test.locked
           ? "border-[#F2D08C66] cursor-not-allowed"
           : "border-[#F2D08C] cursor-pointer",
       )}
     >
-      <div className="space-y-2">
-        <div className="flex flex-col items-center gap-1">
-          <div className={`mb-1 ${test.locked ? "opacity-40" : ""}`}>
-            {test.icon}
-          </div>
-          <h3
-            style={{
-              fontFamily: "var(--font-gotham)",
-              lineHeight: "17px",
-            }}
-            className="text-[10px] text-center font-[100] text-[#ffffff]"
-          >
-            {test.title}
-          </h3>
-        </div>
+      <div
+        className={cn(
+          "flex items-center justify-center max-w-[68px] h-[68px]",
+          test.locked && "opacity-40",
+        )}
+      >
+        {test.icon}
       </div>
+
+      <h3
+        style={{
+          fontFamily: "var(--font-gotham)",
+          fontWeight: "300",
+          lineHeight: "1.2",
+        }}
+        className="
+          text-center
+          text-white
+          text-[11px]
+          sm:text-[11px]
+          md:text-[13px]
+        "
+      >
+        {test.title}
+      </h3>
     </button>
   );
 }

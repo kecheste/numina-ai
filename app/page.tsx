@@ -1,179 +1,49 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
-import { AppContainer } from "@/components/app-container";
-import { WelcomeScreen } from "@/components/auth/welcome-screen";
-import { DOBScreen } from "@/components/auth/dob-screen";
-import { OnboardingInfoScreen } from "@/components/auth/onboarding-info-screen";
-import { TestFlow } from "@/components/test/test-flow";
-import AboutYourself from "@/components/auth/about-yourself";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-type AuthView =
-  | "welcome"
-  | "dob"
-  | "about"
-  | "register"
-  | "onboarding-info"
-  | "test-intro"
-  | "authenticated"
-  | "loading";
-
-interface UserData {
-  dob: string;
-  name: string;
-  email: string;
-}
-
 export default function Home() {
-  const { isLoaded, isSignedIn, user } = useUser();
-  const [authView, setAuthView] = useState<AuthView>("loading");
-  const [userData, setUserData] = useState<Partial<UserData>>({});
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const router = useRouter();
 
-  // Check if user is authenticated and has completed onboarding
   useEffect(() => {
-    if (!isLoaded) return;
+    const timer = setTimeout(() => {
+      router.replace("/welcome");
+    }, 2000);
 
-    if (!isSignedIn) {
-      setAuthView("welcome");
-      return;
-    }
+    return () => clearTimeout(timer);
+  }, [router]);
 
-    // User is signed in, fetch their profile
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch("/api/users/profile");
-        if (res.ok) {
-          const profile = await res.json();
-          setUserProfile(profile);
-          setAuthView("authenticated");
-        } else {
-          // User exists but incomplete profile, ask for DOB
-          setAuthView("dob");
-        }
-      } catch (error) {
-        setAuthView("dob");
-      }
-    };
-
-    fetchProfile();
-  }, [isLoaded, isSignedIn]);
-
-  if (authView === "loading") {
-    return (
-      <div className="flex h-screen bg-white sm:items-center sm:justify-center">
-        <div
-          className="
-          relative w-full h-screen bg-black flex flex-col items-center justify-center
-          sm:h-auto sm:max-w-[450px] sm:aspect-[9/20]
-          sm:border sm:border-[#1f1f1f]
+  return (
+    <div className="flex h-screen bg-white sm:items-center sm:justify-center">
+      <div
+        className="
+          relative
+          w-full
+          h-screen
+          bg-black
+          flex
+          flex-col 
+          items-center
+          justify-center
+          sm:h-auto
+          sm:max-w-[450px]
+          sm:aspect-[9/20]
+          sm:border
+          sm:border-[#1f1f1f]
         "
-        >
-          <Image
-            src="/logo.png"
-            alt="NuminaAI"
-            width={180}
-            height={40}
-            className="mb-10"
-          />
+      >
+        <Image
+          src="/logo.png"
+          alt="NuminaAI"
+          width={180}
+          height={40}
+          className="mb-10"
+        />
 
-          <div className="w-10 h-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin" />
-        </div>
+        <div className="w-10 h-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin" />
       </div>
-    );
-  }
-
-  // Welcome -> Start Your Journey button
-  if (authView === "welcome") {
-    return <WelcomeScreen onStartJourney={() => setAuthView("dob")} />;
-  }
-
-  // DOB collection
-  if (authView === "dob") {
-    return (
-      <DOBScreen
-        onContinue={async (dob) => {
-          setUserData((prev) => ({ ...prev, dob }));
-
-          // Save DOB and other user data
-          if (user?.emailAddresses[0]?.emailAddress) {
-            try {
-              await fetch("/api/users/profile", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  email: user.emailAddresses[0].emailAddress,
-                  name: user.firstName || "User",
-                  dateOfBirth: dob,
-                }),
-              });
-            } catch (error) {
-              console.error("Error saving profile:", error);
-            }
-          }
-
-          setAuthView("about");
-        }}
-        onBack={() => setAuthView("welcome")}
-      />
-    );
-  }
-
-  if (authView === "about") {
-    return (
-      <AboutYourself
-        onContinue={async ({ name, email, password }) => {
-          setUserData((prev) => ({
-            ...prev,
-            name,
-            email,
-          }));
-
-          // Save profile once we have DOB + name
-          try {
-            await fetch("/api/users/profile", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                name,
-                email: email || user?.emailAddresses[0]?.emailAddress,
-                dateOfBirth: userData.dob,
-              }),
-            });
-          } catch (error) {
-            console.error("Error saving profile:", error);
-          }
-
-          setAuthView("onboarding-info");
-        }}
-      />
-    );
-  }
-
-  // Onboarding info screen
-  if (authView === "onboarding-info") {
-    return (
-      <OnboardingInfoScreen
-        userName={user?.firstName || "Friend"}
-        onStartTest={() => setAuthView("test-intro")}
-      />
-    );
-  }
-
-  // First test flow
-  if (authView === "test-intro") {
-    return (
-      <TestFlow
-        testId={1}
-        testTitle="Cosmic Alignment"
-        category="Astrology"
-        onClose={() => setAuthView("authenticated")}
-      />
-    );
-  }
-
-  // Authenticated - show main app
-  return <AppContainer userProfile={userProfile} />;
+    </div>
+  );
 }

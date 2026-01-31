@@ -1,19 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { TestResults } from "./test-results";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const GOLD = "#F2D08C";
 
-interface TestResultData {
-  personalityType: string;
-  insights: string[];
-  recommendations: string[];
-  score: number;
+type QuestionType =
+  | "select"
+  | "textarea"
+  | "color"
+  | "reorder"
+  | "dropdown"
+  | "progress";
+
+interface Question {
+  id: number;
+  type: QuestionType;
+  question: string;
+  options?: string[];
 }
+
+const QUESTIONS: Question[] = [
+  {
+    id: 1,
+    type: "color",
+    question: "Which color feels most aligned with you right now?",
+    options: ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White"],
+  },
+  {
+    id: 2,
+    type: "select",
+    question: "How do you usually approach deadlines?",
+    options: [
+      "I like clear structure and timelines",
+      "I work best under gentle pressure",
+      "I prefer complete flexibility",
+    ],
+  },
+  {
+    id: 3,
+    type: "textarea",
+    question: "Explain how much you recharge after a long day.",
+  },
+  {
+    id: 4,
+    type: "dropdown",
+    question: "When solving problems, you mostly rely on:",
+    options: ["Logic", "Intuition", "Experience", "Collaboration"],
+  },
+  {
+    id: 5,
+    type: "reorder",
+    question: "Reorder what motivates you the most (top = strongest):",
+    options: ["Growth", "Stability", "Recognition", "Freedom"],
+  },
+  {
+    id: 6,
+    type: "progress",
+    question: "How mentally energized do you feel most mornings?",
+  },
+];
 
 export function TestFlow({
   testId,
@@ -26,9 +82,24 @@ export function TestFlow({
   category: string;
   onClose: () => void;
 }) {
-  const [selected, setSelected] = useState<string | null>(null);
-  const [showResults, setShowResults] = useState<boolean>(false);
-  const [resultData, setResultData] = useState<TestResultData | null>(null);
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<Record<number, any>>({});
+  const [showResults, setShowResults] = useState(false);
+
+  const current = QUESTIONS[step];
+  const progressPct = ((step + 1) / QUESTIONS.length) * 100;
+
+  const reorderItems =
+    (answers[current.id] as string[]) ?? current.options ?? [];
+
+  useEffect(() => {
+    if (current.type === "reorder" && !answers[current.id] && current.options) {
+      setAnswers((prev) => ({
+        ...prev,
+        [current.id]: [...current.options],
+      }));
+    }
+  }, [current, answers]);
 
   if (showResults) {
     return (
@@ -36,7 +107,12 @@ export function TestFlow({
         testTitle={testTitle}
         category={category}
         onClose={onClose}
-        resultData={resultData}
+        resultData={{
+          personalityType: "Reflective Explorer",
+          insights: ["You balance intuition and logic well"],
+          recommendations: ["Lean into reflective routines"],
+          score: 82,
+        }}
       />
     );
   }
@@ -44,6 +120,9 @@ export function TestFlow({
   return (
     <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
+        style={{
+          fontFamily: "var(--font-gotham)",
+        }}
         className="
           w-full
           h-screen
@@ -58,111 +137,286 @@ export function TestFlow({
           items-center
           text-center
           px-[32px]
+          sm:px-[59px]
           pb-12
           pt-4
         "
       >
         {/* Top Bar */}
-        <div className="w-full flex items-center justify-between fixed w-full bg-black px-[24px] pb-2">
-          <button onClick={onClose} className="cursor-pointer ">
-            <Icon icon={"icons8:left-arrow"} color="#D9D9D9" width={33} />
+        <div className="flex items-center justify-between fixed w-full max-w-[450px] bg-black px-6 pb-2 z-10">
+          <button onClick={onClose}>
+            <Icon icon="icons8:left-arrow" color="#D9D9D9" width={30} />
           </button>
-
-          <div className="">
-            <Image src="/logo.png" alt="NuminaAI" width={150} height={40} />
-          </div>
-
-          <Icon
-            icon={"material-symbols-light:menu"}
-            color="#D9D9D9"
-            width={40}
-            className="cursor-pointer "
-          />
+          <Image src="/logo.png" alt="NuminaAI" width={140} height={36} />
+          <Icon icon="material-symbols-light:menu" color="#D9D9D9" width={36} />
         </div>
 
         {/* Subtitle */}
         <p
           style={{
-            fontFamily: "var(--font-gotham)",
             lineHeight: "33px",
           }}
-          className="w-full mt-14 text-center font-book text-white text-[21px] font-[300] mb-4"
+          className="mt-16 text-center text-white text-[21px] font-[300]"
         >
           Discover Your Cognitive Blueprint
         </p>
 
         {/* Progress */}
-        <div className="mb-10 w-full relative">
-          <div className="h-[15px] w-full rounded-full bg-transparent border-[0.5px] border-[#F2D08C] overflow-hidden">
+        <div className="my-[27px] relative w-full">
+          <div className="h-[22px] w-full rounded-full border border-[#F2D08C] overflow-hidden">
             <div
-              className="h-full rounded-full"
-              style={{ width: "37.5%", backgroundColor: GOLD }}
+              className="h-full"
+              style={{ width: `${progressPct}%`, backgroundColor: GOLD }}
             />
           </div>
-
-          <p className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px] font-[400] z-10 pointer-events-none">
-            3/8
-          </p>
+          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px]">
+            {step + 1}/{QUESTIONS.length}
+          </span>
         </div>
 
         {/* Question */}
         <h2
-          className="text-center text-[21px] mb-4"
           style={{
-            color: "#F2D08C",
-            fontFamily: "var(--font-gotham)",
-            fontWeight: 350,
-            lineHeight: "27px",
+            lineHeight: "33px",
           }}
+          className="text-center text-[21px] mb-6 text-[#F2D08C] font-[400]"
         >
-          How do you feel about deadlines?
+          {current.question}
         </h2>
 
         {/* Answers */}
-        <div className="space-y-4 mb-4">
-          {[
-            "I like knowing what's expected and when",
-            "I prefer keeping things flexible",
-          ].map((option) => (
-            <button
-              key={option}
-              style={{
-                fontFamily: "var(--font-gotham)",
-                fontWeight: 350,
-              }}
-              onClick={() => setSelected(option)}
-              className={`w-full h-[74px] cursor-pointer px-4 py-4 rounded-xl text-sm text-left transition-all border-[0.5px]
-                ${
-                  selected === option
-                    ? "bg-[#F2D08C] text-black border-[#F2D08C]"
-                    : "bg-transparent text-white border-[#5A4A2A]"
+        <div className="flex-1 w-full">
+          {current.type === "select" && (
+            <div className="space-y-4">
+              {current.options!.map((opt) => (
+                <button
+                  key={opt}
+                  onClick={() => setAnswers({ ...answers, [current.id]: opt })}
+                  className={`w-full h-[70px] rounded-xl border text-left px-4 transition
+                    ${
+                      answers[current.id] === opt
+                        ? "bg-[#F2D08C] text-black border-[#F2D08C]"
+                        : "border-[#5A4A2A] text-white"
+                    }`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {current.type === "textarea" && (
+            <textarea
+              className="w-full h-[160px] rounded-xl bg-[#FFFFFF1C] border border-[#FFFFFF]/50 outline-none text-white p-4"
+              // placeholder="Write freely here…"
+              value={answers[current.id] || ""}
+              onChange={(e) =>
+                setAnswers({ ...answers, [current.id]: e.target.value })
+              }
+            />
+          )}
+
+          {current.type === "dropdown" && (
+            <div className="relative w-full">
+              <select
+                className="
+                  w-full
+                  h-[70px]
+                  rounded-xl
+                  bg-black
+                  border
+                  border-[#5A4A2A]
+                  text-white
+                  px-4
+                  pr-12
+                  text-center
+                  outline-none
+                  appearance-none
+                  focus:border-[#F2D08C]
+                  "
+                value={answers[current.id] || ""}
+                onChange={(e) =>
+                  setAnswers({ ...answers, [current.id]: e.target.value })
                 }
-              `}
-            >
-              {option}
-            </button>
-          ))}
+              >
+                <option value="" disabled>
+                  Select an option
+                </option>
+
+                {current.options!.map((opt) => (
+                  <option key={opt} value={opt} className="bg-black text-white">
+                    {opt}
+                  </option>
+                ))}
+              </select>
+
+              {/* Custom dropdown icon */}
+              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#F2D08C]">
+                <Icon icon={"teenyicons:down-outline"} />
+              </span>
+            </div>
+          )}
+
+          {current.type === "color" && (
+            <div className="space-y-3">
+              {current.options!.map((color) => (
+                <button
+                  key={color}
+                  onClick={() =>
+                    setAnswers({ ...answers, [current.id]: color })
+                  }
+                  className="w-full h-[48px] rounded-lg text-left px-4 font-[300] text-[15px]"
+                  style={{
+                    backgroundColor: color.toLowerCase(),
+                    color:
+                      color === "Yellow" || color === "White"
+                        ? "black"
+                        : "white",
+                    opacity: answers[current.id] === color ? 1 : 0.9,
+                  }}
+                >
+                  {color}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {current.type === "reorder" && (
+            <div className="p-3 border border-[#F2D08C80]/50 rounded-[10px]">
+              <DndContext
+                collisionDetection={closestCenter}
+                onDragEnd={({ active, over }) => {
+                  if (!over || active.id === over.id) return;
+
+                  const items = reorderItems;
+
+                  const oldIndex = items.indexOf(active.id as string);
+                  const newIndex = items.indexOf(over.id as string);
+
+                  const updated = [...items];
+                  const [moved] = updated.splice(oldIndex, 1);
+                  updated.splice(newIndex, 0, moved);
+
+                  setAnswers((prev) => ({
+                    ...prev,
+                    [current.id]: updated,
+                  }));
+                }}
+              >
+                <SortableContext
+                  items={reorderItems}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <ul className="space-y-3">
+                    {reorderItems.map((opt, idx) => (
+                      <SortableItem
+                        key={opt}
+                        id={opt}
+                        index={idx}
+                        label={opt}
+                      />
+                    ))}
+                  </ul>
+                </SortableContext>
+              </DndContext>
+            </div>
+          )}
+
+          {current.type === "progress" && (
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={answers[current.id] || 50}
+              onChange={(e) =>
+                setAnswers({ ...answers, [current.id]: e.target.value })
+              }
+              className="w-full custom-range"
+              style={{
+                ["--value" as any]: answers[current.id] || 50,
+              }}
+            />
+          )}
         </div>
 
         {/* Continue */}
-        <Button
-          disabled={!selected}
-          className="mt-auto w-full mb-[107px] h-[54px] cursor-pointer rounded-[10px] text-lg font-medium"
-          style={{
-            backgroundColor: GOLD,
-            color: "black",
-            opacity: selected ? 1 : 0.5,
-            fontFamily: "var(--font-arp80)",
-            fontWeight: 400,
-            lineHeight: "33px",
-          }}
-          onClick={() => {
-            setShowResults(true);
-          }}
-        >
-          Continue
-        </Button>
+        <div className="px-6 w-full">
+          <Button
+            className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[67px] text-black"
+            style={{
+              backgroundColor: GOLD,
+              color: "black",
+              fontFamily: "var(--font-arp80)",
+              fontWeight: "400",
+              lineHeight: "33px",
+            }}
+            disabled={answers[current.id] == null}
+            onClick={() => {
+              if (step === QUESTIONS.length - 1) {
+                setShowResults(true);
+              } else {
+                setStep(step + 1);
+              }
+            }}
+          >
+            Continue
+          </Button>
+        </div>
       </div>
     </div>
+  );
+}
+
+function SortableItem({
+  id,
+  index,
+  label,
+}: {
+  id: string;
+  index: number;
+  label: string;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={`
+        w-full
+        h-[50px]
+        rounded-lg
+        border
+        px-4
+        flex
+        items-center
+        justify-between
+        text-white
+        cursor-grab
+        ${isDragging ? "bg-[#1A1A1A] border-[#F2D08C]" : "bg-black border-[#5A4A2A]"}
+        `}
+      {...attributes}
+      {...listeners}
+    >
+      <span className="text-sm">
+        {index + 1}. {label}
+      </span>
+
+      <span className="text-[#F2D08C]/50 text-xl">
+        <Icon icon={"lsicon:drag-outline"} fontSize={"32px"} />
+      </span>
+    </li>
   );
 }
