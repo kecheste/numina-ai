@@ -5,7 +5,14 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { TestResults } from "./test-results";
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -117,6 +124,20 @@ export function TestFlow({
     );
   }
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150,
+        tolerance: 5,
+      },
+    }),
+  );
+
   return (
     <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
@@ -143,12 +164,22 @@ export function TestFlow({
         "
       >
         {/* Top Bar */}
-        <div className="flex items-center justify-between fixed w-full max-w-[450px] bg-black px-6 pb-2 z-10">
+        <div className="flex items-center justify-between w-full max-w-[450px] bg-black pb-2">
           <button onClick={onClose}>
-            <Icon icon="icons8:left-arrow" color="#D9D9D9" width={30} />
+            <Icon
+              icon="icons8:left-arrow"
+              color="#D9D9D9"
+              width={30}
+              height={36}
+            />
           </button>
           <Image src="/logo.png" alt="NuminaAI" width={140} height={36} />
-          <Icon icon="material-symbols-light:menu" color="#D9D9D9" width={36} />
+          <Icon
+            icon="material-symbols-light:menu"
+            color="#D9D9D9"
+            width={36}
+            height={36}
+          />
         </div>
 
         {/* Subtitle */}
@@ -284,12 +315,12 @@ export function TestFlow({
           {current.type === "reorder" && (
             <div className="p-3 border border-[#F2D08C80]/50 rounded-[10px]">
               <DndContext
+                sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={({ active, over }) => {
                   if (!over || active.id === over.id) return;
 
                   const items = reorderItems;
-
                   const oldIndex = items.indexOf(active.id as string);
                   const newIndex = items.indexOf(over.id as string);
 
@@ -340,7 +371,7 @@ export function TestFlow({
         </div>
 
         {/* Continue */}
-        <div className="px-6 w-full">
+        <div className="px-6 w-full mt-4 mb-8">
           <Button
             className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[67px] text-black"
             style={{
@@ -405,6 +436,8 @@ function SortableItem({
         justify-between
         text-white
         cursor-grab
+        touch-none
+        select-none
         ${isDragging ? "bg-[#1A1A1A] border-[#F2D08C]" : "bg-black border-[#5A4A2A]"}
         `}
       {...attributes}
