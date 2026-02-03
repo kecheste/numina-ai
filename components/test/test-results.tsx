@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ChakraFullIcon } from "../icons/chakra-full";
+import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 
 interface TestResultsProps {
   testTitle: string;
@@ -20,11 +20,12 @@ const GOLD = "#F2D08C";
 
 export function TestResults({ onClose }: TestResultsProps) {
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
       <div
         className="
           w-full
-          h-screen
+          h-full
+          sm:h-auto
           sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
@@ -43,7 +44,7 @@ export function TestResults({ onClose }: TestResultsProps) {
       >
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
+          <NuminaLogoIcon />
         </div>
 
         {/* Subtitle */}

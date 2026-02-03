@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import { Montserrat } from "next/font/google";
 
 export const gotham = localFont({
   src: [
@@ -39,4 +40,10 @@ export const fangsong = localFont({
   variable: "--font-fangsong",
   weight: "400",
   display: "swap",
+});
+
+export const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-montserrat",
 });

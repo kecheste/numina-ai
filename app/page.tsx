@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 
 export default function Home() {
   const router = useRouter();
@@ -34,15 +35,9 @@ export default function Home() {
           sm:border-[#1f1f1f]
         "
       >
-        <Image
-          src="/logo.png"
-          alt="NuminaAI"
-          width={180}
-          height={40}
-          className="mb-10"
-        />
+        <NuminaLogoIcon />
 
-        <div className="w-10 h-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin mt-4" />
       </div>
     </div>
   );

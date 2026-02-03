@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { gotham, arp80, fangsong } from "@/app/fonts";
+import { gotham, arp80, fangsong, montserrat } from "@/app/fonts";
 
 export const metadata: Metadata = {
   title: "Numina - Spiritual Intelligence",
@@ -42,7 +42,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className="dark">
         <body
-          className={`${gotham.variable} ${arp80.variable} ${fangsong.variable} overflow-hidden`}
+          className={`${gotham.variable} ${arp80.variable} ${fangsong.variable} ${montserrat.variable} overflow-hidden`}
         >
           {children}
           <Analytics />

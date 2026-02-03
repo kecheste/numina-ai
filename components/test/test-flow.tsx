@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { TestResults } from "./test-results";
@@ -19,6 +19,8 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { NuminaLogoIcon } from "../icons/logo/numina-normal";
+import { AppDrawer } from "../navigation/app-drawer";
 
 const GOLD = "#F2D08C";
 
@@ -89,6 +91,8 @@ export function TestFlow({
   category: string;
   onClose: () => void;
 }) {
+  const router = useRouter();
+  const shellRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, any>>({});
   const [showResults, setShowResults] = useState(false);
@@ -101,9 +105,10 @@ export function TestFlow({
 
   useEffect(() => {
     if (current.type === "reorder" && !answers[current.id] && current.options) {
+      const options = current.options;
       setAnswers((prev) => ({
         ...prev,
-        [current.id]: [...current.options],
+        [current.id]: [...options],
       }));
     }
   }, [current, answers]);
@@ -119,8 +124,12 @@ export function TestFlow({
         delay: 150,
         tolerance: 5,
       },
-    }),
+    })
   );
+
+  const handleBack = () => {
+    onClose();
+  };
 
   if (showResults) {
     return (
@@ -139,14 +148,17 @@ export function TestFlow({
   }
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
       <div
+        ref={shellRef}
         style={{
           fontFamily: "var(--font-gotham)",
         }}
         className="
+          relative
           w-full
-          h-screen
+          h-full
+          sm:h-auto
           sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
@@ -157,100 +169,99 @@ export function TestFlow({
           flex-col
           items-center
           text-center
-          px-[32px]
-          sm:px-[59px]
           pb-12
-          pt-4
         "
       >
         {/* Top Bar */}
-        <div className="flex items-center justify-between w-full max-w-[450px] bg-black pb-2">
-          <button onClick={onClose}>
+        <div className="flex items-center border-b border-gray-500/30 justify-between w-full max-w-[450px] bg-black px-[28px] py-2">
+          <button onClick={handleBack} className="cursor-pointer">
             <Icon
               icon="icons8:left-arrow"
               color="#D9D9D9"
               width={30}
-              height={36}
+              className="mt-1.5"
             />
           </button>
-          <Image src="/logo.png" alt="NuminaAI" width={140} height={36} />
-          <Icon
-            icon="material-symbols-light:menu"
-            color="#D9D9D9"
-            width={36}
-            height={36}
+          <NuminaLogoIcon className="mb-2" />
+          <AppDrawer
+            isPremium={false}
+            portalContainer={shellRef}
+            onLogout={() => router.push("/welcome")}
           />
         </div>
 
         {/* Subtitle */}
-        <p
-          style={{
-            lineHeight: "33px",
-          }}
-          className="mt-16 text-center text-white text-[21px] font-[300]"
-        >
-          Discover Your Cognitive Blueprint
-        </p>
+        <div className="flex flex-col px-[32px]">
+          <p
+            style={{
+              lineHeight: "33px",
+            }}
+            className="mt-16 text-center text-white text-[21px] font-[300]"
+          >
+            Discover Your Cognitive Blueprint
+          </p>
 
-        {/* Progress */}
-        <div className="my-[27px] relative w-full">
-          <div className="h-[22px] w-full rounded-full border border-[#F2D08C] overflow-hidden">
-            <div
-              className="h-full"
-              style={{ width: `${progressPct}%`, backgroundColor: GOLD }}
-            />
+          {/* Progress */}
+          <div className="my-[27px] relative w-full">
+            <div className="h-[17px] w-full rounded-full border border-[#F2D08C] overflow-hidden">
+              <div
+                className="h-full"
+                style={{ width: `${progressPct}%`, backgroundColor: GOLD }}
+              />
+            </div>
+            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px]">
+              {step + 1}/{QUESTIONS.length}
+            </span>
           </div>
-          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px]">
-            {step + 1}/{QUESTIONS.length}
-          </span>
-        </div>
 
-        {/* Question */}
-        <h2
-          style={{
-            lineHeight: "33px",
-          }}
-          className="text-center text-[21px] mb-6 text-[#F2D08C] font-[400]"
-        >
-          {current.question}
-        </h2>
+          {/* Question */}
+          <h2
+            style={{
+              lineHeight: "33px",
+            }}
+            className="text-center text-[21px] mb-6 text-[#F2D08C] font-[400]"
+          >
+            {current.question}
+          </h2>
 
-        {/* Answers */}
-        <div className="flex-1 w-full">
-          {current.type === "select" && (
-            <div className="space-y-4">
-              {current.options!.map((opt) => (
-                <button
-                  key={opt}
-                  onClick={() => setAnswers({ ...answers, [current.id]: opt })}
-                  className={`w-full h-[70px] rounded-xl border text-left px-4 transition
+          {/* Answers */}
+          <div className="flex-1 w-full">
+            {current.type === "select" && (
+              <div className="space-y-4">
+                {current.options!.map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() =>
+                      setAnswers({ ...answers, [current.id]: opt })
+                    }
+                    className={`w-full h-[70px] rounded-xl border text-left px-4 transition
                     ${
                       answers[current.id] === opt
                         ? "bg-[#F2D08C] text-black border-[#F2D08C]"
                         : "border-[#5A4A2A] text-white"
                     }`}
-                >
-                  {opt}
-                </button>
-              ))}
-            </div>
-          )}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            )}
 
-          {current.type === "textarea" && (
-            <textarea
-              className="w-full h-[160px] rounded-xl bg-[#FFFFFF1C] border border-[#FFFFFF]/50 outline-none text-white p-4"
-              // placeholder="Write freely here…"
-              value={answers[current.id] || ""}
-              onChange={(e) =>
-                setAnswers({ ...answers, [current.id]: e.target.value })
-              }
-            />
-          )}
+            {current.type === "textarea" && (
+              <textarea
+                className="w-full h-[160px] rounded-xl bg-[#FFFFFF1C] border border-[#FFFFFF]/50 outline-none text-white p-4"
+                // placeholder="Write freely here…"
+                value={answers[current.id] || ""}
+                onChange={(e) =>
+                  setAnswers({ ...answers, [current.id]: e.target.value })
+                }
+              />
+            )}
 
-          {current.type === "dropdown" && (
-            <div className="relative w-full">
-              <select
-                className="
+            {current.type === "dropdown" && (
+              <div className="relative w-full">
+                <select
+                  className="
                   w-full
                   h-[70px]
                   rounded-xl
@@ -265,113 +276,117 @@ export function TestFlow({
                   appearance-none
                   focus:border-[#F2D08C]
                   "
-                value={answers[current.id] || ""}
+                  value={answers[current.id] || ""}
+                  onChange={(e) =>
+                    setAnswers({ ...answers, [current.id]: e.target.value })
+                  }
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+
+                  {current.options!.map((opt) => (
+                    <option
+                      key={opt}
+                      value={opt}
+                      className="bg-black text-white"
+                    >
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Custom dropdown icon */}
+                <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#F2D08C]">
+                  <Icon icon={"teenyicons:down-outline"} />
+                </span>
+              </div>
+            )}
+
+            {current.type === "color" && (
+              <div className="space-y-3">
+                {current.options!.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() =>
+                      setAnswers({ ...answers, [current.id]: color })
+                    }
+                    className="w-full h-[48px] rounded-lg text-left px-4 font-[300] text-[15px]"
+                    style={{
+                      backgroundColor: color.toLowerCase(),
+                      color:
+                        color === "Yellow" || color === "White"
+                          ? "black"
+                          : "white",
+                      opacity: answers[current.id] === color ? 1 : 0.6,
+                    }}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {current.type === "reorder" && (
+              <div className="p-3 border border-[#F2D08C80]/50 rounded-[10px]">
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={({ active, over }) => {
+                    if (!over || active.id === over.id) return;
+
+                    const items = reorderItems;
+                    const oldIndex = items.indexOf(active.id as string);
+                    const newIndex = items.indexOf(over.id as string);
+
+                    const updated = [...items];
+                    const [moved] = updated.splice(oldIndex, 1);
+                    updated.splice(newIndex, 0, moved);
+
+                    setAnswers((prev) => ({
+                      ...prev,
+                      [current.id]: updated,
+                    }));
+                  }}
+                >
+                  <SortableContext
+                    items={reorderItems}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <ul className="space-y-3">
+                      {reorderItems.map((opt, idx) => (
+                        <SortableItem
+                          key={opt}
+                          id={opt}
+                          index={idx}
+                          label={opt}
+                        />
+                      ))}
+                    </ul>
+                  </SortableContext>
+                </DndContext>
+              </div>
+            )}
+
+            {current.type === "progress" && (
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={answers[current.id] || 50}
                 onChange={(e) =>
                   setAnswers({ ...answers, [current.id]: e.target.value })
                 }
-              >
-                <option value="" disabled>
-                  Select an option
-                </option>
-
-                {current.options!.map((opt) => (
-                  <option key={opt} value={opt} className="bg-black text-white">
-                    {opt}
-                  </option>
-                ))}
-              </select>
-
-              {/* Custom dropdown icon */}
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#F2D08C]">
-                <Icon icon={"teenyicons:down-outline"} />
-              </span>
-            </div>
-          )}
-
-          {current.type === "color" && (
-            <div className="space-y-3">
-              {current.options!.map((color) => (
-                <button
-                  key={color}
-                  onClick={() =>
-                    setAnswers({ ...answers, [current.id]: color })
-                  }
-                  className="w-full h-[48px] rounded-lg text-left px-4 font-[300] text-[15px]"
-                  style={{
-                    backgroundColor: color.toLowerCase(),
-                    color:
-                      color === "Yellow" || color === "White"
-                        ? "black"
-                        : "white",
-                    opacity: answers[current.id] === color ? 1 : 0.9,
-                  }}
-                >
-                  {color}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {current.type === "reorder" && (
-            <div className="p-3 border border-[#F2D08C80]/50 rounded-[10px]">
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={({ active, over }) => {
-                  if (!over || active.id === over.id) return;
-
-                  const items = reorderItems;
-                  const oldIndex = items.indexOf(active.id as string);
-                  const newIndex = items.indexOf(over.id as string);
-
-                  const updated = [...items];
-                  const [moved] = updated.splice(oldIndex, 1);
-                  updated.splice(newIndex, 0, moved);
-
-                  setAnswers((prev) => ({
-                    ...prev,
-                    [current.id]: updated,
-                  }));
+                className="w-full custom-range"
+                style={{
+                  ["--value" as any]: answers[current.id] || 50,
                 }}
-              >
-                <SortableContext
-                  items={reorderItems}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <ul className="space-y-3">
-                    {reorderItems.map((opt, idx) => (
-                      <SortableItem
-                        key={opt}
-                        id={opt}
-                        index={idx}
-                        label={opt}
-                      />
-                    ))}
-                  </ul>
-                </SortableContext>
-              </DndContext>
-            </div>
-          )}
-
-          {current.type === "progress" && (
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={answers[current.id] || 50}
-              onChange={(e) =>
-                setAnswers({ ...answers, [current.id]: e.target.value })
-              }
-              className="w-full custom-range"
-              style={{
-                ["--value" as any]: answers[current.id] || 50,
-              }}
-            />
-          )}
+              />
+            )}
+          </div>
         </div>
-
         {/* Continue */}
-        <div className="px-6 w-full mt-4 mb-8">
+        <div className="px-[32px] w-full mt-auto mb-8">
           <Button
             className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[67px] text-black"
             style={{
@@ -438,7 +453,11 @@ function SortableItem({
         cursor-grab
         touch-none
         select-none
-        ${isDragging ? "bg-[#1A1A1A] border-[#F2D08C]" : "bg-black border-[#5A4A2A]"}
+        ${
+          isDragging
+            ? "bg-[#1A1A1A] border-[#F2D08C]"
+            : "bg-black border-[#5A4A2A]"
+        }
         `}
       {...attributes}
       {...listeners}

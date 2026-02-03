@@ -68,7 +68,7 @@ export function SynthesisPage({ isPremium }: SynthesisPageProps) {
           />
         </div>
 
-        <p className="absolute right-13 top-1/2 -translate-y-1/2 text-white text-[10px] font-[400] z-10 pointer-events-none">
+        <p className="absolute right-10 top-1/2 -translate-y-1/2 text-white text-[10px] font-[400] z-10 pointer-events-none">
           4/16
         </p>
       </div>
@@ -125,10 +125,10 @@ export function SynthesisPage({ isPremium }: SynthesisPageProps) {
             Private
           </div>
           <div className="text-[#F2D08C] px-1.5 border border-[#F2D08C]/50 rounded-[10px] text-[13px] font-[300] p-0">
-            Spritual
+            Spiritual
           </div>
           <div className="text-[#F2D08C] px-1.5 border border-[#F2D08C]/50 rounded-[10px] text-[13px] font-[300] p-0">
-            Purpose-drived
+            Purpose-driven
           </div>
           <div className="text-[#F2D08C] px-1.5 border border-[#F2D08C]/50 rounded-[10px] text-[13px] font-[300] p-0">
             Emotionally deep
@@ -146,7 +146,7 @@ export function SynthesisPage({ isPremium }: SynthesisPageProps) {
         </h2>
 
         <p className="text-[13px] font-[400] text-[#F2D08C]">
-          (Based on your currentdata: INFJ + Life Path 7 + Scorpio Sun + Crown
+          (Based on your current data: INFJ + Life Path 7 + Scorpio Sun + Crown
           Chakra Active)
         </p>
 
@@ -195,10 +195,10 @@ export function SynthesisPage({ isPremium }: SynthesisPageProps) {
             Sees patterns others miss
           </div>
           <div className="text-[#D9D9D9] px-1.5 border border-[#D9D9D9]/50 rounded-[10px] text-[13px] font-[300] p-0">
-            Natural healder or guide
+            Natural healer or guide
           </div>
           <div className="text-[#D9D9D9] px-1.5 border border-[#D9D9D9]/50 rounded-[10px] text-[13px] font-[300] p-0">
-            Self-discplined and reflective
+            Self-disciplined and reflective
           </div>
         </div>
 

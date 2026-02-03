@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { Button } from "../ui/button";
+import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 
 interface AboutYourselfProps {
   onContinue: (data: {
@@ -42,7 +42,7 @@ export default function AboutYourself({ onContinue }: AboutYourselfProps) {
       >
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
+          <NuminaLogoIcon />
         </div>
 
         {/* Content */}

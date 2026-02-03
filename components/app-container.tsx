@@ -6,8 +6,8 @@ import { AppDrawer } from "./navigation/app-drawer";
 import { ExplorePage } from "./pages/explore-page";
 import { SynthesisPage } from "./pages/synthesis-page";
 import { SubscriptionModal } from "./modals/subscription-modal";
-import Image from "next/image";
 import { SoulRevealScreen } from "./pages/my-soul-page";
+import { NuminaLogoIcon } from "./icons/logo/numina-normal";
 
 type TabType = "soul" | "explore" | "synthesis";
 
@@ -51,7 +51,7 @@ export function AppContainer({ userProfile }: AppContainerProps) {
         {/* Status bar */}
         <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-2 z-40 absolute top-0 left-0 right-0 px-[24px]">
           <div></div>
-          <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
+          <NuminaLogoIcon />
           <AppDrawer
             isPremium={isPremium}
             portalContainer={shellRef}
@@ -67,12 +67,7 @@ export function AppContainer({ userProfile }: AppContainerProps) {
         </div>
 
         {/* Bottom navigation INSIDE container */}
-        <BottomNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          isPremium={isPremium}
-          onUpgrade={() => setShowSubscription(true)}
-        />
+        <BottomNavigation />
       </div>
 
       {/* Subscription Modal */}

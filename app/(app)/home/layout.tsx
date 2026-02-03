@@ -1,9 +1,9 @@
 "use client";
 
+import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
 import { BottomNavigation } from "@/components/navigation/bottom-navigation";
-import Image from "next/image";
 import { useRef, useState } from "react";
 
 export default function HomeLayout({
@@ -36,7 +36,7 @@ export default function HomeLayout({
       >
         <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-2 z-40 absolute top-0 left-0 right-0 px-[24px]">
           <div />
-          <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
+          <NuminaLogoIcon />
           <AppDrawer
             isPremium={false}
             portalContainer={shellRef}
@@ -44,7 +44,7 @@ export default function HomeLayout({
           />
         </div>
 
-        <div ref={scrollRef} className="flex-1 overflow-y-auto pt-19 w-full">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto pt-18 w-full">
           {children}
         </div>
 

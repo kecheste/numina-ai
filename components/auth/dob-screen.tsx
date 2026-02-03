@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify/react";
+import { NuminaLogoIcon } from "../icons/logo/numina-normal";
+import { searchLocations } from "@/lib/constants/locations";
 
 interface DOBScreenProps {
   onContinue: (dob: string) => void;
@@ -14,8 +15,8 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
   const [year, setYear] = useState<string | null>(null);
   const [month, setMonth] = useState<string | null>(null);
   const [day, setDay] = useState<string | null>(null);
-  const [time, setTime] = useState<string | null>(null);
-  const [place, setPlace] = useState<string | null>(null);
+  const [time, setTime] = useState<string>("");
+  const [place, setPlace] = useState<string>("");
 
   const currentYear = new Date().getFullYear();
   const minYear = currentYear - 21; // must be 21+
@@ -36,21 +37,13 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
     "December",
   ];
   const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
-  const times = ["I don’t know", "00:00", "06:00", "12:00", "18:00"];
-  const countries = [
-    "United States",
-    "United Kingdom",
-    "Canada",
-    "Australia",
-    "India",
-    "Germany",
-    "France",
-  ];
 
   const handleContinue = () => {
     if (year && month && day) {
       const monthIndex = months.indexOf(month) + 1;
-      const dob = `${year}-${String(monthIndex).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const dob = `${year}-${String(monthIndex).padStart(2, "0")}-${String(
+        day
+      ).padStart(2, "0")}`;
       onContinue(dob);
     }
   };
@@ -61,7 +54,7 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
     <div className="flex items-center justify-center bg-white h-screen overflow-hidden">
       <div className="w-full h-screen sm:max-w-[450px] bg-black overflow-y-auto flex flex-col items-center text-center px-[32px] pb-12 sm:pb-[4px] pt-4">
         <div className="flex justify-center mb-8">
-          <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
+          <NuminaLogoIcon />
         </div>
 
         <h1
@@ -71,7 +64,7 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
           }}
           className="text-[21px] font-[400] text-white mb-3"
         >
-          Lets begin your self-discovery.
+          Let's begin your self-discovery.
         </h1>
         <p
           style={{
@@ -80,7 +73,7 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
           }}
           className="text-[15px] font-[300] text-white mb-3"
         >
-          We’ll use your birth data to create your personalized Soul Map.
+          We'll use your birth data to create your personalized Soul Map.
         </p>
 
         <h2
@@ -107,17 +100,17 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
             options={months}
           />
           <Dropdown label="Day" value={day} onChange={setDay} options={days} />
-          <Dropdown
-            label="Time"
+          <TextInput
+            label="Time of Birth"
+            placeholder="00:00 or I don't know"
             value={time}
             onChange={setTime}
-            options={times}
           />
-          <Dropdown
+          <PlaceAutocomplete
             label="Place of Birth"
+            placeholder="Start typing a city..."
             value={place}
             onChange={setPlace}
-            options={countries}
           />
         </div>
 
@@ -205,6 +198,124 @@ function Dropdown({
               className="px-4 py-3 text-white text-center hover:bg-[#F2D08C33] cursor-pointer"
             >
               {opt}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TextInput({
+  label,
+  placeholder,
+  value,
+  onChange,
+}: {
+  label: string;
+  placeholder?: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="relative">
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder || label}
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "22px",
+        }}
+        className="w-full bg-black border border-[#F2D08CE0] rounded-[10px] px-4 py-4 text-[15px] font-[300] text-white text-center placeholder:text-white/50 focus:outline-none focus:border-[#F2D08C]"
+      />
+    </div>
+  );
+}
+
+function PlaceAutocomplete({
+  label,
+  placeholder,
+  value,
+  onChange,
+}: {
+  label: string;
+  placeholder?: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const handleInputChange = (inputValue: string) => {
+    onChange(inputValue);
+
+    if (inputValue.length >= 2) {
+      const results = searchLocations(inputValue, 8);
+      setSuggestions(results);
+      setIsOpen(results.length > 0);
+    } else {
+      setSuggestions([]);
+      setIsOpen(false);
+    }
+  };
+
+  const handleSelect = (location: string) => {
+    onChange(location);
+    setIsOpen(false);
+    setSuggestions([]);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={wrapperRef}>
+      <div className="relative">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => handleInputChange(e.target.value)}
+          onFocus={() => {
+            if (suggestions.length > 0) setIsOpen(true);
+          }}
+          placeholder={placeholder || label}
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "22px",
+          }}
+          className="w-full bg-black border border-[#F2D08CE0] rounded-[10px] px-4 py-4 pr-10 text-[15px] font-[300] text-white text-center placeholder:text-white/50 focus:outline-none focus:border-[#F2D08C]"
+        />
+      </div>
+
+      {isOpen && suggestions.length > 0 && (
+        <div
+          style={{
+            fontFamily: "var(--font-gotham)",
+            lineHeight: "22px",
+          }}
+          className="absolute left-0 right-0 mt-2 max-h-56 overflow-y-auto bg-black border border-[#F2D08CE0] rounded-[14px] z-50"
+        >
+          {suggestions.map((location, index) => (
+            <div
+              key={`${location}-${index}`}
+              onClick={() => handleSelect(location)}
+              className="px-4 py-3 text-white text-center hover:bg-[#F2D08C33] cursor-pointer text-[14px]"
+            >
+              {location}
             </div>
           ))}
         </div>

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import { RefObject } from "react";
 import { Icon } from "@iconify/react";
+import { useRouter } from "next/navigation";
 
 interface AppDrawerProps {
   isPremium: boolean;
@@ -24,15 +25,16 @@ export function AppDrawer({
   portalContainer,
 }: AppDrawerProps) {
   const { signOut } = useClerk();
+  const router = useRouter();
 
   const menuItems = [
-    { label: "My Tests" },
-    { label: "My Synthesis" },
-    { label: "Manage Subscription" },
-    { label: "Help / FAQ" },
-    { label: "Contact Support" },
-    { label: "Terms & Conditions" },
-    { label: "Privacy Policy" },
+    { label: "My Tests", href: "/home/tests" },
+    { label: "My Synthesis", href: "/home/synthesis" },
+    { label: "Manage Subscription", href: "/home/subscription" },
+    { label: "Help / FAQ", href: "/home/faq" },
+    { label: "Contact Support", href: "/home/contact" },
+    { label: "Terms & Conditions", href: "/home/terms-and-conditions" },
+    { label: "Privacy Policy", href: "/home/privacy-policy" },
   ];
 
   return (
@@ -94,6 +96,7 @@ export function AppDrawer({
                         after:via-[#5E5E5E]
                         after:to-[#6868681A]
                       "
+                      onClick={() => router.push(item.href)}
                     >
                       <span
                         style={{

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useEffect } from "react";
+import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 
 interface WelcomeScreenProps {
   onStartJourney: () => void;
@@ -33,7 +34,7 @@ export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
       >
         {/* Logo */}
         <div className="flex items-center justify-center mt-auto">
-          <Image src="/logo.png" width={191} height={44} alt="logo" />
+          <NuminaLogoIcon />
         </div>
 
         {/* Tagline */}

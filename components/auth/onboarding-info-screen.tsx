@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "../ui/button";
 import { SoulMapIcon } from "../icons/soul-map";
 import { PersonalityIcon } from "../icons/personality";
 import { AstrologyIcon } from "../icons/astrology";
 import { ChakraIcon } from "../icons/chakra";
 import { ReactNode } from "react";
+import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 
 interface OnboardingInfoScreenProps {
   userName: string;
@@ -41,7 +41,7 @@ export function OnboardingInfoScreen({
       >
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <Image src="/logo.png" alt="NuminaAI" width={180} height={40} />
+          <NuminaLogoIcon />
         </div>
 
         {/* Title */}
