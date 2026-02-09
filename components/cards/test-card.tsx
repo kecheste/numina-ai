@@ -9,6 +9,7 @@ interface TestCardProps {
     title: string;
     category: string;
     locked: boolean;
+    alreadyTaken: boolean;
     questions: number;
     completed?: boolean;
     icon: ReactNode;
@@ -48,7 +49,7 @@ export function TestCard({ test, onSelect }: TestCardProps) {
         md:min-h-[120px]
         md:px-4
         `,
-        test.locked
+        !test.alreadyTaken
           ? "border-[#F2D08C66] cursor-not-allowed"
           : "border-[#F2D08C] cursor-pointer",
       )}
@@ -56,7 +57,7 @@ export function TestCard({ test, onSelect }: TestCardProps) {
       <div
         className={cn(
           "flex items-center justify-center max-w-[68px] h-[68px]",
-          test.locked && "opacity-40",
+          !test.alreadyTaken && "opacity-40",
         )}
       >
         {test.icon}

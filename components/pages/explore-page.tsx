@@ -21,6 +21,7 @@ interface Test {
   questions: number;
   completed: boolean;
   icon: ReactNode;
+  alreadyTaken: boolean;
 }
 
 export function ExplorePage({ isPremium }: ExplorePageProps) {
@@ -60,6 +61,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
     ...test,
     locked: test.locked && !isPremium,
     completed: completedTests.includes(test.id),
+    alreadyTaken: test.alreadyTaken,
   }));
 
   const categories = Array.from(
@@ -70,25 +72,29 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
           id: test.categoryId,
           label: test.category,
         },
-      ])
-    ).values()
+      ]),
+    ).values(),
   );
 
   const handleTestSelect = (test: Test) => {
+    // First check if test was already taken (either from API or static data)
+    if (test.alreadyTaken || test.completed) {
+      setViewingResult(test.id);
+      return;
+    }
+
+    // If not taken, check if it's locked
     if (test.locked) {
       setLockedTestForIntro({ title: test.title });
       return;
     }
 
-    if (test.completed) {
-      setViewingResult(test.id);
-    } else {
-      setActiveTest({
-        id: test.id,
-        title: test.title,
-        category: test.category,
-      });
-    }
+    // If not taken and not locked, start the test
+    setActiveTest({
+      id: test.id,
+      title: test.title,
+      category: test.category,
+    });
   };
 
   if (activeTest) {
@@ -175,6 +181,9 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
         <TestIntro
           isPremium={isPremium}
           testTitle={lockedTestForIntro.title}
+          testDescription="
+            “Are you a soul seeded from the stars? This test helps uncover your cosmic ancestry — whether you resonate with the Pleiadians, Arcturians, or other galactic lineages. Explore your soul’s multidimensional heritage and how it shapes your intuition, mission, and energy.”
+          "
           onClose={() => setLockedTestForIntro(null)}
           onUpgrade={() => {
             setLockedTestForIntro(null);

@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ArrowLeft, Share2, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useRef } from "react";
+import { Icon } from "@iconify/react";
+import { NuminaLogoIcon } from "../icons/logo/numina-normal";
+import { AppDrawer } from "../navigation/app-drawer";
+import PageLoader from "../custom/loader";
 
 interface TestResultViewProps {
   testId: number;
@@ -11,12 +13,285 @@ interface TestResultViewProps {
   onBack: () => void;
 }
 
-interface TestResult {
-  personalityType: string;
-  insights: string[];
-  recommendations: string[];
-  score: number;
-}
+// Mock data for different test types
+const testResultsData: Record<
+  number,
+  {
+    subtitle: string;
+    mainResult: string;
+    description: string;
+    coreTraits: string[];
+    strengths: string[];
+    challenges: string[];
+    spiritualInsight: string;
+    chartData: {
+      number: string;
+      title: string;
+      line2: string;
+      line3: string;
+    }[];
+    synchronicities: { test: string; connection: string }[];
+  }
+> = {
+  // Astrology Chart (ID: 1)
+  1: {
+    subtitle: "Your Astrological Profile",
+    mainResult: "Scorpio Sun",
+    description:
+      "You're driven by depth, truth, and emotional mastery. You rarely settle for surface-level anything.",
+    coreTraits: [
+      "Intense",
+      "Intuitive",
+      "Transformative",
+      "Private",
+      "Magnetic",
+    ],
+    strengths: [
+      "Deeply perceptive",
+      "Natural investigator",
+      "Emotionally resilient",
+    ],
+    challenges: [
+      "Can become secretive",
+      "May struggle with trust",
+      "Tendency to hold grudges",
+    ],
+    spiritualInsight:
+      "Your path isn't about material success — it's about discovering inner truth and living in alignment with your soul. You're here to understand the mystery behind the visible world.",
+    chartData: [
+      {
+        number: "♏",
+        title: "Sun Sign",
+        line2: "Core identity",
+        line3: "intense and transformative",
+      },
+      {
+        number: "♍",
+        title: "Moon Sign",
+        line2: "Emotional self",
+        line3: "analytical and nurturing",
+      },
+      {
+        number: "♒",
+        title: "Rising Sign",
+        line2: "How others see you",
+        line3: "mysterious and magnetic",
+      },
+    ],
+    synchronicities: [
+      { test: "MBTI (INFJ)", connection: "both seek truth & meaning" },
+      {
+        test: "Chakra Profile",
+        connection: "intuition linked to Third Eye activation",
+      },
+      {
+        test: "Numerology",
+        connection: "Life Path 7 echoes the seeker energy",
+      },
+    ],
+  },
+  // Numerology (ID: 2)
+  2: {
+    subtitle: "Your Life Path Number",
+    mainResult: "7 - The Seeker",
+    description:
+      "You're a deep thinker, always seeking wisdom beneath the surface of life.",
+    coreTraits: [
+      "Introspective",
+      "Analytical",
+      "Spiritual",
+      "Private",
+      "Intuitive",
+    ],
+    strengths: [
+      "Deeply reflective and wise",
+      "Natural philosopher or mystic",
+      "High intuition",
+      "Independent mindset",
+    ],
+    challenges: [
+      "Can become isolated or emotionally distant",
+      "May struggle to trust others or express vulnerability",
+      "Tendency to overanalyze",
+    ],
+    spiritualInsight:
+      "Your path isn't about material success — it's about discovering inner truth and living in alignment with your soul. You're here to understand the mystery behind the visible world and guide others through your insight.",
+    chartData: [
+      {
+        number: "5",
+        title: "Soul Urge",
+        line2: "What your heart craves",
+        line3: "freedom, movement, adventure.",
+      },
+      {
+        number: "5",
+        title: "Personality",
+        line2: "What people see in you",
+        line3: "dynamic, quick, playful",
+      },
+      {
+        number: "6",
+        title: "Birthday",
+        line2: "Extra energy from the day you were born",
+        line3: "nurturer, beauty lover.",
+      },
+    ],
+    synchronicities: [
+      { test: "MBTI (INFJ)", connection: "both seek truth & meaning" },
+      {
+        test: "Chakra Profile",
+        connection: "intuition linked to Third Eye activation",
+      },
+      {
+        test: "Astrological Profile",
+        connection: "your Scorpio sun echoes the 7's intensity",
+      },
+    ],
+  },
+  // MBTI Type (ID: 7)
+  7: {
+    subtitle: "Your MBTI Type",
+    mainResult: "INFJ - The Advocate",
+    description:
+      "Thoughtful, visionary, and driven by deeper meaning — INFJs are introspective idealists who combine empathy with structure.",
+    coreTraits: [
+      "Intuitive",
+      "Empathetic",
+      "Private",
+      "Visionary",
+      "Determined",
+    ],
+    strengths: [
+      "Deep emotional intelligence",
+      "Strong moral compass",
+      "Creative problem solver",
+      "Inspiring leader",
+    ],
+    challenges: [
+      "Prone to burnout",
+      "Can be overly idealistic",
+      "Difficulty with criticism",
+    ],
+    spiritualInsight:
+      "You're here to guide and heal others through your unique combination of insight and compassion. Your purpose lies in making the invisible visible.",
+    chartData: [
+      {
+        number: "Ni",
+        title: "Dominant Function",
+        line2: "Introverted Intuition",
+        line3: "seeing patterns and possibilities",
+      },
+      {
+        number: "Fe",
+        title: "Auxiliary Function",
+        line2: "Extraverted Feeling",
+        line3: "harmonizing with others",
+      },
+      {
+        number: "Ti",
+        title: "Tertiary Function",
+        line2: "Introverted Thinking",
+        line3: "logical analysis",
+      },
+    ],
+    synchronicities: [
+      {
+        test: "Numerology",
+        connection: "Life Path 7 mirrors your seeking nature",
+      },
+      {
+        test: "Chakra Profile",
+        connection: "Crown Chakra activation aligns with intuition",
+      },
+      {
+        test: "Astrological Profile",
+        connection: "Water signs resonate with emotional depth",
+      },
+    ],
+  },
+  // Chakra Assessment Scan (ID: 13)
+  13: {
+    subtitle: "Your Chakra Alignment",
+    mainResult: "Third Eye Dominant",
+    description:
+      "Your energy flows most freely through your Third Eye Chakra, indicating heightened intuition and inner vision.",
+    coreTraits: [
+      "Spiritually attuned",
+      "Intuitive",
+      "Reflective",
+      "Connected",
+      "Wise",
+    ],
+    strengths: [
+      "Strong spiritual connection",
+      "Access to higher guidance",
+      "Natural healer",
+      "Transcendent perspective",
+    ],
+    challenges: [
+      "May feel disconnected from physical world",
+      "Root Chakra needs grounding",
+      "Can become overly ethereal",
+    ],
+    spiritualInsight:
+      "Your Third Eye activation suggests you're in a phase of spiritual awakening. Balance this with grounding practices to integrate insights into daily life.",
+    chartData: [
+      {
+        number: "7",
+        title: "Crown",
+        line2: "Active",
+        line3: "spiritual connection and universal consciousness",
+      },
+      {
+        number: "6",
+        title: "Third Eye",
+        line2: "Most active",
+        line3: "intuition, insight, and inner vision",
+      },
+      {
+        number: "4",
+        title: "Heart",
+        line2: "Balanced",
+        line3: "love, compassion, and emotional connection",
+      },
+      {
+        number: "3",
+        title: "Root",
+        line2: "Needs attention",
+        line3: "grounding and stability",
+      },
+    ],
+    synchronicities: [
+      {
+        test: "MBTI (INFJ)",
+        connection: "intuitive nature supports Third Eye activation",
+      },
+      {
+        test: "Numerology",
+        connection: "Life Path 7 aligns with spiritual seeking",
+      },
+      {
+        test: "Astrological Profile",
+        connection: "Neptune influence amplifies intuition",
+      },
+    ],
+  },
+};
+
+// Default fallback data
+const defaultResult = {
+  subtitle: "Your Result",
+  mainResult: "The Seeker",
+  description:
+    "You have a unique profile that combines multiple aspects of self-discovery.",
+  coreTraits: ["Intuitive", "Reflective", "Growth-oriented"],
+  strengths: ["Self-aware", "Open to learning", "Emotionally intelligent"],
+  challenges: ["May overthink", "Can be too self-critical"],
+  spiritualInsight:
+    "Your journey is about continuous growth and self-discovery. Trust the process.",
+  chartData: [],
+  synchronicities: [],
+};
 
 export function TestResultView({
   testId,
@@ -24,199 +299,233 @@ export function TestResultView({
   category,
   onBack,
 }: TestResultViewProps) {
-  const [testResult, setResult] = useState<TestResult | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchResult = async () => {
-      try {
-        const res = await fetch("/api/tests/results", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ testId }),
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setResult({
-            personalityType: data.personalityType,
-            insights: data.insights,
-            recommendations: data.recommendations,
-            score: data.score,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching result:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchResult();
-  }, [testId]);
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-        <div className="text-center">
-          <div className="text-primary text-3xl mb-4">✨</div>
-          <p className="text-foreground">Loading your results...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Fallback mock test results
-  const mockResults: Record<
-    number,
-    {
-      personality: string;
-      traits: string[];
-      insights: string[];
-      suggestions: string[];
-    }
-  > = {
-    1: {
-      personality: "The Cosmic Dreamer",
-      traits: ["Imaginative", "Intuitive", "Empathetic", "Free-spirited"],
-      insights: [
-        "You are deeply connected to the spiritual realm with strong intuitive abilities.",
-        "Your celestial alignment suggests a natural inclination toward creativity and emotional intelligence.",
-        "Venus in your chart emphasizes harmony and aesthetic appreciation.",
-      ],
-      suggestions: [
-        "Practice meditation to deepen your intuitive connection",
-        "Explore creative outlets to channel your imaginative energy",
-        "Trust your instincts when making important decisions",
-        "Seek balance between material and spiritual pursuits",
-      ],
-    },
-    2: {
-      personality: "The Analytical Mind",
-      traits: ["Logical", "Detail-oriented", "Systematic", "Pragmatic"],
-      insights: [
-        "Your cognitive pattern shows exceptional analytical abilities.",
-        "You excel at problem-solving and strategic thinking.",
-        "Your mind naturally seeks patterns and connections.",
-      ],
-      suggestions: [
-        "Channel your analytical skills into leadership roles",
-        "Practice mindfulness to balance logic with intuition",
-        "Share your insights with others to amplify impact",
-        "Allow yourself time for creative exploration",
-      ],
-    },
-    3: {
-      personality: "The Harmonious Soul",
-      traits: ["Balanced", "Diplomatic", "Patient", "Compassionate"],
-      insights: [
-        "You naturally seek balance in all areas of life.",
-        "Your numerological profile indicates healing and nurturing energy.",
-        "People are drawn to your calm and grounded presence.",
-      ],
-      suggestions: [
-        "Share your peaceful energy with others",
-        "Explore mentoring or counseling roles",
-        "Set boundaries to protect your energy",
-        "Engage in activities that nourish your soul",
-      ],
-    },
-  };
-
-  // Use API result or fallback to mock
-  const displayResult = testResult || mockResults[testId] || mockResults[1];
-  const finalResult = {
-    personality: displayResult.personalityType || displayResult.personality,
-    insights: displayResult.insights,
-    suggestions: displayResult.recommendations || displayResult.suggestions,
-    score: Math.round((displayResult.score || 7.5) * 10),
-  };
+  const shellRef = useRef<HTMLDivElement>(null);
+  const result = testResultsData[testId] || defaultResult;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto">
-        <div className="p-4 pb-24 space-y-6">
-          {/* Header */}
-          <div className="flex items-center gap-3 pt-2">
-            <button
-              onClick={onBack}
-              className="p-2 rounded-lg hover:bg-gray-900 transition-colors"
-            >
-              <ArrowLeft size={24} className="text-[#F2D08C]" />
-            </button>
-            <div className="flex-1">
-              <h2 className="font-heading text-xl text-[#F2D08C]">
-                {testTitle}
-              </h2>
-              <p className="text-xs text-gray-400">{category}</p>
-            </div>
-          </div>
-
-          {/* Main Personality Result */}
-          <div className="bg-gradient-to-br from-[#F2D08C]/20 to-[#F2D08C]/5 border-2 border-[#F2D08C]/30 rounded-2xl p-6 space-y-4">
-            <p className="text-xs font-semibold text-[#F2D08C] uppercase tracking-wider">
-              Your Profile
-            </p>
-            <h3 className="font-heading text-2xl text-[#F2D08C]">
-              {finalResult.personality}
-            </h3>
-            <p className="text-sm text-gray-300">
-              Score: {finalResult.score}/100
-            </p>
-          </div>
-
-          {/* Insights */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
-              Key Insights
-            </h3>
-            <div className="space-y-3">
-              {finalResult.insights.map((insight, idx) => (
-                <div
-                  key={idx}
-                  className="bg-gray-900/60 border border-gray-800 rounded-lg p-4"
-                >
-                  <p className="text-sm text-gray-300 leading-relaxed">
-                    {insight}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Suggestions */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
-              Recommendations
-            </h3>
-            <div className="space-y-2">
-              {finalResult.suggestions.map((suggestion, idx) => (
-                <div
-                  key={idx}
-                  className="flex gap-3 p-3 bg-gray-900/40 border border-gray-800 rounded-lg"
-                >
-                  <div className="w-1.5 h-1.5 bg-[#F2D08C] rounded-full mt-1.5 flex-shrink-0" />
-                  <p className="text-sm text-gray-300">{suggestion}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            <Button className="flex-1 bg-[#F2D08C] text-black hover:bg-[#F2D08C]/90 flex items-center justify-center gap-2">
-              <Share2 size={16} />
-              Share
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 border-[#F2D08C]/50 text-[#F2D08C] flex items-center justify-center gap-2 bg-transparent hover:bg-[#F2D08C]/10"
-            >
-              <Download size={16} />
-              Export
-            </Button>
-          </div>
+      <div
+        ref={shellRef}
+        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto"
+      >
+        <PageLoader>
+        {/* Top Bar */}
+        <div className="sticky top-0 flex items-center justify-between w-full bg-black px-[24px] py-2 border-b border-gray-800/30 z-10">
+          <button onClick={onBack} className="cursor-pointer p-1">
+            <Icon icon="icons8:left-arrow" color="#D9D9D9" width={24} />
+          </button>
+          <NuminaLogoIcon />
+          <AppDrawer
+            isPremium={false}
+            portalContainer={shellRef}
+            onLogout={() => {}}
+          />
         </div>
+
+        {/* Content */}
+        <div className="px-[24px] py-6 pb-12">
+          {/* Title */}
+          <div className="text-center">
+            <h1
+              style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
+              className="text-[21px] font-[400] text-white mb-1"
+            >
+              {testTitle}
+            </h1>
+            <p
+              style={{ fontFamily: "var(--font-gotham)" }}
+              className="text-[13px] font-[300] text-[#F2D08C]"
+            >
+              {result.subtitle}
+            </p>
+          </div>
+
+          {/* Main Result */}
+          <div className="text-center">
+            <h2
+              style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
+              className="text-[21px] font-[400] text-white mb-1"
+            >
+              {result.mainResult}
+            </h2>
+            <p
+              style={{ fontFamily: "var(--font-gotham)" }}
+              className="text-[13px] font-[300] text-[#FFFFFF] mt-2 px-4"
+            >
+              {result.description}
+            </p>
+          </div>
+
+          {/* Core Traits */}
+          <div className="text-left my-4">
+            <h3
+              style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
+              className="text-[15px] font-[350] text-white"
+            >
+              Core Traits
+            </h3>
+            <div className="flex flex-wrap gap-1">
+              {result.coreTraits.map((trait, idx) => (
+                <span
+                  key={idx}
+                  className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                    lineHeight: "12px",
+                  }}
+                >
+                  <span className="text-[12px] font-[300] text-[#F2D08C]">
+                    {trait}
+                  </span>
+                </span>
+              ))}
+            </div>
+            <p
+              style={{ fontFamily: "var(--font-gotham)" }}
+              className="text-[13px] font-[300] text-[#FFFFFF] mt-3"
+            >
+              You walk the hidden paths of knowledge, questioning reality and
+              searching for truth that others often overlook.
+            </p>
+          </div>
+
+          {/* Strengths */}
+          <div className="text-left mb-4">
+            <h3
+              style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
+              className="text-[15px] font-[350] text-white"
+            >
+              Strengths
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {result.strengths.map((strength, idx) => (
+                <span
+                  key={idx}
+                  className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                    lineHeight: "12px",
+                  }}
+                >
+                  <span className="text-[12px] font-[300] text-[#F2D08C]">
+                    {strength}
+                  </span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Challenges */}
+          <div className="text-left mb-4">
+            <h3
+              style={{ fontFamily: "var(--font-gotham)", lineHeight: "24px" }}
+              className="text-[15px] font-[600] text-white mb-3"
+            >
+              Challenges
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {result.challenges.map((challenge, idx) => (
+                <span
+                  key={idx}
+                  className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                    lineHeight: "12px",
+                  }}
+                >
+                  <span className="text-[12px] font-[300] text-white">
+                    {challenge}
+                  </span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Spiritual Insight */}
+          <div className="text-left mb-4">
+            <h3
+              style={{ fontFamily: "var(--font-gotham)", lineHeight: "24px" }}
+              className="text-[15px] font-[600] text-white mb-1"
+            >
+              Spiritual Insight
+            </h3>
+            <p
+              style={{ fontFamily: "var(--font-gotham)" }}
+              className="text-[13px] font-[300] text-white"
+            >
+              {result.spiritualInsight}
+            </p>
+          </div>
+
+          {/* Chart Data (e.g., Numerology in Your Chart) */}
+          {result.chartData.length > 0 && (
+            <div className="text-left mb-4">
+              <h3
+                style={{ fontFamily: "var(--font-gotham)", lineHeight: "24px" }}
+                className="text-[15px] font-[600] text-white mb-1"
+              >
+                {testTitle} in Your Chart
+              </h3>
+              <div className="space-y-3">
+                {result.chartData.map((item, idx) => (
+                  <div key={idx}>
+                    <p
+                      style={{ fontFamily: "var(--font-gotham)" }}
+                      className="text-[14px] font-[400] text-[#F2D08C]"
+                    >
+                      {item.number} {item.title}
+                    </p>
+                    <p
+                      style={{ fontFamily: "var(--font-gotham)" }}
+                      className="text-[13px] font-[300] text-[#F2D08C]"
+                    >
+                      {item.line2}
+                    </p>
+                    <p
+                      style={{ fontFamily: "var(--font-gotham)" }}
+                      className="text-[13px] font-[400] text-[#F2D08C] italic"
+                    >
+                      {item.line3}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Synchronicities */}
+          {result.synchronicities.length > 0 && (
+            <div className="text-left mb-4">
+              <h3
+                style={{ fontFamily: "var(--font-gotham)", lineHeight: "24px" }}
+                className="text-[15px] font-[600] text-white mb-1"
+              >
+                Synchronicities
+              </h3>
+              <p
+                style={{ fontFamily: "var(--font-gotham)", lineHeight: "20px" }}
+                className="text-[12px] font-[300] text-[#FFFFFF]"
+              >
+                This Life Path overlaps with your:
+              </p>
+              <div className="space-y-2">
+                {result.synchronicities.map((sync, idx) => (
+                  <p
+                    key={idx}
+                    style={{
+                      fontFamily: "var(--font-gotham)",
+                    }}
+                    className="text-[13px] font-[300] text-white"
+                  >
+                    • <span className="font-[600]">{sync.test}</span>:{" "}
+                    {sync.connection}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        </PageLoader>
       </div>
     </div>
   );
