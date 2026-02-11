@@ -56,7 +56,7 @@ export const allTests: Test[] = [
     category: "Cosmic Identity",
     categoryId: "cosmic",
     locked: false,
-    alreadyTaken: true,
+    alreadyTaken: true, // result screen: TestResultView (numerology)
     questions: 10,
     completed: false,
     icon: <NumerologyIcon />,
@@ -67,7 +67,7 @@ export const allTests: Test[] = [
     category: "Cosmic Identity",
     categoryId: "cosmic",
     locked: true,
-    alreadyTaken: false,
+    alreadyTaken: true, // result screen: TestResultStarseedView
     questions: 9,
     completed: false,
     icon: <StarseedIcon />,
@@ -113,7 +113,7 @@ export const allTests: Test[] = [
     category: "Psychological Profile",
     categoryId: "psychological",
     locked: false,
-    alreadyTaken: true,
+    alreadyTaken: false,
     questions: 16,
     completed: false,
     icon: <MBTITypeIcon />,
@@ -181,7 +181,7 @@ export const allTests: Test[] = [
     category: "Energy & Wellbeing",
     categoryId: "energy",
     locked: false,
-    alreadyTaken: true,
+    alreadyTaken: true, // result screen: TestResultChakraView
     questions: 8,
     completed: false,
     icon: <ChakraAlignmentIcon />,
