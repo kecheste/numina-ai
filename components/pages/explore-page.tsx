@@ -4,6 +4,8 @@ import { useState, useEffect, ReactNode } from "react";
 import { TestCard } from "@/components/cards/test-card";
 import { TestFlow } from "@/components/test/test-flow";
 import { TestResultView } from "@/components/test/test-result-view";
+import { TestResultStarseedView } from "@/components/test/test-result-starseed-view";
+import { TestResultChakraView } from "@/components/test/test-result-chakra-view";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
 import { allTests } from "@/lib/constants/allTests";
 import { TestIntro } from "../modals/test-intro";
@@ -77,19 +79,16 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   );
 
   const handleTestSelect = (test: Test) => {
-    // First check if test was already taken (either from API or static data)
     if (test.alreadyTaken || test.completed) {
       setViewingResult(test.id);
       return;
     }
 
-    // If not taken, check if it's locked
     if (test.locked) {
       setLockedTestForIntro({ title: test.title });
       return;
     }
 
-    // If not taken and not locked, start the test
     setActiveTest({
       id: test.id,
       title: test.title,
@@ -110,19 +109,43 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
 
   if (viewingResult !== null) {
     const test = allTests.find((t) => t.id === viewingResult)!;
+    const onBackResult = () => setViewingResult(null);
+
+    if (test.id === 3) {
+      return (
+        <TestResultStarseedView testTitle={test.title} onBack={onBackResult} />
+      );
+    }
+
+    if (test.id === 2) {
+      return (
+        <TestResultView
+          testId={test.id}
+          testTitle={test.title}
+          category={test.category}
+          onBack={onBackResult}
+        />
+      );
+    }
+
+    if (test.id === 13) {
+      return (
+        <TestResultChakraView testTitle={test.title} onBack={onBackResult} />
+      );
+    }
+
     return (
       <TestResultView
         testId={test.id}
         testTitle={test.title}
         category={test.category}
-        onBack={() => setViewingResult(null)}
+        onBack={onBackResult}
       />
     );
   }
 
   return (
     <div className="pb-24 space-y-6">
-      {/* Header */}
       <div className="text-center">
         <h1
           style={{
@@ -144,7 +167,6 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
         </p>
       </div>
 
-      {/* Categories */}
       {categories.map((cat) => {
         const categoryTests = tests.filter((t) => t.categoryId === cat.id);
 

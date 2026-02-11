@@ -124,7 +124,7 @@ export function TestFlow({
         delay: 150,
         tolerance: 5,
       },
-    })
+    }),
   );
 
   const handleBack = () => {
@@ -386,7 +386,7 @@ export function TestFlow({
           </div>
         </div>
         {/* Continue */}
-        <div className="px-[32px] w-full mt-auto mb-8">
+        <div className="px-[32px] w-full mt-auto pt-8 mb-8">
           <Button
             className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[67px] text-black"
             style={{
