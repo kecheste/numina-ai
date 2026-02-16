@@ -24,6 +24,7 @@ interface Test {
   completed: boolean;
   icon: ReactNode;
   alreadyTaken: boolean;
+  description: string;
 }
 
 export function ExplorePage({ isPremium }: ExplorePageProps) {
@@ -41,6 +42,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [lockedTestForIntro, setLockedTestForIntro] = useState<{
     title: string;
+    description: string;
   } | null>(null);
   const [completedTests, setCompletedTests] = useState<number[]>([]);
 
@@ -64,6 +66,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
     locked: test.locked && !isPremium,
     completed: completedTests.includes(test.id),
     alreadyTaken: test.alreadyTaken,
+    description: test.description || "",
   }));
 
   const categories = Array.from(
@@ -85,7 +88,10 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
     }
 
     if (test.locked) {
-      setLockedTestForIntro({ title: test.title });
+      setLockedTestForIntro({
+        title: test.title,
+        description: test.description,
+      });
       return;
     }
 
@@ -203,9 +209,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
         <TestIntro
           isPremium={isPremium}
           testTitle={lockedTestForIntro.title}
-          testDescription="
-            “Are you a soul seeded from the stars? This test helps uncover your cosmic ancestry — whether you resonate with the Pleiadians, Arcturians, or other galactic lineages. Explore your soul’s multidimensional heritage and how it shapes your intuition, mission, and energy.”
-          "
+          testDescription={lockedTestForIntro.description}
           onClose={() => setLockedTestForIntro(null)}
           onUpgrade={() => {
             setLockedTestForIntro(null);
