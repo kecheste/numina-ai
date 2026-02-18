@@ -1,0 +1,122 @@
+"use client";
+
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  clearStoredToken,
+  setStoredToken,
+  getStoredToken,
+  apiGetMe,
+  apiLogin,
+  apiRegister,
+  type UserProfile,
+  type RegisterPayload,
+} from "@/lib/api-client";
+
+interface AuthState {
+  user: UserProfile | null;
+  token: string | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+}
+
+interface AuthContextValue extends AuthState {
+  login: (email: string, password: string) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<void>;
+  logout: () => void;
+  refreshUser: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [token, setTokenState] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const refreshUser = useCallback(async () => {
+    const t = getStoredToken();
+    if (!t) {
+      setTokenState(null);
+      setUser(null);
+      return;
+    }
+    setTokenState(t);
+    try {
+      const profile = await apiGetMe();
+      setUser(profile);
+    } catch {
+      clearStoredToken();
+      setTokenState(null);
+      setUser(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    const t = getStoredToken();
+    if (!t) {
+      setTokenState(null);
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+    setTokenState(t);
+    apiGetMe()
+      .then((profile) => {
+        setUser(profile);
+      })
+      .catch(() => {
+        clearStoredToken();
+        setTokenState(null);
+        setUser(null);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  const login = useCallback(
+    async (email: string, password: string) => {
+      const { access_token } = await apiLogin(email, password);
+      setStoredToken(access_token);
+      setTokenState(access_token);
+      const profile = await apiGetMe();
+      setUser(profile ?? null);
+    },
+    []
+  );
+
+  const register = useCallback(async (payload: RegisterPayload) => {
+    const { access_token } = await apiRegister(payload);
+    setStoredToken(access_token);
+    setTokenState(access_token);
+    const profile = await apiGetMe();
+    setUser(profile ?? null);
+  }, []);
+
+  const logout = useCallback(() => {
+    clearStoredToken();
+    setTokenState(null);
+    setUser(null);
+  }, []);
+
+  const value: AuthContextValue = {
+    user,
+    token,
+    isLoading,
+    isAuthenticated: !!token && !!user,
+    login,
+    register,
+    logout,
+    refreshUser,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth(): AuthContextValue {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return ctx;
+}

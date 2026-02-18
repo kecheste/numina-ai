@@ -1,22 +1,22 @@
-import { ObjectId } from "mongodb";
-
 export interface UserProfile {
-  _id?: ObjectId;
-  clerkId: string;
+  id: number;
   email: string;
-  name: string;
-  dateOfBirth: string;
-  isPremium: boolean;
-  subscriptionStatus: "free" | "active" | "cancelled";
-  subscriptionId?: string;
-  stripeCustomerId?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  name: string | null;
+  birth_year: number | null;
+  birth_month: number | null;
+  birth_day: number | null;
+  birth_time: string | null;
+  birth_place: string | null;
+  is_premium: boolean;
+  subscription_status: string;
+  is_active: boolean;
+  role: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface TestResult {
-  _id?: ObjectId;
-  userId: string;
+  userId: number;
   testId: number;
   testTitle: string;
   category: string;
@@ -29,8 +29,7 @@ export interface TestResult {
 }
 
 export interface UserTestRecord {
-  _id?: ObjectId;
-  clerkId: string;
+  userId: number;
   testId: number;
   completed: boolean;
   completedAt?: Date;

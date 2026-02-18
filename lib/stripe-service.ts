@@ -33,7 +33,7 @@ export async function createCheckoutSession(
   return session;
 }
 
-export async function createOrGetCustomer(email: string, clerkId: string) {
+export async function createOrGetCustomer(email: string, userId: string) {
   // Search for existing customer
   const customers = await stripe.customers.list({
     email,
@@ -48,7 +48,7 @@ export async function createOrGetCustomer(email: string, clerkId: string) {
   const customer = await stripe.customers.create({
     email,
     metadata: {
-      clerkId,
+      userId,
     },
   });
 

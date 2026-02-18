@@ -13,17 +13,21 @@ type TabType = "soul" | "explore" | "synthesis";
 
 interface AppContainerProps {
   userProfile?: {
-    isPremium: boolean;
+    is_premium: boolean;
     email: string;
-    name: string;
-    dateOfBirth: string;
+    name: string | null;
+    birth_year: number | null;
+    birth_month: number | null;
+    birth_day: number | null;
+    birth_time: string | null;
+    birth_place: string | null;
   } | null;
 }
 
 export function AppContainer({ userProfile }: AppContainerProps) {
   const shellRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<TabType>("soul");
-  const [isPremium, setIsPremium] = useState(userProfile?.isPremium || false);
+  const [isPremium, setIsPremium] = useState(userProfile?.is_premium || false);
   const [showSubscription, setShowSubscription] = useState(false);
 
   return (

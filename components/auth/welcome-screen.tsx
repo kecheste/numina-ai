@@ -7,9 +7,10 @@ import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 
 interface WelcomeScreenProps {
   onStartJourney: () => void;
+  onLogin?: () => void;
 }
 
-export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
+export function WelcomeScreen({ onStartJourney, onLogin }: WelcomeScreenProps) {
   return (
     <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
       <div
@@ -74,6 +75,18 @@ export function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           >
             Start Your Journey
           </Button>
+          {onLogin && (
+            <p className="text-xs text-gray-400 mt-4">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={onLogin}
+                className="text-[#F2D08C] hover:text-[#F2D08CC0 font-medium transition-colors"
+              >
+                Log in
+              </button>
+            </p>
+          )}
         </div>
       </div>
     </div>

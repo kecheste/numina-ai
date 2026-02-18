@@ -42,22 +42,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   const [lockedTestForIntro, setLockedTestForIntro] = useState<{
     title: string;
   } | null>(null);
-  const [completedTests, setCompletedTests] = useState<number[]>([]);
-
-  useEffect(() => {
-    const fetchCompletedTests = async () => {
-      try {
-        const res = await fetch("/api/tests/results");
-        if (res.ok) {
-          const { results } = await res.json();
-          setCompletedTests(results.map((r: any) => r.testId));
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchCompletedTests();
-  }, []);
+  const [completedTests] = useState<number[]>([]);
 
   const tests: Test[] = allTests.map((test) => ({
     ...test,

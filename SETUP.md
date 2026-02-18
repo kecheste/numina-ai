@@ -4,10 +4,9 @@
 
 Configure the following environment variables in your Vercel project:
 
-### Clerk Authentication
+### Backend API (Authentication)
 
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Get from Clerk dashboard
-- `CLERK_SECRET_KEY` - Get from Clerk dashboard
+- `NEXT_PUBLIC_API_URL` - Backend API base URL (e.g. `http://localhost:8000` for local, or your deployed backend URL). The frontend uses this for login, register, and `/api/v1/users/me`.
 
 ### MongoDB Database
 
@@ -24,12 +23,10 @@ Configure the following environment variables in your Vercel project:
 
 ## Setup Steps
 
-### 1. Clerk Authentication Setup
+### 1. Backend and Authentication
 
-1. Create account at https://clerk.com
-2. Create a new application
-3. Copy NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY
-4. Configure allowed redirect URIs to include your app URL
+1. Run the Numina backend (see backend README): set `DATABASE_URL`, `JWT_SECRET_KEY`, etc., then `uv run uvicorn app.main:app --reload`.
+2. Set `NEXT_PUBLIC_API_URL` in the frontend to your backend URL (e.g. `http://localhost:8000`).
 
 ### 2. MongoDB Setup
 
@@ -52,18 +49,9 @@ Configure the following environment variables in your Vercel project:
 
 The MongoDB database automatically uses the following collections:
 
-### users
+### users (backend / Postgres)
 
-- clerkId (string, required)
-- email (string, required)
-- name (string, required)
-- dateOfBirth (string, required)
-- isPremium (boolean)
-- subscriptionStatus (string: 'free' | 'active' | 'cancelled')
-- subscriptionId (string, optional)
-- stripeCustomerId (string, optional)
-- createdAt (date)
-- updatedAt (date)
+User data is stored in the backend (Postgres). Profile is returned from `GET /api/v1/users/me` (id, email, name, birth_year, birth_month, birth_day, birth_time, birth_place, is_premium, subscription_status, etc.).
 
 ### testResults
 
@@ -80,7 +68,7 @@ The MongoDB database automatically uses the following collections:
 
 ### userTestRecords
 
-- clerkId (string, required)
+- userId (number, required)
 - testId (number, required)
 - completed (boolean)
 - completedAt (date, optional)
@@ -89,9 +77,9 @@ The MongoDB database automatically uses the following collections:
 
 ### Authentication
 
-- Clerk-based authentication with email/password
-- DOB stored as metadata
-- User profiles with email and name
+- Backend JWT authentication (register with name, email, password, date of birth; login with email/password)
+- DOB collected on DOB screen and sent on register
+- User profiles from backend `GET /api/v1/users/me`
 
 ### Tests
 
@@ -117,7 +105,7 @@ The MongoDB database automatically uses the following collections:
 
 ## Testing
 
-1. Create account with Clerk
+1. Create account via frontend (DOB → Register with name, email, password)
 2. Complete DOB onboarding
 3. Take first free test (Birth Chart Reading)
 4. View results
