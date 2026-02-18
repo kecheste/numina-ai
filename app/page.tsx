@@ -2,19 +2,17 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Home() {
   const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.replace("/welcome");
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [router]);
+    if (isLoading) return;
+    router.replace(isAuthenticated ? "/home" : "/welcome");
+  }, [router, isAuthenticated, isLoading]);
 
   return (
     <div className="flex h-screen bg-white sm:items-center sm:justify-center">

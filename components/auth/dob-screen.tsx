@@ -5,9 +5,10 @@ import { Button } from "../ui/button";
 import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 import { searchLocations } from "@/lib/constants/locations";
+import type { BirthData } from "@/lib/birth-data";
 
 interface DOBScreenProps {
-  onContinue: (dob: string) => void;
+  onContinue: (data: BirthData) => void;
   onBack: () => void;
 }
 
@@ -41,10 +42,17 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
   const handleContinue = () => {
     if (year && month && day) {
       const monthIndex = months.indexOf(month) + 1;
-      const dob = `${year}-${String(monthIndex).padStart(2, "0")}-${String(
+      const dateOfBirth = `${year}-${String(monthIndex).padStart(2, "0")}-${String(
         day
       ).padStart(2, "0")}`;
-      onContinue(dob);
+      onContinue({
+        dateOfBirth,
+        birthYear: year,
+        birthMonth: String(monthIndex),
+        birthDay: day,
+        birthTime: time,
+        birthPlace: place,
+      });
     }
   };
 

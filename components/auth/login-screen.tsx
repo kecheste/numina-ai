@@ -1,80 +1,145 @@
-'use client'
+"use client";
 
-import React from "react"
-
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Sparkles } from 'lucide-react'
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 
 interface LoginScreenProps {
-  onLoginSuccess: () => void
-  onSwitchToRegister: () => void
+  onLoginSuccess: (email: string, password: string) => void | Promise<void>;
+  onSwitchToRegister: () => void;
+  error?: string | null;
 }
 
-export function LoginScreen({ onLoginSuccess, onSwitchToRegister }: LoginScreenProps) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+export function LoginScreen({
+  onLoginSuccess,
+  onSwitchToRegister,
+  error,
+}: LoginScreenProps) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Mock authentication
+    e.preventDefault();
     if (email && password) {
-      onLoginSuccess()
+      void Promise.resolve(onLoginSuccess(email, password));
     }
-  }
+  };
+
+  const isComplete = email.trim().length > 0 && password.length > 0;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4">
-      <div className="w-full max-w-[450px] aspect-[9/20] bg-black rounded-3xl shadow-2xl overflow-hidden border-8 border-gray-900 flex flex-col justify-between p-6">
-        {/* Header */}
-        <div className="flex flex-col items-center gap-4 mt-12">
-          <div className="flex items-center gap-2">
-            <Sparkles className="text-primary" size={32} />
-            <h1 className="font-heading text-3xl text-primary">Numina</h1>
-          </div>
-          <p className="text-muted-foreground text-sm text-center">Your journey to self-discovery begins here</p>
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
+      <div
+        className="
+          w-full
+          h-screen
+          sm:min-h-0
+          sm:max-w-[450px]
+          sm:aspect-[9/20]
+          bg-black
+          overflow-y-auto
+          sm:overflow-hidden
+          flex
+          flex-col
+          items-center
+          text-center
+          px-[37px]
+          pb-12
+          pt-4
+        "
+      >
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <NuminaLogoIcon />
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-foreground mb-2">Email</label>
-            <Input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-gray-900 border-gray-700 text-foreground placeholder:text-gray-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-foreground mb-2">Password</label>
-            <Input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-gray-900 border-gray-700 text-foreground placeholder:text-gray-500"
-            />
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full bg-primary text-primary-foreground font-semibold mt-2 hover:bg-primary/90 transition-colors"
+        {/* Content */}
+        <div className="flex flex-col items-center text-center mt-auto">
+          <h1
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "33px",
+            }}
+            className="text-[18px] font-bold text-white mb-3"
           >
-            Enter
-          </Button>
+            Welcome back
+          </h1>
+
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "22px",
+            }}
+            className="text-[15px] font-light text-[#9ca3af] max-w-[320px]"
+          >
+            Enter your email and password to continue your journey.
+          </p>
+        </div>
+
+        {error && (
+          <p className="text-sm text-red-400 mt-2 max-w-[320px]">{error}</p>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleLogin} className="mt-10 space-y-4 w-full">
+          <GoldInput
+            placeholder="Your E-mail"
+            value={email}
+            onChange={setEmail}
+            type="email"
+          />
+          <GoldInput
+            placeholder="Password"
+            value={password}
+            onChange={setPassword}
+            type="password"
+          />
+
+          {/* CTA */}
+          <div className="pt-4 w-full">
+            <Button
+              type="submit"
+              disabled={!isComplete}
+              style={{
+                fontFamily: "var(--font-arp80)",
+                fontWeight: 400,
+                lineHeight: "33px",
+              }}
+              className="
+                w-full
+                h-[60px]
+                sm:h-[67px]
+                bg-[#F2D08CE0]
+                hover:bg-[#F2D08CC0]
+                cursor-pointer
+                text-black
+                rounded-[10px]
+                text-[18px]
+                sm:text-[21px]
+                transition-colors
+                disabled:opacity-50
+                disabled:cursor-not-allowed
+              "
+            >
+              Enter
+            </Button>
+          </div>
         </form>
 
         {/* Register link */}
-        <div className="text-center">
-          <p className="text-xs text-muted-foreground">
-            New to Numina?{' '}
+        <div className="mb-auto pt-6 w-full text-center">
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "22px",
+            }}
+            className="text-[15px] font-light text-[#9ca3af]"
+          >
+            New to Numina?{" "}
             <button
+              type="button"
               onClick={onSwitchToRegister}
-              className="text-primary hover:text-primary/80 font-semibold transition-colors"
+              className="text-[#F2D08C] hover:text-[#F2D08CC0 font-medium transition-colors"
             >
               Create Account
             </button>
@@ -82,5 +147,46 @@ export function LoginScreen({ onLoginSuccess, onSwitchToRegister }: LoginScreenP
         </div>
       </div>
     </div>
-  )
+  );
+}
+
+function GoldInput({
+  placeholder,
+  value,
+  onChange,
+  type = "text",
+}: {
+  placeholder: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+}) {
+  return (
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="
+        w-full
+        bg-black
+        border
+        border-[#F2D08CE0]
+        rounded-[10px]
+        px-4
+        py-4
+        text-[15px]
+        text-white
+        placeholder:text-[#9ca3af]
+        focus:outline-none
+        text-center
+        font-light
+      "
+      style={{
+        fontFamily: "var(--font-gotham)",
+        fontWeight: 300,
+        lineHeight: "22px",
+      }}
+    />
+  );
 }

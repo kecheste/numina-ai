@@ -1,6 +1,6 @@
 # Numina - Spiritual Intelligence Platform
 
-A premium spiritual assessment platform combining astrology, psychology, numerology, and wellness guidance. Built with Next.js, Clerk, MongoDB, Stripe, and AI.
+A premium spiritual assessment platform combining astrology, psychology, numerology, and wellness guidance. Built with Next.js, backend JWT auth, MongoDB, Stripe, and AI.
 
 ## 🌟 Features
 
@@ -8,7 +8,7 @@ A premium spiritual assessment platform combining astrology, psychology, numerol
 
 1. **Welcome Screen** - Beautiful landing with "Discover your unique soul map. Powered by AI, psychology & mysticism."
 2. **Birth Date Collection** - Stored as metadata for personalization
-3. **User Registration** - Name, email, password via Clerk
+3. **User Registration** - Date of birth (DOB screen), then full name, email, and password via backend API
 4. **Onboarding Info** - Learn about the 5 energy pillars and features
 5. **First Test** - Immediate engagement with "Cosmic Alignment" test
 
@@ -80,14 +80,14 @@ Each test returns AI-generated insights:
 
 ### Backend (Next.js API Routes)
 
-- **Clerk** - User authentication and sessions
+- **Backend API** - JWT authentication (login/register), user profile
 - **MongoDB** - Data persistence
 - **Stripe** - Payment processing
 - **Mock AI Service** - Personality generation (extensible)
 
 ### Security
 
-- Clerk middleware for protected routes
+- Auth context and protected /home routes (redirect to /welcome if not logged in)
 - Stripe webhook signature verification
 - Environment variables for secrets
 - User data isolation
@@ -99,16 +99,13 @@ Each test returns AI-generated insights:
 
 ```typescript
 {
-  clerkId: string,           // Clerk user ID
-  email: string,             // Email address
-  name: string,              // Full name
-  dateOfBirth: string,       // ISO date (YYYY-MM-DD)
-  isPremium: boolean,        // Subscription status
-  subscriptionStatus: string, // 'free' | 'active' | 'cancelled'
-  stripeCustomerId: string,  // Stripe customer ID
-  subscriptionId: string,    // Stripe subscription ID
-  createdAt: Date,
-  updatedAt: Date
+  id: number,                 // Backend user ID
+  email: string,
+  name: string | null,
+  birth_year, birth_month, birth_day, birth_time, birth_place
+  is_premium: boolean,
+  subscription_status: string,
+  ...
 }
 ```
 
@@ -133,30 +130,21 @@ Each test returns AI-generated insights:
 
 ```typescript
 {
-  clerkId: string,    // Clerk user ID
-  testId: number,     // Test ID
-  completed: boolean, // Completion status
-  completedAt: Date   // When completed
+  userId: number,     // Backend user ID
+  testId: number,
+  completed: boolean,
+  completedAt: Date
 }
 ```
 
 ## 🔌 Integrations
 
-### Clerk Authentication
+### Backend Authentication
 
-- Email/password signup
-- Session management
-- Built-in security
-- User metadata support
-
-```typescript
-// Automatic middleware protection
-const isProtectedRoute = createRouteMatcher([
-  "/api/users(.*)",
-  "/api/tests(.*)",
-  "/api/checkout(.*)",
-]);
-```
+- Register: `POST /api/v1/auth/register` (email, password, name, birth_year, birth_month, birth_day, birth_time?, birth_place?)
+- Login: `POST /api/v1/auth/login` (email, password) → JWT
+- Profile: `GET /api/v1/users/me` with `Authorization: Bearer <token>`
+- Token stored in localStorage; AuthProvider and protected /home routes
 
 ### MongoDB
 
@@ -194,8 +182,7 @@ const response = await generateTestInsights({
 
 ```bash
 # Add to Vercel project settings → Environment Variables
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
-CLERK_SECRET_KEY=...
+NEXT_PUBLIC_API_URL=https://your-backend-url.com
 MONGODB_URI=...
 STRIPE_SECRET_KEY=...
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=...
@@ -207,7 +194,7 @@ NEXT_PUBLIC_APP_URL=https://numina.vercel.app
 
 ### 2. Create Services
 
-1. **Clerk**: https://clerk.com → Create app → Copy keys
+1. **Backend**: Run Numina backend, set `NEXT_PUBLIC_API_URL` in frontend to backend URL
 2. **MongoDB**: https://atlas.mongodb.com → Create cluster → Copy URI
 3. **Stripe**: https://stripe.com → Create products → Copy IDs and webhook secret
 
@@ -238,7 +225,7 @@ git push origin main
 ```
 numina/
 ├── app/
-│   ├── layout.tsx              # Root layout with Clerk
+│   ├── layout.tsx              # Root layout with AuthProvider
 │   ├── page.tsx                # Auth flow & routing
 │   ├── globals.css             # Tailwind + design tokens
 │   └── api/
@@ -256,7 +243,7 @@ numina/
 │   ├── auth/
 │   │   ├── welcome-screen.tsx
 │   │   ├── dob-screen.tsx
-│   │   ├── register-screen.tsx
+│   │   ├── about-yourself.tsx
 │   │   └── onboarding-info-screen.tsx
 │   ├── test/
 │   │   ├── test-flow.tsx
@@ -273,7 +260,7 @@ numina/
 │   ├── models/user.ts          # Type definitions
 │   ├── stripe-service.ts       # Payment logic
 │   └── ai-service.ts           # Personality generation
-├── middleware.ts               # Clerk protection
+├── contexts/auth-context.tsx    # Auth state and token
 ├── SETUP.md                    # Setup guide
 ├── IMPLEMENTATION.md           # Technical details
 ├── CHECKLIST.md               # Completion checklist
@@ -306,7 +293,7 @@ numina/
 ## 🔐 Security Features
 
 1. **Authentication**
-   - Clerk handles all auth
+   - Backend JWT handles auth
    - Secure password hashing
    - Session management
    - Email verification
@@ -386,7 +373,6 @@ Monitor with built-in Vercel Analytics:
 ## 🎓 Learning Resources
 
 - [Next.js Docs](https://nextjs.org/docs)
-- [Clerk Docs](https://clerk.com/docs)
 - [MongoDB Docs](https://docs.mongodb.com)
 - [Stripe Docs](https://stripe.com/docs)
 - [Tailwind CSS](https://tailwindcss.com/docs)

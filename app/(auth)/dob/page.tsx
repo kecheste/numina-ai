@@ -1,6 +1,7 @@
 "use client";
 
 import { DOBScreen } from "@/components/auth/dob-screen";
+import { saveBirthDataToSession } from "@/lib/birth-data";
 import { useRouter } from "next/navigation";
 
 export default function DOBPage() {
@@ -8,7 +9,10 @@ export default function DOBPage() {
 
   return (
     <DOBScreen
-      onContinue={() => router.push("/about")}
+      onContinue={(data) => {
+        saveBirthDataToSession(data);
+        router.push("/about");
+      }}
       onBack={() => router.push("/welcome")}
     />
   );

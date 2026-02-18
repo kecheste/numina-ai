@@ -1,9 +1,9 @@
 import React from "react";
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { gotham, arp80, fangsong, montserrat } from "@/app/fonts";
+import { AuthProvider } from "@/contexts/auth-context";
 
 export const metadata: Metadata = {
   title: "Numina - Spiritual Intelligence",
@@ -39,15 +39,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="dark">
-        <body
-          className={`${gotham.variable} ${arp80.variable} ${fangsong.variable} ${montserrat.variable} overflow-hidden`}
-        >
+    <html lang="en" className="dark">
+      <body
+        className={`${gotham.variable} ${arp80.variable} ${fangsong.variable} ${montserrat.variable} overflow-hidden`}
+      >
+        <AuthProvider>
           {children}
           <Analytics />
-        </body>
-      </html>
-    </ClerkProvider>
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useClerk } from "@clerk/nextjs";
 import {
   Drawer,
   DrawerContent,
@@ -9,23 +8,30 @@ import {
   DrawerPortal,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { useAuth } from "@/contexts/auth-context";
 import { RefObject } from "react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 
 interface AppDrawerProps {
   isPremium: boolean;
-  onLogout: () => void;
+  onLogout?: () => void;
   portalContainer: RefObject<HTMLDivElement | null>;
 }
 
 export function AppDrawer({
   isPremium,
-  onLogout,
+  onLogout: onLogoutProp,
   portalContainer,
 }: AppDrawerProps) {
-  const { signOut } = useClerk();
   const router = useRouter();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    onLogoutProp?.();
+    router.replace("/welcome");
+  };
 
   const menuItems = [
     { label: "My Tests", href: "/home/tests" },
@@ -39,7 +45,6 @@ export function AppDrawer({
 
   return (
     <Drawer direction="right">
-      {/* Trigger */}
       <DrawerTrigger asChild>
         <button className="cursor-pointer mt-2">
           <Icon icon="material-symbols-light:menu" width={40} color="#ffffff" />
@@ -63,7 +68,6 @@ export function AppDrawer({
           "
         >
           <div className="flex flex-col h-full px-6 py-6">
-            {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <DrawerClose asChild>
                 <button>
@@ -76,7 +80,6 @@ export function AppDrawer({
               </DrawerClose>
             </div>
 
-            {/* Menu items */}
             <div className="flex flex-col items-end">
               {menuItems.map((item) => {
                 return (
@@ -112,10 +115,10 @@ export function AppDrawer({
               })}
             </div>
 
-            {/* Logout */}
             <div className="flex flex-col items-end">
               <button
-                onClick={() => signOut()}
+                type="button"
+                onClick={handleLogout}
                 className="flex items-center gap-4"
               >
                 <span

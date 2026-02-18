@@ -10,14 +10,22 @@ interface AboutYourselfProps {
     email?: string;
     password?: string;
   }) => void;
+  registrationMode?: boolean;
+  error?: string | null;
 }
 
-export default function AboutYourself({ onContinue }: AboutYourselfProps) {
+export default function AboutYourself({
+  onContinue,
+  registrationMode = false,
+  error,
+}: AboutYourselfProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const isComplete = name.trim().length > 0;
+  const isComplete = registrationMode
+    ? name.trim().length > 0 && email.trim().length > 0 && password.length >= 8
+    : name.trim().length > 0;
 
   return (
     <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
@@ -64,10 +72,15 @@ export default function AboutYourself({ onContinue }: AboutYourselfProps) {
             }}
             className="text-[15px] font-light text-[#9ca3af] max-w-[320px]"
           >
-            Enter your name to personalize your experience. Email is optional
-            but enter it if you want to save your results or revisit them later.
+            {registrationMode
+              ? "Enter your name, email, and password to create your account."
+              : "Enter your name to personalize your experience. Email is optional but enter it if you want to save your results or revisit them later."}
           </p>
         </div>
+
+        {error && (
+          <p className="text-sm text-red-400 mt-2 max-w-[320px]">{error}</p>
+        )}
 
         {/* Inputs */}
         <div className="mt-10 space-y-4">
