@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   clearStoredToken,
   setStoredToken,
@@ -52,17 +58,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const t = getStoredToken();
-    if (!t) {
+    const storedToken = getStoredToken();
+    if (!storedToken) {
       setTokenState(null);
       setUser(null);
       setIsLoading(false);
       return;
     }
-    setTokenState(t);
+    setTokenState(storedToken);
     apiGetMe()
       .then((profile) => {
-        setUser(profile);
+        if (profile === null) {
+          clearStoredToken();
+          setTokenState(null);
+          setUser(null);
+        } else {
+          setUser(profile);
+        }
       })
       .catch(() => {
         clearStoredToken();
@@ -74,22 +86,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
   }, []);
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      const { access_token } = await apiLogin(email, password);
-      setStoredToken(access_token);
-      setTokenState(access_token);
-      const profile = await apiGetMe();
-      setUser(profile ?? null);
-    },
-    []
-  );
+  useEffect(() => {
+    if (!token || user !== null || isLoading) return;
+    let cancelled = false;
+    apiGetMe().then(
+      (profile) => {
+        if (cancelled) return;
+        if (profile === null) {
+          clearStoredToken();
+          setTokenState(null);
+          setUser(null);
+        } else {
+          setUser(profile);
+        }
+      },
+      () => {
+        if (!cancelled) {
+          clearStoredToken();
+          setTokenState(null);
+          setUser(null);
+        }
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [token, user, isLoading]);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const { access_token } = await apiLogin(email, password);
+    setStoredToken(access_token);
+    setTokenState(access_token);
+    const profile = await apiGetMe();
+    setUser(profile ?? null);
+  }, []);
 
   const register = useCallback(async (payload: RegisterPayload) => {
     const { access_token } = await apiRegister(payload);
     setStoredToken(access_token);
     setTokenState(access_token);
-    const profile = await apiGetMe();
+
+    let profile: UserProfile | null = null;
+    try {
+      profile = await apiGetMe();
+    } catch {
+      await new Promise((r) => setTimeout(r, 400));
+      try {
+        profile = await apiGetMe();
+      } catch {
+        setUser(null);
+        return;
+      }
+    }
     setUser(profile ?? null);
   }, []);
 
