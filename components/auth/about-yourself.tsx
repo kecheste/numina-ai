@@ -12,12 +12,14 @@ interface AboutYourselfProps {
   }) => void;
   registrationMode?: boolean;
   error?: string | null;
+  isPending?: boolean;
 }
 
 export default function AboutYourself({
   onContinue,
   registrationMode = false,
   error,
+  isPending = false,
 }: AboutYourselfProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -101,32 +103,50 @@ export default function AboutYourself({
 
         {/* CTA */}
         <div className="mb-auto pt-10 w-full">
-          <Button
-            disabled={!isComplete}
-            style={{
-              fontFamily: "var(--font-arp80)",
-              fontWeight: 400,
-              lineHeight: "33px",
-            }}
-            onClick={() => onContinue({ name, email, password })}
-            className="
-              w-full
-              h-[60px]
-              sm:h-[67px]
-              bg-[#F2D08CE0]
-              hover:bg-[#F2D08CC0]
-              cursor-pointer
-              text-black
-              rounded-[10px]
-              text-[18px]
-              sm:text-[21px]
-              transition-colors
-              disabled:opacity-50
-              disabled:cursor-not-allowed
-            "
-          >
-            Reveal My Path
-          </Button>
+          {isPending ? (
+            <div
+              className="
+                w-full
+                h-[60px]
+                sm:h-[67px]
+                rounded-[10px]
+                flex items-center justify-center
+                bg-[#F2D08CE0]
+              "
+            >
+              <div
+                className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
+                aria-hidden
+              />
+            </div>
+          ) : (
+            <Button
+              disabled={!isComplete}
+              style={{
+                fontFamily: "var(--font-arp80)",
+                fontWeight: 400,
+                lineHeight: "33px",
+              }}
+              onClick={() => onContinue({ name, email, password })}
+              className="
+                w-full
+                h-[60px]
+                sm:h-[67px]
+                bg-[#F2D08CE0]
+                hover:bg-[#F2D08CC0]
+                cursor-pointer
+                text-black
+                rounded-[10px]
+                text-[18px]
+                sm:text-[21px]
+                transition-colors
+                disabled:opacity-50
+                disabled:cursor-not-allowed
+              "
+            >
+              Reveal My Path
+            </Button>
+          )}
         </div>
       </div>
     </div>

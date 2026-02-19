@@ -76,7 +76,14 @@ export function WelcomeScreen({ onStartJourney, onLogin }: WelcomeScreenProps) {
             Start Your Journey
           </Button>
           {onLogin && (
-            <p className="text-xs text-gray-400 mt-4">
+            <p
+              style={{
+                fontFamily: "var(--font-fangsong)",
+                fontWeight: 500,
+                lineHeight: "24px",
+              }}
+              className="text-[14px] text-gray-400 mt-4"
+            >
               Already have an account?{" "}
               <button
                 type="button"

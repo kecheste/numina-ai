@@ -10,9 +10,10 @@ import type { BirthData } from "@/lib/birth-data";
 interface DOBScreenProps {
   onContinue: (data: BirthData) => void;
   onBack: () => void;
+  isPending?: boolean;
 }
 
-export function DOBScreen({ onContinue }: DOBScreenProps) {
+export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
   const [year, setYear] = useState<string | null>(null);
   const [month, setMonth] = useState<string | null>(null);
   const [day, setDay] = useState<string | null>(null);
@@ -40,20 +41,19 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
   const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
 
   const handleContinue = () => {
-    if (year && month && day) {
-      const monthIndex = months.indexOf(month) + 1;
-      const dateOfBirth = `${year}-${String(monthIndex).padStart(2, "0")}-${String(
-        day
-      ).padStart(2, "0")}`;
-      onContinue({
-        dateOfBirth,
-        birthYear: year,
-        birthMonth: String(monthIndex),
-        birthDay: day,
-        birthTime: time,
-        birthPlace: place,
-      });
-    }
+    if (isPending || !year || !month || !day) return;
+    const monthIndex = months.indexOf(month) + 1;
+    const dateOfBirth = `${year}-${String(monthIndex).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
+    onContinue({
+      dateOfBirth,
+      birthYear: year,
+      birthMonth: String(monthIndex),
+      birthDay: day,
+      birthTime: time,
+      birthPlace: place,
+    });
   };
 
   const isComplete = year && month && day;
@@ -123,30 +123,48 @@ export function DOBScreen({ onContinue }: DOBScreenProps) {
         </div>
 
         <div className="mt-auto w-full">
-          <Button
-            disabled={!isComplete}
-            onClick={handleContinue}
-            style={{
-              fontFamily: "var(--font-arp80)",
-              fontWeight: 400,
-              lineHeight: "33px",
-            }}
-            className="
-              cursor-pointer
-              hover:bg-[#F2D08CC0]
-              w-full
-              h-[60px]
-              sm:h-[67px]
-              bg-[#F2D08CE0]
-              text-black
-              rounded-[10px]
-              text-[18px]
-              sm:text-[21px]
-              transition-colors
-            "
-          >
-            Next Step
-          </Button>
+          {isPending ? (
+            <div
+              className="
+                w-full
+                h-[60px]
+                sm:h-[67px]
+                rounded-[10px]
+                flex items-center justify-center
+                bg-[#F2D08CE0]
+              "
+            >
+              <div
+                className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
+                aria-hidden
+              />
+            </div>
+          ) : (
+            <Button
+              disabled={!isComplete}
+              onClick={handleContinue}
+              style={{
+                fontFamily: "var(--font-arp80)",
+                fontWeight: 400,
+                lineHeight: "33px",
+              }}
+              className="
+                cursor-pointer
+                hover:bg-[#F2D08CC0]
+                w-full
+                h-[60px]
+                sm:h-[67px]
+                bg-[#F2D08CE0]
+                text-black
+                rounded-[10px]
+                text-[18px]
+                sm:text-[21px]
+                transition-colors
+              "
+            >
+              Next Step
+            </Button>
+          )}
         </div>
       </div>
     </div>

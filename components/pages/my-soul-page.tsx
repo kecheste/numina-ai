@@ -1,13 +1,41 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/auth-context";
 import { RootChakraIcon } from "../icons/mysoul/chakra";
 import { InfjIcon } from "../icons/mysoul/infj";
 import { LifePathIcon } from "../icons/mysoul/lifepath";
 import { ScorpioIcon } from "../icons/zodiac/scorpio";
 
+function getFirstName(name: string | null | undefined): string {
+  if (!name?.trim()) return "";
+  return name.trim().split(/\s+/)[0] ?? "";
+}
+
+function getZodiacSign(month: number | null | undefined, day: number | null | undefined): string {
+  if (month == null || day == null) return "";
+  const d = month * 100 + day;
+  if (d >= 1222 || d <= 119) return "Capricorn";
+  if (d <= 218) return "Aquarius";
+  if (d <= 320) return "Pisces";
+  if (d <= 419) return "Aries";
+  if (d <= 520) return "Taurus";
+  if (d <= 620) return "Gemini";
+  if (d <= 722) return "Cancer";
+  if (d <= 822) return "Leo";
+  if (d <= 922) return "Virgo";
+  if (d <= 1022) return "Libra";
+  if (d <= 1121) return "Scorpio";
+  return "Sagittarius";
+}
+
 export function SoulRevealScreen() {
   const router = useRouter();
+  const { user } = useAuth();
+  const firstName = getFirstName(user?.name ?? null);
+  const firstNameDisplay = firstName ? firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase() : "";
+  const zodiacSign = getZodiacSign(user?.birth_month ?? null, user?.birth_day ?? null);
+  const titleLine = [firstName.toUpperCase(), zodiacSign].filter(Boolean).join(" – ") || "My Soul";
 
   return (
     <div className="bg-black text-white pr-1 pb-24 space-y-6">
@@ -34,7 +62,7 @@ export function SoulRevealScreen() {
             }}
             className="text-[21px] font-[700] text-center font-montserrat"
           >
-            NIIKOLOZ – SCORPIO
+            {titleLine}
           </h1>
 
           <div className="flex items-center gap-[11px]">
@@ -156,7 +184,7 @@ export function SoulRevealScreen() {
             lineHeight: "33px",
           }}
         >
-          Nikoloz – Today
+          {firstNameDisplay ? `${firstNameDisplay} – Today` : "Today"}
         </p>
 
         <p

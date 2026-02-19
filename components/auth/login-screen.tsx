@@ -8,21 +8,22 @@ interface LoginScreenProps {
   onLoginSuccess: (email: string, password: string) => void | Promise<void>;
   onSwitchToRegister: () => void;
   error?: string | null;
+  isPending?: boolean;
 }
 
 export function LoginScreen({
   onLoginSuccess,
   onSwitchToRegister,
   error,
+  isPending = false,
 }: LoginScreenProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
-      void Promise.resolve(onLoginSuccess(email, password));
-    }
+    if (isPending || !email || !password) return;
+    void Promise.resolve(onLoginSuccess(email, password));
   };
 
   const isComplete = email.trim().length > 0 && password.length > 0;
@@ -97,32 +98,50 @@ export function LoginScreen({
 
           {/* CTA */}
           <div className="pt-4 w-full">
-            <Button
-              type="submit"
-              disabled={!isComplete}
-              style={{
-                fontFamily: "var(--font-arp80)",
-                fontWeight: 400,
-                lineHeight: "33px",
-              }}
-              className="
-                w-full
-                h-[60px]
-                sm:h-[67px]
-                bg-[#F2D08CE0]
-                hover:bg-[#F2D08CC0]
-                cursor-pointer
-                text-black
-                rounded-[10px]
-                text-[18px]
-                sm:text-[21px]
-                transition-colors
-                disabled:opacity-50
-                disabled:cursor-not-allowed
-              "
-            >
-              Enter
-            </Button>
+            {isPending ? (
+              <div
+                className="
+                  w-full
+                  h-[60px]
+                  sm:h-[67px]
+                  rounded-[10px]
+                  flex items-center justify-center
+                  bg-[#F2D08CE0]
+                "
+              >
+                <div
+                  className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
+                  aria-hidden
+                />
+              </div>
+            ) : (
+              <Button
+                type="submit"
+                disabled={!isComplete}
+                style={{
+                  fontFamily: "var(--font-arp80)",
+                  fontWeight: 400,
+                  lineHeight: "33px",
+                }}
+                className="
+                  w-full
+                  h-[60px]
+                  sm:h-[67px]
+                  bg-[#F2D08CE0]
+                  hover:bg-[#F2D08CC0]
+                  cursor-pointer
+                  text-black
+                  rounded-[10px]
+                  text-[18px]
+                  sm:text-[21px]
+                  transition-colors
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
+                "
+              >
+                Enter
+              </Button>
+            )}
           </div>
         </form>
 

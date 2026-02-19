@@ -7,6 +7,7 @@ import {
   clearBirthDataFromSession,
   hasBirthDataInSession,
 } from "@/lib/birth-data";
+import { useRequestTracker } from "@/hooks/use-request-tracker";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -14,7 +15,22 @@ export default function AboutPage() {
   const router = useRouter();
   const { register: doRegister, isAuthenticated, isLoading } = useAuth();
   const [isRegistration, setIsRegistration] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const registerTracker = useRequestTracker(
+    async (payload: {
+      email: string;
+      password: string;
+      name: string;
+      birth_year: number;
+      birth_month: number;
+      birth_day: number;
+      birth_time?: string;
+      birth_place?: string;
+    }) => {
+      await doRegister(payload);
+    }
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -38,16 +54,17 @@ export default function AboutPage() {
 
     if (isRegistration && birthData) {
       if (!data.email?.trim() || !data.password) {
-        setError("Email and password are required.");
+        setValidationError("Email and password are required.");
         return;
       }
       if ((data.password?.length ?? 0) < 8) {
-        setError("Password must be at least 8 characters.");
+        setValidationError("Password must be at least 8 characters.");
         return;
       }
-      setError(null);
+      setValidationError(null);
+      registerTracker.reset();
       try {
-        await doRegister({
+        await registerTracker.execute({
           email: data.email!,
           password: data.password!,
           name: data.name.trim(),
@@ -59,8 +76,8 @@ export default function AboutPage() {
         });
         clearBirthDataFromSession();
         router.replace("/home");
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Registration failed");
+      } catch {
+        // error is on registerTracker
       }
       return;
     }
@@ -68,6 +85,8 @@ export default function AboutPage() {
     clearBirthDataFromSession();
     router.push("/onboarding");
   };
+
+  const error = validationError ?? registerTracker.errorMessage;
 
   if (isLoading) {
     return (
@@ -82,6 +101,7 @@ export default function AboutPage() {
       onContinue={handleContinue}
       registrationMode={isRegistration}
       error={error}
+      isPending={registerTracker.isPending}
     />
   );
 }

@@ -25,7 +25,7 @@ export function clearStoredToken(): void {
 
 export async function fetchWithAuth(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<Response> {
   const base = getApiBaseUrl();
   const token = typeof window !== "undefined" ? getStoredToken() : null;
@@ -55,7 +55,10 @@ export interface RegisterPayload {
   birth_place?: string | null;
 }
 
-export async function apiLogin(email: string, password: string): Promise<LoginResponse> {
+export async function apiLogin(
+  email: string,
+  password: string,
+): Promise<LoginResponse> {
   const base = getApiBaseUrl();
   const res = await fetch(`${base}/api/v1/auth/login`, {
     method: "POST",
@@ -69,7 +72,9 @@ export async function apiLogin(email: string, password: string): Promise<LoginRe
   return res.json();
 }
 
-export async function apiRegister(payload: RegisterPayload): Promise<LoginResponse> {
+export async function apiRegister(
+  payload: RegisterPayload,
+): Promise<LoginResponse> {
   const base = getApiBaseUrl();
   const res = await fetch(`${base}/api/v1/auth/register`, {
     method: "POST",
@@ -80,7 +85,9 @@ export async function apiRegister(payload: RegisterPayload): Promise<LoginRespon
     const err = await res.json().catch(() => ({}));
     const detail = (err as { detail?: string | { msg?: string }[] }).detail;
     const message = Array.isArray(detail)
-      ? detail.map((d) => (typeof d === "object" && d?.msg ? d.msg : String(d))).join(", ")
+      ? detail
+          .map((d) => (typeof d === "object" && d?.msg ? d.msg : String(d)))
+          .join(", ")
       : typeof detail === "string"
         ? detail
         : "Registration failed";

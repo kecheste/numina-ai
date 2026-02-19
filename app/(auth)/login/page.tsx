@@ -2,13 +2,18 @@
 
 import { LoginScreen } from "@/components/auth/login-screen";
 import { useAuth } from "@/contexts/auth-context";
+import { useRequestTracker } from "@/hooks/use-request-tracker";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
   const { login, isAuthenticated, isLoading } = useAuth();
-  const [error, setError] = useState<string | null>(null);
+  const loginTracker = useRequestTracker(
+    async (vars: { email: string; password: string }) => {
+      await login(vars.email, vars.password);
+    },
+  );
 
   useEffect(() => {
     if (isLoading) return;
@@ -19,13 +24,11 @@ export default function LoginPage() {
   }, [isAuthenticated, isLoading, router]);
 
   const handleLoginSuccess = async (email: string, password: string) => {
-    setError(null);
+    loginTracker.reset();
     try {
-      await login(email, password);
+      await loginTracker.execute({ email, password });
       router.replace("/home");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Login failed");
-    }
+    } catch {}
   };
 
   if (isLoading) {
@@ -38,7 +41,8 @@ export default function LoginPage() {
 
   return (
     <LoginScreen
-      error={error}
+      error={loginTracker.errorMessage}
+      isPending={loginTracker.isPending}
       onLoginSuccess={handleLoginSuccess}
       onSwitchToRegister={() => router.push("/dob")}
     />

@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { gotham, arp80, fangsong, montserrat } from "@/app/fonts";
 import { AuthProvider } from "@/contexts/auth-context";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Numina - Spiritual Intelligence",
@@ -43,10 +44,12 @@ export default function RootLayout({
       <body
         className={`${gotham.variable} ${arp80.variable} ${fangsong.variable} ${montserrat.variable} overflow-hidden`}
       >
-        <AuthProvider>
-          {children}
-          <Analytics />
-        </AuthProvider>
+        <Providers>
+          <AuthProvider>
+            {children}
+            <Analytics />
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
