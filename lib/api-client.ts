@@ -119,3 +119,73 @@ export async function apiGetMe(): Promise<UserProfile | null> {
   if (!res.ok) throw new Error("Failed to fetch user");
   return res.json();
 }
+
+export interface TestFromApi {
+  id: number;
+  title: string;
+  category: string;
+  category_id: string;
+  questions: number;
+  auto_generated: boolean;
+  premium: boolean;
+  already_taken: boolean;
+}
+
+export interface TestsListResponse {
+  user_is_premium: boolean;
+  tests: TestFromApi[];
+}
+
+export async function apiFetchTests(): Promise<TestsListResponse> {
+  const res = await fetchWithAuth("/api/v1/tests");
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (!res.ok) throw new Error("Failed to fetch tests");
+  return res.json();
+}
+
+/** Single question from GET /tests/{test_id}/questions */
+export interface QuestionFromApi {
+  id: number;
+  prompt: string;
+  answer_type: "text" | "date" | "time" | "single_choice" | "multiple_choice" | "slider";
+  options: string[] | null;
+  slider_min: number;
+  slider_max: number;
+  required: boolean;
+}
+
+/** Fetch questions for a test. Returns [] if test has no questions. Auth required. */
+export async function apiFetchTestQuestions(testId: number): Promise<QuestionFromApi[]> {
+  const res = await fetchWithAuth(`/api/v1/tests/${testId}/questions`);
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (res.status === 404) return [];
+  if (!res.ok) throw new Error("Failed to fetch questions");
+  return res.json();
+}
+
+export interface SubmitTestRequest {
+  test_id: number;
+  test_title: string;
+  category: string;
+  answers: Record<string, string | number | string[]>;
+}
+
+export interface SubmitTestResponse {
+  result_id: number;
+  status: string;
+  message?: string;
+}
+
+/** Submit test answers. Auth required. */
+export async function apiSubmitTest(body: SubmitTestRequest): Promise<SubmitTestResponse> {
+  const res = await fetchWithAuth("/api/v1/tests/submit", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as { detail?: string }).detail ?? "Failed to submit test");
+  }
+  return res.json();
+}
