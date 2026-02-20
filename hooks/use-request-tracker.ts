@@ -5,6 +5,7 @@ import {
   type UseMutationOptions,
   type UseMutationResult,
 } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 export interface RequestError {
   message: string;
@@ -69,6 +70,11 @@ export function useRequestTracker<TData, TVariables>(
     (error?.details as RequestTrackerResult<TData, TVariables>["details"]) ??
     null;
 
+  const execute = useCallback(
+    (variables: TVariables) => mutation.mutateAsync(variables),
+    [mutation],
+  );
+
   return {
     isPending: mutation.isPending,
     isError: mutation.isError,
@@ -77,7 +83,7 @@ export function useRequestTracker<TData, TVariables>(
     error,
     errorMessage: error?.message ?? null,
     details,
-    execute: (variables: TVariables) => mutation.mutateAsync(variables),
+    execute,
     reset: () => mutation.reset(),
     mutation,
   };
