@@ -7,6 +7,9 @@ export interface UserProfile {
   birth_day: number | null;
   birth_time: string | null;
   birth_place: string | null;
+  birth_place_lat: number | null;
+  birth_place_lng: number | null;
+  birth_place_timezone: string | null;
   is_premium: boolean;
   subscription_status: string;
   is_active: boolean;

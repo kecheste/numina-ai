@@ -160,13 +160,14 @@ body {
 }
 
 .custom-range {
-  --track-color: #f2d08c66;
+  --value: 0;
+  --track-color: #f2d08c40;
   --fill-color: #f2d08c;
 
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 3px;
+  height: 12px;
   border-radius: 999px;
   outline: none;
 
@@ -200,7 +201,7 @@ body {
 }
 
 .custom-range::-moz-range-track {
-  height: 3px;
-  background: #f2d08c66;
+  height: 6px;
+  background: var(--track-color, #f2d08c40);
   border-radius: 999px;
 }

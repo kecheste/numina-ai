@@ -5,6 +5,10 @@ export interface BirthData {
   birthDay: string;
   birthTime: string;
   birthPlace: string;
+  /** From Mapbox + geo-tz when user selects a place. */
+  birthPlaceLat?: number | null;
+  birthPlaceLng?: number | null;
+  birthPlaceTimezone?: string | null;
 }
 
 const SESSION_KEYS = {
@@ -14,6 +18,9 @@ const SESSION_KEYS = {
   birthDay: "register_birth_day",
   birthTime: "register_birth_time",
   birthPlace: "register_birth_place",
+  birthPlaceLat: "register_birth_place_lat",
+  birthPlaceLng: "register_birth_place_lng",
+  birthPlaceTimezone: "register_birth_place_timezone",
 } as const;
 
 export function saveBirthDataToSession(data: BirthData): void {
@@ -24,12 +31,32 @@ export function saveBirthDataToSession(data: BirthData): void {
   sessionStorage.setItem(SESSION_KEYS.birthDay, data.birthDay);
   sessionStorage.setItem(SESSION_KEYS.birthTime, data.birthTime);
   sessionStorage.setItem(SESSION_KEYS.birthPlace, data.birthPlace);
+  if (data.birthPlaceLat != null) {
+    sessionStorage.setItem(SESSION_KEYS.birthPlaceLat, String(data.birthPlaceLat));
+  } else {
+    sessionStorage.removeItem(SESSION_KEYS.birthPlaceLat);
+  }
+  if (data.birthPlaceLng != null) {
+    sessionStorage.setItem(SESSION_KEYS.birthPlaceLng, String(data.birthPlaceLng));
+  } else {
+    sessionStorage.removeItem(SESSION_KEYS.birthPlaceLng);
+  }
+  if (data.birthPlaceTimezone != null && data.birthPlaceTimezone !== "") {
+    sessionStorage.setItem(SESSION_KEYS.birthPlaceTimezone, data.birthPlaceTimezone);
+  } else {
+    sessionStorage.removeItem(SESSION_KEYS.birthPlaceTimezone);
+  }
 }
 
 export function getBirthDataFromSession(): BirthData | null {
   if (typeof window === "undefined") return null;
   const dateOfBirth = sessionStorage.getItem(SESSION_KEYS.dateOfBirth);
   if (!dateOfBirth) return null;
+  const lat = sessionStorage.getItem(SESSION_KEYS.birthPlaceLat);
+  const lng = sessionStorage.getItem(SESSION_KEYS.birthPlaceLng);
+  const tz = sessionStorage.getItem(SESSION_KEYS.birthPlaceTimezone);
+  const parsedLat = lat != null && lat !== "" ? parseFloat(lat) : NaN;
+  const parsedLng = lng != null && lng !== "" ? parseFloat(lng) : NaN;
   return {
     dateOfBirth,
     birthYear: sessionStorage.getItem(SESSION_KEYS.birthYear) ?? "",
@@ -37,6 +64,9 @@ export function getBirthDataFromSession(): BirthData | null {
     birthDay: sessionStorage.getItem(SESSION_KEYS.birthDay) ?? "",
     birthTime: sessionStorage.getItem(SESSION_KEYS.birthTime) ?? "",
     birthPlace: sessionStorage.getItem(SESSION_KEYS.birthPlace) ?? "",
+    birthPlaceLat: Number.isFinite(parsedLat) ? parsedLat : null,
+    birthPlaceLng: Number.isFinite(parsedLng) ? parsedLng : null,
+    birthPlaceTimezone: tz != null && tz !== "" ? tz : null,
   };
 }
 

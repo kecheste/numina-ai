@@ -73,6 +73,10 @@ export default function AboutPage() {
           birth_day: parseInt(birthData.birthDay, 10),
           birth_time: birthData.birthTime || undefined,
           birth_place: birthData.birthPlace || undefined,
+          // Always send so backend persists; use null when missing (JSON keeps keys)
+          birth_place_lat: birthData.birthPlaceLat ?? null,
+          birth_place_lng: birthData.birthPlaceLng ?? null,
+          birth_place_timezone: birthData.birthPlaceTimezone ?? null,
         });
         clearBirthDataFromSession();
         router.replace("/home");

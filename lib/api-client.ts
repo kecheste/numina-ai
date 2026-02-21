@@ -53,6 +53,9 @@ export interface RegisterPayload {
   birth_day: number;
   birth_time?: string | null;
   birth_place?: string | null;
+  birth_place_lat?: number | null;
+  birth_place_lng?: number | null;
+  birth_place_timezone?: string | null;
 }
 
 export async function apiLogin(
@@ -105,6 +108,9 @@ export interface UserProfile {
   birth_day: number | null;
   birth_time: string | null;
   birth_place: string | null;
+  birth_place_lat: number | null;
+  birth_place_lng: number | null;
+  birth_place_timezone: string | null;
   is_premium: boolean;
   subscription_status: string;
   is_active: boolean;
@@ -122,6 +128,7 @@ export async function apiGetMe(): Promise<UserProfile | null> {
 
 export interface TestFromApi {
   id: number;
+  slug: string;
   title: string;
   category: string;
   category_id: string;
@@ -136,38 +143,126 @@ export interface TestsListResponse {
   tests: TestFromApi[];
 }
 
+function normalizeTestsResponse(data: unknown): TestsListResponse {
+  if (Array.isArray(data)) {
+    return {
+      user_is_premium: false,
+      tests: data.map((t: Record<string, unknown>) => ({
+        id: t.id as number,
+        slug: (t.slug as string) ?? `test-${t.id}`,
+        title: t.title as string,
+        category: t.category as string,
+        category_id: t.category_id as string,
+        questions: t.questions as number,
+        auto_generated: (t.auto_generated as boolean) ?? false,
+        premium: (t.premium as boolean) ?? false,
+        already_taken: (t.already_taken as boolean) ?? false,
+      })),
+    };
+  }
+  const obj = data as TestsListResponse;
+  if (obj && typeof obj.tests === "object" && Array.isArray(obj.tests)) {
+    return {
+      user_is_premium: obj.user_is_premium ?? false,
+      tests: obj.tests.map((t) => ({
+        id: t.id,
+        slug: t.slug ?? `test-${t.id}`,
+        title: t.title,
+        category: t.category,
+        category_id: t.category_id,
+        questions: t.questions,
+        auto_generated: t.auto_generated ?? false,
+        premium: t.premium ?? false,
+        already_taken: t.already_taken ?? false,
+      })),
+    };
+  }
+  return { user_is_premium: false, tests: [] };
+}
+
 export async function apiFetchTests(): Promise<TestsListResponse> {
   const res = await fetchWithAuth("/api/v1/tests");
   if (res.status === 401) throw new Error("Unauthorized");
   if (!res.ok) throw new Error("Failed to fetch tests");
-  return res.json();
+  const data: unknown = await res.json();
+  return normalizeTestsResponse(data);
+}
+
+/** Show this question only when another question's answer equals value */
+export interface ShowWhenFromApi {
+  question_id: number;
+  value: string;
 }
 
 /** Single question from GET /tests/{test_id}/questions */
 export interface QuestionFromApi {
   id: number;
   prompt: string;
-  answer_type: "text" | "date" | "time" | "single_choice" | "multiple_choice" | "slider";
+  answer_type:
+    | "text"
+    | "date"
+    | "time"
+    | "single_choice"
+    | "multiple_choice"
+    | "slider"
+    | "color";
   options: string[] | null;
   slider_min: number;
   slider_max: number;
   required: boolean;
+  /** Use that question's answer (list) as options for this question */
+  options_from_question_id?: number | null;
+  /** Only show when answer of question_id equals value */
+  show_when?: ShowWhenFromApi | null;
+  /** For multiple_choice: allow at most this many selections */
+  max_selections?: number | null;
 }
 
-/** Fetch questions for a test. Returns [] if test has no questions. Auth required. */
-export async function apiFetchTestQuestions(testId: number): Promise<QuestionFromApi[]> {
-  const res = await fetchWithAuth(`/api/v1/tests/${testId}/questions`);
+export async function apiFetchTestQuestions(
+  testIdOrSlug: number | string,
+): Promise<QuestionFromApi[]> {
+  const res = await fetchWithAuth(`/api/v1/tests/${testIdOrSlug}/questions`);
   if (res.status === 401) throw new Error("Unauthorized");
   if (res.status === 404) return [];
   if (!res.ok) throw new Error("Failed to fetch questions");
   return res.json();
 }
 
+/** Response from GET /api/v1/tests/astrology-chart (user birth data). */
+export interface AstrologyChartResponse {
+  sun_sign: string;
+  moon_sign: string;
+  rising_sign: string;
+  element_distribution: { fire: number; earth: number; air: number; water: number };
+}
+
+/** Fetch current user's astrology chart. Auth required. 404 if birth data incomplete. */
+export async function apiFetchAstrologyChart(): Promise<AstrologyChartResponse> {
+  const res = await fetchWithAuth("/api/v1/tests/astrology-chart");
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (res.status === 404) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Birth data incomplete. Add birth date and place in profile.",
+    );
+  }
+  if (!res.ok) throw new Error("Failed to load astrology chart");
+  return res.json();
+}
+
+/** One question with its answer (for submit and synthesis). */
+export interface QuestionAnswerItem {
+  question_id: number;
+  prompt: string;
+  answer_type?: string;
+  answer: string | number | string[];
+}
+
 export interface SubmitTestRequest {
   test_id: number;
   test_title: string;
   category: string;
-  answers: Record<string, string | number | string[]>;
+  answers: QuestionAnswerItem[];
 }
 
 export interface SubmitTestResponse {
@@ -177,7 +272,9 @@ export interface SubmitTestResponse {
 }
 
 /** Submit test answers. Auth required. */
-export async function apiSubmitTest(body: SubmitTestRequest): Promise<SubmitTestResponse> {
+export async function apiSubmitTest(
+  body: SubmitTestRequest,
+): Promise<SubmitTestResponse> {
   const res = await fetchWithAuth("/api/v1/tests/submit", {
     method: "POST",
     body: JSON.stringify(body),
@@ -185,7 +282,9 @@ export async function apiSubmitTest(body: SubmitTestRequest): Promise<SubmitTest
   if (res.status === 401) throw new Error("Unauthorized");
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error((err as { detail?: string }).detail ?? "Failed to submit test");
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Failed to submit test",
+    );
   }
   return res.json();
 }

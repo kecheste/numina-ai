@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
-import { searchLocations } from "@/lib/constants/locations";
+import { searchPlaces, getTimezoneForCoords, type MapboxPlaceFeature } from "@/lib/mapbox";
+import { getApiBaseUrl } from "@/lib/api-client";
 import type { BirthData } from "@/lib/birth-data";
 
 interface DOBScreenProps {
@@ -19,6 +20,9 @@ export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
   const [day, setDay] = useState<string | null>(null);
   const [time, setTime] = useState<string>("");
   const [place, setPlace] = useState<string>("");
+  const [placeLat, setPlaceLat] = useState<number | null>(null);
+  const [placeLng, setPlaceLng] = useState<number | null>(null);
+  const [placeTimezone, setPlaceTimezone] = useState<string | null>(null);
 
   const currentYear = new Date().getFullYear();
   const minYear = currentYear - 21; // must be 21+
@@ -53,6 +57,9 @@ export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
       birthDay: day,
       birthTime: time,
       birthPlace: place,
+      birthPlaceLat: placeLat ?? null,
+      birthPlaceLng: placeLng ?? null,
+      birthPlaceTimezone: placeTimezone ?? null,
     });
   };
 
@@ -116,9 +123,20 @@ export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
           />
           <PlaceAutocomplete
             label="Place of Birth"
-            placeholder="Start typing a city..."
+            placeholder="Search for a city or place..."
             value={place}
-            onChange={setPlace}
+            onInputChange={(text) => {
+              setPlace(text);
+              setPlaceLat(null);
+              setPlaceLng(null);
+              setPlaceTimezone(null);
+            }}
+            onSelect={(placeName, lat, lng, timezone) => {
+              setPlace(placeName);
+              setPlaceLat(lat);
+              setPlaceLng(lng);
+              setPlaceTimezone(timezone);
+            }}
           />
         </div>
 
@@ -260,38 +278,84 @@ function TextInput({
   );
 }
 
+const MAPBOX_DEBOUNCE_MS = 300;
+
 function PlaceAutocomplete({
   label,
   placeholder,
   value,
-  onChange,
+  onInputChange,
+  onSelect,
 }: {
   label: string;
   placeholder?: string;
   value: string;
-  onChange: (v: string) => void;
+  onInputChange: (text: string) => void;
+  onSelect: (placeName: string, lat: number, lng: number, timezone: string) => void;
 }) {
+  const [inputValue, setInputValue] = useState(value);
   const [isOpen, setIsOpen] = useState(false);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<MapboxPlaceFeature[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isResolvingTimezone, setIsResolvingTimezone] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleInputChange = (inputValue: string) => {
-    onChange(inputValue);
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
-    if (inputValue.length >= 2) {
-      const results = searchLocations(inputValue, 8);
-      setSuggestions(results);
-      setIsOpen(results.length > 0);
-    } else {
-      setSuggestions([]);
-      setIsOpen(false);
-    }
+  const handleInputChange = (text: string) => {
+    setInputValue(text);
+    onInputChange(text);
   };
 
-  const handleSelect = (location: string) => {
-    onChange(location);
-    setIsOpen(false);
+  const runSearch = useCallback(async (query: string) => {
+    if (query.trim().length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    setIsSearching(true);
+    try {
+      const features = await searchPlaces(query, { limit: 5 });
+      setSuggestions(features);
+      setIsOpen(features.length > 0);
+    } catch {
+      setSuggestions([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, []);
+
+  const handleInputChangeDebounced = (text: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (text.trim().length < 2) {
+      setSuggestions([]);
+      setIsOpen(false);
+      return;
+    }
+    debounceRef.current = setTimeout(() => runSearch(text), MAPBOX_DEBOUNCE_MS);
+  };
+
+  const onInputChangeHandler = (text: string) => {
+    handleInputChange(text);
+    handleInputChangeDebounced(text);
+  };
+
+  const handleSelect = async (feature: MapboxPlaceFeature) => {
+    const [lng, lat] = feature.center;
+    setInputValue(feature.place_name);
     setSuggestions([]);
+    setIsOpen(false);
+    setIsResolvingTimezone(true);
+    try {
+      const timezone = await getTimezoneForCoords(lat, lng, getApiBaseUrl());
+      onSelect(feature.place_name, lat, lng, timezone);
+    } catch {
+      onSelect(feature.place_name, lat, lng, "UTC");
+    } finally {
+      setIsResolvingTimezone(false);
+    }
   };
 
   useEffect(() => {
@@ -308,13 +372,19 @@ function PlaceAutocomplete({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
   return (
     <div className="relative" ref={wrapperRef}>
       <div className="relative">
         <input
           type="text"
-          value={value}
-          onChange={(e) => handleInputChange(e.target.value)}
+          value={inputValue}
+          onChange={(e) => onInputChangeHandler(e.target.value)}
           onFocus={() => {
             if (suggestions.length > 0) setIsOpen(true);
           }}
@@ -324,7 +394,13 @@ function PlaceAutocomplete({
             lineHeight: "22px",
           }}
           className="w-full bg-black border border-[#F2D08CE0] rounded-[10px] px-4 py-4 pr-10 text-[15px] font-[300] text-white text-center placeholder:text-white/50 focus:outline-none focus:border-[#F2D08C]"
+          disabled={isResolvingTimezone}
         />
+        {(isSearching || isResolvingTimezone) && (
+          <span className="absolute right-4 top-1/2 -translate-y-1/2">
+            <span className="inline-block h-4 w-4 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin" />
+          </span>
+        )}
       </div>
 
       {isOpen && suggestions.length > 0 && (
@@ -335,13 +411,13 @@ function PlaceAutocomplete({
           }}
           className="absolute left-0 right-0 mt-2 max-h-56 overflow-y-auto bg-black border border-[#F2D08CE0] rounded-[14px] z-50"
         >
-          {suggestions.map((location, index) => (
+          {suggestions.map((feature) => (
             <div
-              key={`${location}-${index}`}
-              onClick={() => handleSelect(location)}
-              className="px-4 py-3 text-white text-center hover:bg-[#F2D08C33] cursor-pointer text-[14px]"
+              key={feature.id}
+              onClick={() => handleSelect(feature)}
+              className="px-4 py-3 text-white text-left hover:bg-[#F2D08C33] cursor-pointer text-[14px]"
             >
-              {location}
+              {feature.place_name}
             </div>
           ))}
         </div>
