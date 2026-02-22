@@ -250,6 +250,26 @@ export async function apiFetchAstrologyChart(): Promise<AstrologyChartResponse> 
   return res.json();
 }
 
+/** Response from GET /api/v1/tests/numerology (user birth date + name). */
+export interface NumerologyResponse {
+  life_path: number;
+  soul_urge: number;
+}
+
+/** Fetch current user's numerology. Auth required. 404 if birth date or name missing. */
+export async function apiFetchNumerology(): Promise<NumerologyResponse> {
+  const res = await fetchWithAuth("/api/v1/tests/numerology");
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (res.status === 404) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Birth date and name are required. Add them in your profile.",
+    );
+  }
+  if (!res.ok) throw new Error("Failed to load numerology");
+  return res.json();
+}
+
 /** One question with its answer (for submit and synthesis). */
 export interface QuestionAnswerItem {
   question_id: number;
