@@ -4,18 +4,24 @@ import { useState, useEffect, useMemo } from "react";
 import { TestCard } from "@/components/cards/test-card";
 import { TestFlow } from "@/components/test/test-flow";
 import { TestResultView } from "@/components/test/test-result-view";
-import { TestResultStarseedView } from "@/components/test/test-result-starseed-view";
-import { TestResultChakraView } from "@/components/test/test-result-chakra-view";
+import {
+  StarseedOriginResult,
+  ChakraAlignmentResult,
+} from "@/components/test/result-view";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
 import { TestIntro } from "../modals/test-intro";
-import { apiFetchTests, type TestFromApi } from "@/lib/api-client";
+import {
+  apiFetchTests,
+  apiListTestResults,
+  type TestFromApi,
+  type TestResultResponse,
+} from "@/lib/api-client";
 import { getTestUi } from "@/lib/constants/testUiMap";
 
 interface ExplorePageProps {
   isPremium: boolean;
 }
 
-/** Test from API merged with UI (icon, description). locked/completed from backend. */
 interface TestWithUi extends TestFromApi {
   categoryId: string;
   icon: React.ReactNode;
@@ -42,6 +48,9 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
     category: string;
   } | null>(null);
   const [viewingResult, setViewingResult] = useState<number | null>(null);
+  const [viewingResultData, setViewingResultData] = useState<
+    TestResultResponse | null | undefined
+  >(undefined);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [lockedTestForIntro, setLockedTestForIntro] = useState<{
     title: string;
@@ -53,7 +62,11 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
     setTestsError(null);
     apiFetchTests()
       .then((data) => {
-        if (!cancelled) setTestsResponse({ user_is_premium: data.user_is_premium, tests: data.tests });
+        if (!cancelled)
+          setTestsResponse({
+            user_is_premium: data.user_is_premium,
+            tests: data.tests,
+          });
       })
       .catch((e) => {
         if (!cancelled)
@@ -98,10 +111,18 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   const handleTestSelect = (test: TestWithUi) => {
     if (test.auto_generated) {
       setViewingResult(test.id);
+      setViewingResultData(undefined);
       return;
     }
     if (test.alreadyTaken || test.completed) {
       setViewingResult(test.id);
+      setViewingResultData(undefined);
+      apiListTestResults(test.id)
+        .then((results) => {
+          if (results.length > 0) setViewingResultData(results[0]);
+          else setViewingResultData(null);
+        })
+        .catch(() => setViewingResultData(null));
       return;
     }
     if (test.locked) {
@@ -131,21 +152,27 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
 
   if (viewingResult !== null) {
     const test = tests.find((t) => t.id === viewingResult);
-    const onBackResult = () => setViewingResult(null);
+    const onBackResult = () => {
+      setViewingResult(null);
+      setViewingResultData(undefined);
+    };
     if (!test) {
       setViewingResult(null);
+      setViewingResultData(undefined);
+    } else if (test.id === 3) {
+      return (
+        <StarseedOriginResult testTitle={test.title} onBack={onBackResult} />
+      );
+    } else if (test.id === 13) {
+      return (
+        <ChakraAlignmentResult testTitle={test.title} onBack={onBackResult} />
+      );
     } else {
-      if (test.id === 3) {
+      if (!test.auto_generated && viewingResultData === undefined) {
         return (
-          <TestResultStarseedView
-            testTitle={test.title}
-            onBack={onBackResult}
-          />
-        );
-      }
-      if (test.id === 13) {
-        return (
-          <TestResultChakraView testTitle={test.title} onBack={onBackResult} />
+          <div className="pb-24 flex items-center justify-center min-h-[200px]">
+            <p className="text-[#F2D08C] font-[325]">Loading your result…</p>
+          </div>
         );
       }
       return (
@@ -154,6 +181,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
           testTitle={test.title}
           category={test.category}
           onBack={onBackResult}
+          result={viewingResultData ?? undefined}
         />
       );
     }

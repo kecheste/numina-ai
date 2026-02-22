@@ -291,6 +291,23 @@ export interface SubmitTestResponse {
   message?: string;
 }
 
+/** Single test result from GET /tests/results/:id (includes LLM narrative when completed). */
+export interface TestResultResponse {
+  id: number;
+  user_id: number;
+  test_id: number;
+  test_title: string;
+  category: string;
+  completed_at: string;
+  answers: QuestionAnswerItem[] | Record<string, unknown>;
+  status: string;
+  score: number | null;
+  personality_type: string | null;
+  insights: string[] | null;
+  recommendations: string[] | null;
+  narrative: string | null;
+}
+
 /** Submit test answers. Auth required. */
 export async function apiSubmitTest(
   body: SubmitTestRequest,
@@ -304,6 +321,37 @@ export async function apiSubmitTest(
     const err = await res.json().catch(() => ({}));
     throw new Error(
       (err as { detail?: string }).detail ?? "Failed to submit test",
+    );
+  }
+  return res.json();
+}
+
+/** List current user's test results, optionally filtered by test_id. Most recent first. Auth required. */
+export async function apiListTestResults(
+  testId?: number,
+): Promise<TestResultResponse[]> {
+  const qs = testId != null ? `?test_id=${testId}` : "";
+  const res = await fetchWithAuth(`/api/v1/tests/results${qs}`);
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Failed to load results",
+    );
+  }
+  return res.json();
+}
+
+/** Get a single test result by id (for polling after submit). Auth required. */
+export async function apiGetTestResult(
+  resultId: number,
+): Promise<TestResultResponse> {
+  const res = await fetchWithAuth(`/api/v1/tests/results/${resultId}`);
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Result not found",
     );
   }
   return res.json();

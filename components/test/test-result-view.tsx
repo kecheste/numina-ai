@@ -5,12 +5,14 @@ import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 import { AppDrawer } from "../navigation/app-drawer";
 import PageLoader from "../custom/loader";
+import type { TestResultResponse } from "@/lib/api-client";
 
 interface TestResultViewProps {
   testId: number;
   testTitle: string;
   category: string;
   onBack: () => void;
+  result?: TestResultResponse | null;
 }
 
 // Mock data for different test types
@@ -298,9 +300,25 @@ export function TestResultView({
   testTitle,
   category,
   onBack,
+  result: apiResult,
 }: TestResultViewProps) {
   const shellRef = useRef<HTMLDivElement>(null);
-  const result = testResultsData[testId] || defaultResult;
+  const mockResult = testResultsData[testId] || defaultResult;
+  const result = apiResult
+    ? {
+        subtitle: "Your Result",
+        mainResult: apiResult.personality_type ?? mockResult.mainResult,
+        description:
+          (apiResult.narrative && apiResult.narrative.trim()) ||
+          mockResult.description,
+        coreTraits: apiResult.insights?.slice(0, 5) ?? mockResult.coreTraits,
+        strengths: apiResult.insights ?? mockResult.strengths,
+        challenges: apiResult.recommendations ?? mockResult.challenges,
+        spiritualInsight: mockResult.spiritualInsight,
+        chartData: mockResult.chartData,
+        synchronicities: mockResult.synchronicities,
+      }
+    : mockResult;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
@@ -309,7 +327,6 @@ export function TestResultView({
         className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto"
       >
         <PageLoader>
-          {/* Top Bar */}
           <div className="sticky top-0 flex items-center justify-between w-full bg-black px-[24px] py-2 border-b border-gray-800/30 z-10">
             <button onClick={onBack} className="cursor-pointer p-1">
               <Icon icon="icons8:left-arrow" color="#D9D9D9" width={24} />
@@ -322,9 +339,7 @@ export function TestResultView({
             />
           </div>
 
-          {/* Content */}
           <div className="px-[24px] py-6 pb-12">
-            {/* Title */}
             <div className="text-center">
               <h1
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
@@ -340,7 +355,6 @@ export function TestResultView({
               </p>
             </div>
 
-            {/* Main Result */}
             <div className="text-center">
               <h2
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
@@ -389,7 +403,6 @@ export function TestResultView({
               </p>
             </div>
 
-            {/* Strengths */}
             <div className="text-left mb-4">
               <h3
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
@@ -415,7 +428,6 @@ export function TestResultView({
               </div>
             </div>
 
-            {/* Challenges */}
             <div className="text-left mb-4">
               <h3
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "24px" }}
@@ -441,7 +453,6 @@ export function TestResultView({
               </div>
             </div>
 
-            {/* Spiritual Insight */}
             <div className="text-left mb-4">
               <h3
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "24px" }}
@@ -457,7 +468,6 @@ export function TestResultView({
               </p>
             </div>
 
-            {/* Chart Data (e.g., Numerology in Your Chart) */}
             {result.chartData.length > 0 && (
               <div className="text-left mb-4">
                 <h3
@@ -496,7 +506,6 @@ export function TestResultView({
               </div>
             )}
 
-            {/* Synchronicities */}
             {result.synchronicities.length > 0 && (
               <div className="text-left mb-4">
                 <h3
