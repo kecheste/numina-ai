@@ -81,11 +81,14 @@ export function TestFlow({
   testTitle,
   category,
   onClose,
+  onboardingNext,
 }: {
   testId: number;
   testTitle: string;
   category: string;
   onClose: () => void;
+  /** When set, the result screen uses this as "continue" (e.g. next onboarding test) instead of going back. */
+  onboardingNext?: () => void;
 }) {
   const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
@@ -310,7 +313,7 @@ export function TestFlow({
         testId={testId}
         testTitle={testTitle}
         category={category}
-        onClose={onClose}
+        onClose={onboardingNext ?? onClose}
         resultData={resultData}
       />
     );

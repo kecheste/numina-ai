@@ -39,11 +39,11 @@ export default function AboutPage() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (isAuthenticated) {
+    if (isAuthenticated && !isRegistration) {
       clearBirthDataFromSession();
       router.replace("/home");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, isRegistration, router]);
 
   const handleContinue = async (data: {
     name: string;
@@ -79,7 +79,7 @@ export default function AboutPage() {
           birth_place_timezone: birthData.birthPlaceTimezone ?? null,
         });
         clearBirthDataFromSession();
-        router.replace("/home");
+        router.replace("/onboarding");
       } catch {
         // error is on registerTracker
       }

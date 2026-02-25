@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/auth-context";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 export default function AuthLayout({
@@ -10,14 +10,20 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated, isLoading } = useAuth();
+
+  const isOnboardingRoute =
+    pathname === "/about" ||
+    pathname === "/onboarding" ||
+    pathname?.startsWith("/onboarding/");
 
   useEffect(() => {
     if (isLoading) return;
-    if (isAuthenticated) {
+    if (isAuthenticated && !isOnboardingRoute) {
       router.replace("/home");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, isOnboardingRoute, router]);
 
   if (isLoading) {
     return (
@@ -27,7 +33,7 @@ export default function AuthLayout({
     );
   }
 
-  if (isAuthenticated) {
+  if (isAuthenticated && !isOnboardingRoute) {
     return null;
   }
 
