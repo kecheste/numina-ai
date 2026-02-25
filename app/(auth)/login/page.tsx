@@ -45,6 +45,7 @@ export default function LoginPage() {
       isPending={loginTracker.isPending}
       onLoginSuccess={handleLoginSuccess}
       onSwitchToRegister={() => router.push("/dob")}
+      onForgotPassword={() => router.push("/forgot-password")}
     />
   );
 }

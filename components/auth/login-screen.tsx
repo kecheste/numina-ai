@@ -7,6 +7,7 @@ import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 interface LoginScreenProps {
   onLoginSuccess: (email: string, password: string) => void | Promise<void>;
   onSwitchToRegister: () => void;
+  onForgotPassword?: () => void;
   error?: string | null;
   isPending?: boolean;
 }
@@ -14,6 +15,7 @@ interface LoginScreenProps {
 export function LoginScreen({
   onLoginSuccess,
   onSwitchToRegister,
+  onForgotPassword,
   error,
   isPending = false,
 }: LoginScreenProps) {
@@ -95,6 +97,18 @@ export function LoginScreen({
             onChange={setPassword}
             type="password"
           />
+          {onForgotPassword && (
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={onForgotPassword}
+                className="text-[13px] font-light text-[#F2D08C] hover:text-[#F2D08CC0 transition-colors"
+                style={{ fontFamily: "var(--font-gotham)" }}
+              >
+                Forgot password?
+              </button>
+            </div>
+          )}
 
           {/* CTA */}
           <div className="pt-4 w-full">
