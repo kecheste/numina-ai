@@ -6,13 +6,26 @@ import { RootChakraIcon } from "../icons/mysoul/chakra";
 import { InfjIcon } from "../icons/mysoul/infj";
 import { LifePathIcon } from "../icons/mysoul/lifepath";
 import { ScorpioIcon } from "../icons/zodiac/scorpio";
+import { PiscesIcon } from "../icons/zodiac/pisces";
+import { AquariusIcon } from "../icons/zodiac/aquarius";
+import { CapricornIcon } from "../icons/zodiac/capricorn";
+import { LeoIcon } from "../icons/zodiac/leo";
+import { VirgoIcon } from "../icons/zodiac/virgo";
+import { LibraIcon } from "../icons/zodiac/libra";
+import { SagittariusIcon } from "../icons/zodiac/sagittarius";
+import { TaurusIcon } from "../icons/zodiac/taurus";
+import { GeminiIcon } from "../icons/zodiac/gemini";
+import { CancerIcon } from "../icons/zodiac/cancer";
 
 function getFirstName(name: string | null | undefined): string {
   if (!name?.trim()) return "";
   return name.trim().split(/\s+/)[0] ?? "";
 }
 
-function getZodiacSign(month: number | null | undefined, day: number | null | undefined): string {
+function getZodiacSign(
+  month: number | null | undefined,
+  day: number | null | undefined,
+): string {
   if (month == null || day == null) return "";
   const d = month * 100 + day;
   if (d >= 1222 || d <= 119) return "Capricorn";
@@ -33,9 +46,16 @@ export function SoulRevealScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const firstName = getFirstName(user?.name ?? null);
-  const firstNameDisplay = firstName ? firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase() : "";
-  const zodiacSign = getZodiacSign(user?.birth_month ?? null, user?.birth_day ?? null);
-  const titleLine = [firstName.toUpperCase(), zodiacSign].filter(Boolean).join(" – ") || "My Soul";
+  const firstNameDisplay = firstName
+    ? firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
+    : "";
+  const zodiacSign = getZodiacSign(
+    user?.birth_month ?? null,
+    user?.birth_day ?? null,
+  );
+  const titleLine =
+    [firstName.toUpperCase(), zodiacSign].filter(Boolean).join(" – ") ||
+    "My Soul";
 
   return (
     <div className="bg-black text-white pr-1 pb-24 space-y-6">
@@ -67,7 +87,29 @@ export function SoulRevealScreen() {
 
           <div className="flex items-center gap-[11px]">
             <div className="h-[72px] w-[72px] p-2 border border-[#FFFFFF]/50 rounded-[7px]">
-              <ScorpioIcon />
+              {zodiacSign === "Scorpio" ? (
+                <ScorpioIcon />
+              ) : zodiacSign === "Pisces" ? (
+                <PiscesIcon />
+              ) : zodiacSign === "Aquarius" ? (
+                <AquariusIcon />
+              ) : zodiacSign === "Capricorn" ? (
+                <CapricornIcon />
+              ) : zodiacSign === "Leo" ? (
+                <LeoIcon />
+              ) : zodiacSign === "Virgo" ? (
+                <VirgoIcon />
+              ) : zodiacSign === "Libra" ? (
+                <LibraIcon />
+              ) : zodiacSign === "Sagittarius" ? (
+                <SagittariusIcon />
+              ) : zodiacSign === "Taurus" ? (
+                <TaurusIcon />
+              ) : zodiacSign === "Gemini" ? (
+                <GeminiIcon />
+              ) : zodiacSign === "Cancer" ? (
+                <CancerIcon />
+              ) : null}
             </div>
             <div
               style={{
