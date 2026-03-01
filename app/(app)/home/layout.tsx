@@ -40,13 +40,14 @@ export default function HomeLayout({
   }
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-[100dvh]">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
       <div
         ref={shellRef}
         className="
-          relative
           w-full
-          h-[100dvh]
+          relative
+          h-dvh 
+          sm:h-auto
           sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
@@ -55,10 +56,12 @@ export default function HomeLayout({
           flex-col
           items-center
           text-center
+          pt-4
+          pb-4
           overflow-hidden
         "
       >
-        <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-2 z-40 absolute top-0 left-0 right-0 px-[24px]">
+        <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-4 z-40 relative px-[24px] shrink-0">
           <div />
           <NuminaLogoIcon />
           <AppDrawer
@@ -68,11 +71,13 @@ export default function HomeLayout({
           />
         </div>
 
-        <div ref={scrollRef} className="flex-1 overflow-y-auto pt-18 w-full">
-          {children}
+        <div ref={scrollRef} className="flex-1 overflow-y-auto w-full">
+          <div className="py-4">{children}</div>
         </div>
 
-        <BottomNavigation />
+        <div className="w-full shrink-0">
+          <BottomNavigation />
+        </div>
       </div>
 
       {showSubscription && (

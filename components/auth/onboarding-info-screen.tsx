@@ -18,33 +18,31 @@ export function OnboardingInfoScreen({
   onStartTest,
 }: OnboardingInfoScreenProps) {
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
       <div
         className="
           w-full
-          h-screen
+          h-dvh 
+          sm:h-auto
           sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          overflow-y-auto
-          sm:overflow-hidden
+          overflow-y-auto 
           flex
           flex-col
           items-center
           text-center
-          px-[32px]
-          sm:px-[59px]
-          pb-12
+          px-[35px]
+          sm:px-[36px]
           pt-4
+          pb-4
         "
       >
-        {/* Logo */}
         <div className="flex justify-center mb-8">
           <NuminaLogoIcon />
         </div>
 
-        {/* Title */}
         <h1
           style={{
             fontFamily: "var(--font-gotham)",
@@ -55,7 +53,6 @@ export function OnboardingInfoScreen({
           What You’ll Receive
         </h1>
 
-        {/* Cards */}
         <div className="grid grid-cols-2 gap-4 mb-4 place-items-center">
           <InfoCard
             icon={<SoulMapIcon />}
@@ -75,7 +72,6 @@ export function OnboardingInfoScreen({
           />
         </div>
 
-        {/* Extra info */}
         <div
           style={{
             fontFamily: "var(--font-gotham)",
@@ -91,7 +87,6 @@ export function OnboardingInfoScreen({
           <p className="mt-3">All in just a few minutes</p>
         </div>
 
-        {/* CTA */}
         <Button
           onClick={onStartTest}
           style={{
@@ -115,7 +110,6 @@ export function OnboardingInfoScreen({
           Let’s start
         </Button>
 
-        {/* Footer */}
         <p
           style={{
             fontFamily: "var(--font-gotham)",
@@ -132,7 +126,7 @@ export function OnboardingInfoScreen({
 
 function InfoCard({ icon, text }: { icon: ReactNode; text: string }) {
   return (
-    <div className="border border-[#F2D08CE0] rounded-[10px] w-[150px] h-[165px] p-4 flex flex-col items-center justify-between pb-6 gap-3 text-center">
+    <div className="border border-[#F2D08CE0] rounded-[10px] w-full h-[165px] p-4 flex flex-col items-center justify-between pb-6 gap-3 text-center">
       {icon}
       <p
         style={{

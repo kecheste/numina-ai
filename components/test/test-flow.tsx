@@ -87,7 +87,6 @@ export function TestFlow({
   testTitle: string;
   category: string;
   onClose: () => void;
-  /** When set, the result screen uses this as "continue" (e.g. next onboarding test) instead of going back. */
   onboardingNext?: () => void;
 }) {
   const router = useRouter();
@@ -378,9 +377,9 @@ export function TestFlow({
       <div
         ref={shellRef}
         style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto sm:overflow-hidden flex flex-col items-center text-center pb-12"
+        className="relative w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center pb-4"
       >
-        <div className="flex items-center border-b border-gray-500/30 justify-between w-full max-w-[450px] bg-black px-[28px] py-2">
+        <div className="flex items-center border-b border-gray-500/30 justify-between w-full bg-black px-[28px] py-2 shrink-0 z-10">
           <button onClick={handleBack} className="cursor-pointer">
             <Icon
               icon="icons8:left-arrow"
@@ -593,7 +592,7 @@ export function TestFlow({
           <p className="text-red-400 text-sm px-6">{submitError}</p>
         )}
 
-        <div className="px-[32px] w-full mt-auto pt-8 mb-8">
+        <div className="px-[32px] w-full mt-auto pt-8">
           <Button
             className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[67px] text-black"
             style={{

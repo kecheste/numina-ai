@@ -30,82 +30,84 @@ export default function AboutYourself({
     : name.trim().length > 0;
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
       <div
         className="
           w-full
-          h-screen
+          h-dvh 
+          sm:h-auto
           sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          overflow-y-auto
-          sm:overflow-hidden
+          overflow-y-auto 
           flex
           flex-col
           items-center
           text-center
-          px-[37px]
-          pb-12
+          px-[35px]
+          sm:px-[36px]
           pt-4
+          pb-4
         "
       >
-        {/* Logo */}
         <div className="flex justify-center mb-8">
           <NuminaLogoIcon />
         </div>
 
-        {/* Content */}
-        <div className="flex flex-col items-center text-center mt-auto">
-          <h1
-            style={{
-              fontFamily: "var(--font-gotham)",
-              lineHeight: "33px",
-            }}
-            className="text-[18px] font-bold text-white mb-3"
-          >
-            About yourself
-          </h1>
+        <div className="flex-1 flex flex-col justify-center w-full">
+          <div className="flex flex-col items-center text-center">
+            <h1
+              style={{
+                fontFamily: "var(--font-gotham)",
+                lineHeight: "33px",
+              }}
+              className="text-[18px] font-bold text-white mb-3"
+            >
+              About yourself
+            </h1>
 
-          <p
-            style={{
-              fontFamily: "var(--font-gotham)",
-              lineHeight: "22px",
-            }}
-            className="text-[15px] font-light text-[#9ca3af] max-w-[320px]"
-          >
-            {registrationMode
-              ? "Enter your name, email, and password to create your account."
-              : "Enter your name to personalize your experience. Email is optional but enter it if you want to save your results or revisit them later."}
-          </p>
-        </div>
+            <p
+              style={{
+                fontFamily: "var(--font-gotham)",
+                lineHeight: "22px",
+              }}
+              className="text-[15px] font-light text-[#9ca3af] max-w-[320px]"
+            >
+              {registrationMode
+                ? "Enter your name, email, and password to create your account."
+                : "Enter your name to personalize your experience. Email is optional but enter it if you want to save your results or revisit them later."}
+            </p>
+          </div>
 
-        {error && (
-          <p className="text-sm text-red-400 mt-2 max-w-[320px]">{error}</p>
-        )}
+          {error && (
+            <p className="text-sm text-red-400 mt-2 max-w-[320px]">{error}</p>
+          )}
 
-        {/* Inputs */}
-        <div className="mt-10 space-y-4">
-          <GoldInput placeholder="Your Name" value={name} onChange={setName} />
-          <GoldInput
-            placeholder="Your E-mail"
-            value={email}
-            onChange={setEmail}
-            type="email"
-          />
-          <GoldInput
-            placeholder="Set Password"
-            value={password}
-            onChange={setPassword}
-            type="password"
-          />
-        </div>
+          <div className="mt-10 space-y-4">
+            <GoldInput
+              placeholder="Your Name"
+              value={name}
+              onChange={setName}
+            />
+            <GoldInput
+              placeholder="Your E-mail"
+              value={email}
+              onChange={setEmail}
+              type="email"
+            />
+            <GoldInput
+              placeholder="Set Password"
+              value={password}
+              onChange={setPassword}
+              type="password"
+            />
+          </div>
 
-        {/* CTA */}
-        <div className="mb-auto pt-10 w-full">
-          {isPending ? (
-            <div
-              className="
+          <div className="pt-10 w-full">
+            {isPending ? (
+              <div
+                className="
                 w-full
                 h-[60px]
                 sm:h-[67px]
@@ -113,22 +115,22 @@ export default function AboutYourself({
                 flex items-center justify-center
                 bg-[#F2D08CE0]
               "
-            >
-              <div
-                className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
-                aria-hidden
-              />
-            </div>
-          ) : (
-            <Button
-              disabled={!isComplete}
-              style={{
-                fontFamily: "var(--font-arp80)",
-                fontWeight: 400,
-                lineHeight: "33px",
-              }}
-              onClick={() => onContinue({ name, email, password })}
-              className="
+              >
+                <div
+                  className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
+                  aria-hidden
+                />
+              </div>
+            ) : (
+              <Button
+                disabled={!isComplete}
+                style={{
+                  fontFamily: "var(--font-arp80)",
+                  fontWeight: 400,
+                  lineHeight: "33px",
+                }}
+                onClick={() => onContinue({ name, email, password })}
+                className="
                 w-full
                 h-[60px]
                 sm:h-[67px]
@@ -143,10 +145,11 @@ export default function AboutYourself({
                 disabled:opacity-50
                 disabled:cursor-not-allowed
               "
-            >
-              Reveal My Path
-            </Button>
-          )}
+              >
+                Reveal My Path
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -4,7 +4,11 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
-import { searchPlaces, getTimezoneForCoords, type MapboxPlaceFeature } from "@/lib/mapbox";
+import {
+  searchPlaces,
+  getTimezoneForCoords,
+  type MapboxPlaceFeature,
+} from "@/lib/mapbox";
 import { getApiBaseUrl } from "@/lib/api-client";
 import type { BirthData } from "@/lib/birth-data";
 
@@ -48,7 +52,7 @@ export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
     if (isPending || !year || !month || !day) return;
     const monthIndex = months.indexOf(month) + 1;
     const dateOfBirth = `${year}-${String(monthIndex).padStart(2, "0")}-${String(
-      day
+      day,
     ).padStart(2, "0")}`;
     onContinue({
       dateOfBirth,
@@ -66,8 +70,27 @@ export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
   const isComplete = year && month && day;
 
   return (
-    <div className="flex items-center justify-center bg-white h-screen overflow-hidden">
-      <div className="w-full h-screen sm:max-w-[450px] bg-black overflow-y-auto flex flex-col items-center text-center px-[32px] pb-12 sm:pb-[4px] pt-4">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
+      <div
+        className="
+          w-full
+          h-dvh 
+          sm:h-auto
+          sm:min-h-0
+          sm:max-w-[450px]
+          sm:aspect-[9/20]
+          bg-black
+          overflow-y-auto 
+          flex
+          flex-col
+          items-center
+          text-center
+          px-[35px]
+          sm:px-[36px]
+          pt-4
+          pb-4
+        "
+      >
         <div className="flex justify-center mb-8">
           <NuminaLogoIcon />
         </div>
@@ -291,7 +314,12 @@ function PlaceAutocomplete({
   placeholder?: string;
   value: string;
   onInputChange: (text: string) => void;
-  onSelect: (placeName: string, lat: number, lng: number, timezone: string) => void;
+  onSelect: (
+    placeName: string,
+    lat: number,
+    lng: number,
+    timezone: string,
+  ) => void;
 }) {
   const [inputValue, setInputValue] = useState(value);
   const [isOpen, setIsOpen] = useState(false);

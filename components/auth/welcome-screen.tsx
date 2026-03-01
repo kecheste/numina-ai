@@ -12,33 +12,31 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onStartJourney, onLogin }: WelcomeScreenProps) {
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 h-screen overflow-hidden">
+    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
       <div
         className="
           w-full
-          h-screen
+          h-dvh 
+          sm:h-auto
           sm:min-h-0
           sm:max-w-[450px]
           sm:aspect-[9/20]
           bg-black
-          overflow-y-auto
-          sm:overflow-hidden
+          overflow-y-auto 
           flex
           flex-col
           items-center
           text-center
-          px-[62px]
-          sm:px-[59px]
-          pt-10
-          pb-12
+          px-[35px]
+          sm:px-[36px]
+          pt-4
+          pb-4
         "
       >
-        {/* Logo */}
         <div className="flex items-center justify-center mt-auto">
           <NuminaLogoIcon />
         </div>
 
-        {/* Tagline */}
         <p
           className="text-[21px] text-white mt-12 sm:mt-[70px]"
           style={{
@@ -50,8 +48,7 @@ export function WelcomeScreen({ onStartJourney, onLogin }: WelcomeScreenProps) {
           Discover your unique soul map. Powered by AI, psychology & mysticism.
         </p>
 
-        {/* CTA */}
-        <div className="w-full mb-[130px] pt-[135px]">
+        <div className="w-full mb-[120px] pt-[135px]">
           <Button
             onClick={onStartJourney}
             style={{
@@ -78,7 +75,7 @@ export function WelcomeScreen({ onStartJourney, onLogin }: WelcomeScreenProps) {
           {onLogin && (
             <p
               style={{
-                fontFamily: "var(--font-fangsong)",
+                fontFamily: "var(--font-gotham)",
                 fontWeight: 500,
                 lineHeight: "24px",
               }}

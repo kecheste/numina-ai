@@ -53,9 +53,10 @@ export function ResetPasswordScreen({
           flex-col
           items-center
           text-center
-          px-[37px]
-          pb-12
+          px-[35px]
+          sm:px-[36px]
           pt-4
+          pb-18
         "
       >
         <div className="flex justify-center mb-8">
