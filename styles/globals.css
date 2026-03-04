@@ -124,6 +124,10 @@
   }
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 *::-webkit-scrollbar {
   width: 2px;
   height: 6px;

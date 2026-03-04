@@ -1,21 +1,9 @@
 /**
- * Mapbox Geocoding API (v5) for place search.
- * Uses NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN (or NEXT_PUBLIC_MAPBOX_API_KEY) from env.
+ * Place search and timezone helpers.
+ * Place search is proxied through our backend so the Mapbox API key is never exposed to the client.
  */
 
-const MAPBOX_BASE = "https://api.mapbox.com/geocoding/v5/mapbox.places";
-
-function getMapboxToken(): string {
-  const token =
-    typeof process !== "undefined" &&
-    (process.env.NEXT_PUBLIC_MAPBOX_API_KEY ?? process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN);
-  if (!token || typeof token !== "string") {
-    throw new Error(
-      "Mapbox token missing. Set NEXT_PUBLIC_MAPBOX_API_KEY in .env.local (client-side requires NEXT_PUBLIC_ prefix)."
-    );
-  }
-  return token;
-}
+import { getApiBaseUrl } from "./api-client";
 
 export interface MapboxPlaceFeature {
   id: string;
@@ -24,14 +12,14 @@ export interface MapboxPlaceFeature {
   geometry: { coordinates: [number, number] };
 }
 
-export interface MapboxGeocodeResponse {
-  type: string;
-  features: MapboxPlaceFeature[];
+interface PlacesSearchResponse {
+  type?: string;
+  features?: MapboxPlaceFeature[];
 }
 
 /**
- * Search for places via Mapbox Geocoding API.
- * Call only from client (requires NEXT_PUBLIC_* token).
+ * Search for places via the backend proxy. The Mapbox token is only used on the server.
+ * No API key is sent to or visible in the browser.
  */
 export async function searchPlaces(
   query: string,
@@ -40,16 +28,16 @@ export async function searchPlaces(
   const trimmed = query.trim();
   if (trimmed.length < 2) return [];
 
-  const token = getMapboxToken();
+  const base = getApiBaseUrl();
   const limit = Math.min(Math.max(options.limit ?? 5, 1), 10);
-  const url = `${MAPBOX_BASE}/${encodeURIComponent(trimmed)}.json?access_token=${encodeURIComponent(token)}&limit=${limit}&types=place,locality,address,region`;
+  const url = `${base.replace(/\/$/, "")}/api/v1/utils/places/search?q=${encodeURIComponent(trimmed)}&limit=${limit}`;
 
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Mapbox geocoding failed: ${res.status}`);
+    throw new Error(`Place search failed: ${res.status}`);
   }
 
-  const data = (await res.json()) as MapboxGeocodeResponse;
+  const data = (await res.json()) as PlacesSearchResponse;
   if (!data?.features || !Array.isArray(data.features)) {
     return [];
   }
@@ -64,7 +52,6 @@ export async function searchPlaces(
 
 /**
  * Get IANA timezone for a point (lat, lng) via the backend.
- * Backend uses a lightweight library (no heavy geocoding).
  */
 export async function getTimezoneForCoords(
   lat: number,

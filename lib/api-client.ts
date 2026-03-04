@@ -48,6 +48,7 @@ export interface RegisterPayload {
   email: string;
   password: string;
   name: string;
+  full_name?: string | null;
   birth_year: number;
   birth_month: number;
   birth_day: number;
@@ -152,6 +153,7 @@ export interface UserProfile {
   subscription_status: string;
   is_active: boolean;
   role: string;
+  life_path_number: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -160,6 +162,26 @@ export async function apiGetMe(): Promise<UserProfile | null> {
   const res = await fetchWithAuth("/api/v1/users/me");
   if (res.status === 401) return null;
   if (!res.ok) throw new Error("Failed to fetch user");
+  return res.json();
+}
+
+export interface CheckoutSessionResponse {
+  url: string;
+}
+
+export async function apiCreateCheckoutSession(): Promise<CheckoutSessionResponse> {
+  const res = await fetchWithAuth(
+    "/api/v1/subscription/create-checkout-session",
+    {
+      method: "POST",
+    },
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Could not start checkout",
+    );
+  }
   return res.json();
 }
 
@@ -261,7 +283,18 @@ export async function apiFetchTestQuestions(
   const res = await fetchWithAuth(`/api/v1/tests/${testIdOrSlug}/questions`);
   if (res.status === 401) throw new Error("Unauthorized");
   if (res.status === 404) return [];
-  if (!res.ok) throw new Error("Failed to fetch questions");
+  if (res.status === 409) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "You have already taken this test.",
+    );
+  }
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Failed to fetch questions",
+    );
+  }
   return res.json();
 }
 
@@ -270,7 +303,12 @@ export interface AstrologyChartResponse {
   sun_sign: string;
   moon_sign: string;
   rising_sign: string;
-  element_distribution: { fire: number; earth: number; air: number; water: number };
+  element_distribution: {
+    fire: number;
+    earth: number;
+    air: number;
+    water: number;
+  };
 }
 
 /** Fetch current user's astrology chart. Auth required. 404 if birth data incomplete. */
@@ -280,7 +318,8 @@ export async function apiFetchAstrologyChart(): Promise<AstrologyChartResponse> 
   if (res.status === 404) {
     const err = await res.json().catch(() => ({}));
     throw new Error(
-      (err as { detail?: string }).detail ?? "Birth data incomplete. Add birth date and place in profile.",
+      (err as { detail?: string }).detail ??
+        "Birth data incomplete. Add birth date and place in profile.",
     );
   }
   if (!res.ok) throw new Error("Failed to load astrology chart");
@@ -300,7 +339,8 @@ export async function apiFetchNumerology(): Promise<NumerologyResponse> {
   if (res.status === 404) {
     const err = await res.json().catch(() => ({}));
     throw new Error(
-      (err as { detail?: string }).detail ?? "Birth date and name are required. Add them in your profile.",
+      (err as { detail?: string }).detail ??
+        "Birth date and name are required. Add them in your profile.",
     );
   }
   if (!res.ok) throw new Error("Failed to load numerology");
@@ -343,6 +383,66 @@ export interface TestResultResponse {
   insights: string[] | null;
   recommendations: string[] | null;
   narrative: string | null;
+  /** Structured LLM output: title, summary, coreTraits, strengths, challenges, spiritualInsight, tryThis, avoidThis, synchronicities */
+  llm_result_json?: {
+    title?: string;
+    summary?: string;
+    coreTraits?: string[];
+    strengths?: string[];
+    challenges?: string[];
+    spiritualInsight?: string;
+    tryThis?: string[];
+    avoidThis?: string[];
+    synchronicities?: { test: string; connection: string }[];
+    chartData?: unknown[];
+  } | null;
+}
+
+/** Synthesis response: preview (3 tests) or full (6+). Result shape from LLM. */
+export interface SynthesisResponse {
+  type: "preview" | "full";
+  completed_count: number;
+  result: {
+    youAre?: string;
+    sureThings?: string[];
+    identitySummary?: string;
+    growthAreas?: string[];
+    nextFocus?: string;
+    themes?: string[];
+    strengths?: string[];
+    shadowPatterns?: string[];
+  };
+}
+
+/** Daily message for My Soul screen. Keyed by date; no LLM (static list). No auth required. */
+export interface DailyMessageResponse {
+  message: string;
+  quote: string;
+}
+
+export async function apiGetDailyMessage(): Promise<DailyMessageResponse> {
+  const res = await fetchWithAuth("/api/v1/daily-message");
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Failed to load daily message",
+    );
+  }
+  return res.json();
+}
+
+/** Fetch current user's synthesis. Returns null when 404 (fewer than 3 tests completed). Auth required. */
+export async function apiGetSynthesis(): Promise<SynthesisResponse | null> {
+  const res = await fetchWithAuth("/api/v1/synthesis");
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Failed to load synthesis",
+    );
+  }
+  return res.json();
 }
 
 /** Submit test answers. Auth required. */
@@ -387,8 +487,26 @@ export async function apiGetTestResult(
   if (res.status === 401) throw new Error("Unauthorized");
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
+    throw new Error((err as { detail?: string }).detail ?? "Result not found");
+  }
+  return res.json();
+}
+
+/** Ensure Life Path (19) result is queued after onboarding. Call when user finishes Chakra + MBTI onboarding. */
+export async function apiEnsureOnboardingLifePath(): Promise<{
+  queued: boolean;
+  already_exists?: boolean;
+  reason?: string;
+  result_id?: number;
+}> {
+  const res = await fetchWithAuth("/api/v1/tests/ensure-onboarding-life-path", {
+    method: "POST",
+  });
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
     throw new Error(
-      (err as { detail?: string }).detail ?? "Result not found",
+      (err as { detail?: string }).detail ?? "Ensure onboarding failed",
     );
   }
   return res.json();

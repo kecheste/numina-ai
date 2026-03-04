@@ -2,6 +2,7 @@ export interface UserProfile {
   id: number;
   email: string;
   name: string | null;
+  full_name: string | null;
   birth_year: number | null;
   birth_month: number | null;
   birth_day: number | null;

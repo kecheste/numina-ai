@@ -5,7 +5,6 @@ import {
   CognitiveStyleResult,
   MbtiTypeResult,
   AstrologyBlueprintResult,
-  NumerologyBlueprintResult,
   ChakraAlignmentResult,
   type MbtiResultData,
 } from "./result-view";
@@ -66,10 +65,6 @@ export function TestResults({
           <AstrologyBlueprintResult onClose={onClose} shellRef={shellRef} />
         )}
 
-        {testId === TEST_IDS.NUMEROLOGY && (
-          <NumerologyBlueprintResult onClose={onClose} shellRef={shellRef} />
-        )}
-
         {testId === TEST_IDS.CHAKRA_ASSESSMENT && (
           <ChakraAlignmentResult
             testTitle="Chakra Alignment"
@@ -80,7 +75,6 @@ export function TestResults({
         {testId !== TEST_IDS.COGNITIVE_STYLE &&
           testId !== TEST_IDS.MBTI_TYPE &&
           testId !== TEST_IDS.ASTROLOGY_CHART &&
-          testId !== TEST_IDS.NUMEROLOGY &&
           testId !== TEST_IDS.CHAKRA_ASSESSMENT && (
             <CognitiveStyleResult onClose={onClose} />
           )}

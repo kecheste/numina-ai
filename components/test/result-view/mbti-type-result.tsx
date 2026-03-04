@@ -120,7 +120,7 @@ export function MbtiTypeResult({
           }}
           className="cursor-pointer mb-auto mt-[70px] hover:bg-[#F2D08CC0] w-full h-[60px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[18px] transition-colors"
         >
-          Done
+          Continue
         </Button>
       </div>
     </div>

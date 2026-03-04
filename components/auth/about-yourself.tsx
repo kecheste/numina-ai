@@ -3,6 +3,11 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
+import {
+  validateFullName,
+  validateEmail,
+  validatePassword,
+} from "@/lib/validation";
 
 interface AboutYourselfProps {
   onContinue: (data: {
@@ -21,13 +26,33 @@ export default function AboutYourself({
   error,
   isPending = false,
 }: AboutYourselfProps) {
-  const [name, setName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [touched, setTouched] = useState({ name: false, email: false, password: false });
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  const isComplete = registrationMode
-    ? name.trim().length > 0 && email.trim().length > 0 && password.length >= 8
-    : name.trim().length > 0;
+  const nameValidation = validateFullName(fullName);
+  const emailValidation = registrationMode ? validateEmail(email) : { valid: true };
+  const passwordValidation = registrationMode ? validatePassword(password) : { valid: true };
+
+  const isFormValid =
+    nameValidation.valid && emailValidation.valid && passwordValidation.valid;
+
+  const showNameError = (touched.name || submitAttempted) && !nameValidation.valid;
+  const showEmailError = (touched.email || submitAttempted) && registrationMode && !emailValidation.valid;
+  const showPasswordError = (touched.password || submitAttempted) && registrationMode && !passwordValidation.valid;
+
+  const handleSubmit = () => {
+    setSubmitAttempted(true);
+    if (!nameValidation.valid || (registrationMode && (!emailValidation.valid || !passwordValidation.valid))) {
+      return;
+    }
+    onContinue({
+      name: fullName.trim(),
+      ...(registrationMode ? { email: email.trim(), password } : {}),
+    });
+  };
 
   return (
     <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
@@ -75,8 +100,8 @@ export default function AboutYourself({
               className="text-[15px] font-light text-[#9ca3af] max-w-[320px]"
             >
               {registrationMode
-                ? "Enter your name, email, and password to create your account."
-                : "Enter your name to personalize your experience. Email is optional but enter it if you want to save your results or revisit them later."}
+                ? "Enter your full name (first and last), email, and password to create your account."
+                : "Enter your full name to personalize your experience. Email is optional but enter it if you want to save your results or revisit them later."}
             </p>
           </div>
 
@@ -85,23 +110,57 @@ export default function AboutYourself({
           )}
 
           <div className="mt-10 space-y-4">
-            <GoldInput
-              placeholder="Your Name"
-              value={name}
-              onChange={setName}
-            />
-            <GoldInput
-              placeholder="Your E-mail"
-              value={email}
-              onChange={setEmail}
-              type="email"
-            />
-            <GoldInput
-              placeholder="Set Password"
-              value={password}
-              onChange={setPassword}
-              type="password"
-            />
+            <div>
+              <GoldInput
+                placeholder="Your Full Name (e.g. John Doe)"
+                value={fullName}
+                onChange={(v) => {
+                  setFullName(v);
+                  setTouched((t) => ({ ...t, name: true }));
+                }}
+                onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+                ariaInvalid={showNameError}
+              />
+              {showNameError && (
+                <p className="text-sm text-red-400 mt-1 text-left">{nameValidation.message}</p>
+              )}
+            </div>
+            {registrationMode && (
+              <>
+                <div>
+                  <GoldInput
+                    placeholder="Your E-mail"
+                    value={email}
+                    onChange={(v) => {
+                      setEmail(v);
+                      setTouched((t) => ({ ...t, email: true }));
+                    }}
+                    onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                    type="email"
+                    ariaInvalid={showEmailError}
+                  />
+                  {showEmailError && (
+                    <p className="text-sm text-red-400 mt-1 text-left">{emailValidation.message}</p>
+                  )}
+                </div>
+                <div>
+                  <GoldInput
+                    placeholder="Set Password (min 8 characters)"
+                    value={password}
+                    onChange={(v) => {
+                      setPassword(v);
+                      setTouched((t) => ({ ...t, password: true }));
+                    }}
+                    onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                    type="password"
+                    ariaInvalid={showPasswordError}
+                  />
+                  {showPasswordError && (
+                    <p className="text-sm text-red-400 mt-1 text-left">{passwordValidation.message}</p>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           <div className="pt-10 w-full">
@@ -123,13 +182,16 @@ export default function AboutYourself({
               </div>
             ) : (
               <Button
-                disabled={!isComplete}
+                disabled={
+                  !fullName.trim() ||
+                  (registrationMode && (!email.trim() || password.length < 8))
+                }
                 style={{
                   fontFamily: "var(--font-arp80)",
                   fontWeight: 400,
                   lineHeight: "33px",
                 }}
-                onClick={() => onContinue({ name, email, password })}
+                onClick={handleSubmit}
                 className="
                 w-full
                 h-[60px]
@@ -160,19 +222,25 @@ function GoldInput({
   placeholder,
   value,
   onChange,
+  onBlur,
   type = "text",
+  ariaInvalid,
 }: {
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
   type?: string;
+  ariaInvalid?: boolean;
 }) {
   return (
     <input
       type={type}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      onBlur={onBlur}
       placeholder={placeholder}
+      aria-invalid={ariaInvalid}
       className="
         w-full
         bg-black

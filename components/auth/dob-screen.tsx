@@ -11,6 +11,7 @@ import {
 } from "@/lib/mapbox";
 import { getApiBaseUrl } from "@/lib/api-client";
 import type { BirthData } from "@/lib/birth-data";
+import { validateTimeOfBirth, getDaysInMonth } from "@/lib/validation";
 
 interface DOBScreenProps {
   onContinue: (data: BirthData) => void;
@@ -18,7 +19,7 @@ interface DOBScreenProps {
   isPending?: boolean;
 }
 
-export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
+export function DOBScreen({ onContinue, onBack, isPending = false }: DOBScreenProps) {
   const [year, setYear] = useState<string | null>(null);
   const [month, setMonth] = useState<string | null>(null);
   const [day, setDay] = useState<string | null>(null);
@@ -46,20 +47,41 @@ export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
     "November",
     "December",
   ];
-  const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
+
+  const yearNum = year ? parseInt(year, 10) : 0;
+  const monthIndex = month ? months.indexOf(month) + 1 : 0;
+  const maxDay = yearNum && monthIndex ? getDaysInMonth(yearNum, monthIndex) : 31;
+  const days = Array.from({ length: maxDay }, (_, i) => `${i + 1}`);
+
+  const timeValidation = validateTimeOfBirth(time);
+  const [timeTouched, setTimeTouched] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const showTimeError = (timeTouched || submitAttempted) && time.trim() !== "" && !timeValidation.valid;
+
+  const dayNum = day ? parseInt(day, 10) : 0;
+  const dayValid = !day || (dayNum >= 1 && dayNum <= maxDay);
+
+  useEffect(() => {
+    if (day && maxDay > 0 && dayNum > maxDay) {
+      setDay(String(maxDay));
+    }
+  }, [year, month, maxDay]); // eslint-disable-line react-hooks/exhaustive-deps -- only clamp when maxDay changes
 
   const handleContinue = () => {
+    setSubmitAttempted(true);
     if (isPending || !year || !month || !day) return;
-    const monthIndex = months.indexOf(month) + 1;
-    const dateOfBirth = `${year}-${String(monthIndex).padStart(2, "0")}-${String(
+    if (time.trim() && !timeValidation.valid) return;
+    if (!dayValid) return;
+    const monthIdx = months.indexOf(month) + 1;
+    const dateOfBirth = `${year}-${String(monthIdx).padStart(2, "0")}-${String(
       day,
     ).padStart(2, "0")}`;
     onContinue({
       dateOfBirth,
       birthYear: year,
-      birthMonth: String(monthIndex),
+      birthMonth: String(monthIdx),
       birthDay: day,
-      birthTime: time,
+      birthTime: time.trim() || "",
       birthPlace: place,
       birthPlaceLat: placeLat ?? null,
       birthPlaceLng: placeLng ?? null,
@@ -67,7 +89,12 @@ export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
     });
   };
 
-  const isComplete = year && month && day;
+  const isComplete =
+    year &&
+    month &&
+    day &&
+    dayValid &&
+    (time.trim() === "" || timeValidation.valid);
 
   return (
     <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
@@ -138,14 +165,25 @@ export function DOBScreen({ onContinue, isPending = false }: DOBScreenProps) {
             options={months}
           />
           <Dropdown label="Day" value={day} onChange={setDay} options={days} />
-          <TextInput
-            label="Time of Birth"
-            placeholder="00:00 or I don't know"
-            value={time}
-            onChange={setTime}
-          />
+          <div>
+            <TextInput
+              label="Time of Birth (optional)"
+              placeholder="24h format e.g. 14:30"
+              value={time}
+              onChange={(v) => {
+                setTime(v);
+                setTimeTouched(true);
+              }}
+              onBlur={() => setTimeTouched(true)}
+            />
+            {showTimeError && (
+              <p className="text-sm text-red-400 mt-1 text-left">
+                {timeValidation.message}
+              </p>
+            )}
+          </div>
           <PlaceAutocomplete
-            label="Place of Birth"
+            label="Place of Birth (optional)"
             placeholder="Search for a city or place..."
             value={place}
             onInputChange={(text) => {
@@ -278,11 +316,13 @@ function TextInput({
   placeholder,
   value,
   onChange,
+  onBlur,
 }: {
   label: string;
   placeholder?: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
 }) {
   return (
     <div className="relative">
@@ -290,6 +330,7 @@ function TextInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
         placeholder={placeholder || label}
         style={{
           fontFamily: "var(--font-gotham)",

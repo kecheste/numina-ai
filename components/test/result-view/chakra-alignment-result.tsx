@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
+import { Button } from "@/components/ui/button";
 
 interface ChakraAlignmentResultProps {
   testTitle: string;
@@ -345,6 +346,17 @@ export function ChakraAlignmentResult({
               <span className="underline">{AVOID_THIS[1]}</span>
             </p>
           </div>
+          <Button
+            onClick={onBack}
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            className="cursor-pointer mt-4 mb-2 w-full h-[60px] bg-[#F2D08CE0] text-black rounded-[10px] text-[18px] hover:bg-[#F2D08CC0] transition-colors"
+          >
+            Continue
+          </Button>
         </div>
       </div>
     </div>

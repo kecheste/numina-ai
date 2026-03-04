@@ -1,7 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
+import {
+  apiGetDailyMessage,
+  apiGetSynthesis,
+  apiListTestResults,
+} from "@/lib/api-client";
+import type { TestResultResponse } from "@/lib/api-client";
 import { RootChakraIcon } from "../icons/mysoul/chakra";
 import { InfjIcon } from "../icons/mysoul/infj";
 import { LifePathIcon } from "../icons/mysoul/lifepath";
@@ -42,9 +49,83 @@ function getZodiacSign(
   return "Sagittarius";
 }
 
+const ONBOARDING_TEST_IDS = [13, 7, 19] as const;
+
+const TOTAL_TEST_COUNT = 24;
+
+const ZODIAC_SUMMARY: Record<string, string> = {
+  Aries: "Bold and fearless, always ready to lead the charge.",
+  Taurus: "Grounded and loyal, steady in love and ambition.",
+  Gemini: "Curious and quick-minded, thriving on ideas.",
+  Cancer: "Deeply intuitive, protective, and emotionally wise.",
+  Leo: "Radiant and expressive, leading with heart and fire.",
+  Virgo: "Precise and thoughtful, devoted to meaningful service.",
+  Libra: "Charming and diplomatic, seeking harmony and beauty.",
+  Scorpio: "Intense and transformative, drawn to hidden truths.",
+  Sagittarius: "Adventurous and optimistic, chasing wisdom.",
+  Capricorn: "Disciplined and ambitious, building lasting success.",
+  Aquarius: "Visionary and unconventional, shaping the future.",
+  Pisces: "Compassionate and dreamy, flowing with imagination.",
+};
+
+const MOST_SURE_DEFAULT_TAGS = [
+  "Goals-oriented and disciplined",
+  "Connected to the earth",
+  "Deeply empathetic",
+  "You are a Visionary Empath",
+];
+
+function getLatestResultByTestId(
+  results: TestResultResponse[],
+): Record<number, TestResultResponse> {
+  const byTest: Record<number, TestResultResponse> = {};
+  for (const r of results) {
+    if (
+      ONBOARDING_TEST_IDS.includes(r.test_id as 13 | 7 | 19) &&
+      !byTest[r.test_id]
+    ) {
+      byTest[r.test_id] = r;
+    }
+  }
+  return byTest;
+}
+
+function getCardLabel(
+  result: TestResultResponse | undefined,
+  testId: number,
+): string {
+  if (!result) {
+    if (testId === 13) return "Chakra Scan";
+    if (testId === 7) return "MBTI Type";
+    if (testId === 19) return "Life Path";
+    return "Take test";
+  }
+  const title =
+    result.llm_result_json?.title ?? result.personality_type ?? null;
+  if (title) return title;
+  if (testId === 13) return "Chakra";
+  if (testId === 7) return result.personality_type ?? "MBTI";
+  if (testId === 19) return "Life Path";
+  return result.test_title;
+}
+
 export function SoulRevealScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const [resultsByTest, setResultsByTest] = useState<
+    Record<number, TestResultResponse>
+  >({});
+  const [dailyMessage, setDailyMessage] = useState<{
+    message: string;
+    quote: string;
+  } | null>(null);
+  const [dailyMessageError, setDailyMessageError] = useState<string | null>(
+    null,
+  );
+
+  const [completedTestsCount, setCompletedTestsCount] = useState(0);
+  const [sureThings, setSureThings] = useState<string[]>([]);
+
   const firstName = getFirstName(user?.name ?? null);
   const firstNameDisplay = firstName
     ? firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
@@ -57,23 +138,97 @@ export function SoulRevealScreen() {
     [firstName.toUpperCase(), zodiacSign].filter(Boolean).join(" – ") ||
     "My Soul";
 
+  useEffect(() => {
+    let cancelled = false;
+    apiListTestResults()
+      .then((list) => {
+        if (cancelled) return;
+        setResultsByTest(getLatestResultByTestId(list));
+        const completedIds = new Set<number>();
+        for (const r of list) {
+          if (r.status === "completed") {
+            completedIds.add(r.test_id);
+          }
+        }
+        setCompletedTestsCount(completedIds.size);
+      })
+      .catch(() => {
+        if (!cancelled) setResultsByTest({});
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    apiGetSynthesis()
+      .then((data) => {
+        if (cancelled || !data?.result) return;
+        const raw = (data.result as { sureThings?: unknown }).sureThings;
+        if (Array.isArray(raw)) {
+          const cleaned = raw
+            .map((x) =>
+              typeof x === "string" ? x.trim() : String(x ?? "").trim(),
+            )
+            .filter((x) => x.length > 0);
+          if (cleaned.length > 0) {
+            setSureThings(cleaned);
+          }
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setSureThings([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    setDailyMessageError(null);
+    apiGetDailyMessage()
+      .then((data) => {
+        if (!cancelled)
+          setDailyMessage({ message: data.message, quote: data.quote });
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setDailyMessageError(
+            e instanceof Error ? e.message : "Failed to load",
+          );
+          setDailyMessage(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="bg-black text-white pr-1 pb-24 space-y-6">
-      {/* Progress */}
       <div className="mb-4 w-full relative">
         <div className="h-[15px] w-full rounded-full bg-transparent border border-[#F2D08C]/50 overflow-hidden">
           <div
             className="h-full rounded-full"
-            style={{ width: "20.5%", backgroundColor: "#282828" }}
+            style={{
+              width: `${Math.min(
+                100,
+                TOTAL_TEST_COUNT > 0
+                  ? (completedTestsCount / TOTAL_TEST_COUNT) * 100
+                  : 0,
+              ).toFixed(1)}%`,
+              backgroundColor: "#282828",
+            }}
           />
         </div>
 
         <p className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px] font-[400] z-10 pointer-events-none">
-          2/16
+          {completedTestsCount}/{TOTAL_TEST_COUNT}
         </p>
       </div>
 
-      {/* Identity */}
       <div className="space-y-2.5">
         <div className="text-center space-y-2">
           <h1
@@ -118,12 +273,13 @@ export function SoulRevealScreen() {
               }}
               className="border border-[#FFFFFF]/50 rounded-[7px] p-3 h-[72px] text-[15px] text-[#F2D08C]"
             >
-              A grounded intuitive with cosmic insights
+              {zodiacSign && ZODIAC_SUMMARY[zodiacSign]
+                ? ZODIAC_SUMMARY[zodiacSign]
+                : "A grounded intuitive with cosmic insights"}
             </div>
           </div>
         </div>
 
-        {/* Trinity Cards */}
         <div className="grid grid-cols-3 gap-3">
           <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
             <RootChakraIcon />
@@ -133,9 +289,9 @@ export function SoulRevealScreen() {
                 fontWeight: "325",
                 lineHeight: "17px",
               }}
-              className="text-[13px] text-[#ffffff] font-book"
+              className="text-[13px] text-[#ffffff] font-book text-center"
             >
-              Root Chakra Srtong
+              {getCardLabel(resultsByTest[13], 13)}
             </p>
           </div>
           <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
@@ -146,9 +302,9 @@ export function SoulRevealScreen() {
                 fontWeight: "325",
                 lineHeight: "17px",
               }}
-              className="text-[13px] text-[#ffffff] font-book"
+              className="text-[13px] text-[#ffffff] font-book text-center"
             >
-              INFJ The advocate
+              {getCardLabel(resultsByTest[7], 7)}
             </p>
           </div>
           <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
@@ -159,15 +315,20 @@ export function SoulRevealScreen() {
                 fontWeight: "325",
                 lineHeight: "17px",
               }}
-              className="text-[13px] text-[#ffffff] font-book"
+              className="text-[13px] text-[#ffffff] font-book text-center"
             >
-              Life <br /> Path
+              {resultsByTest[19] ? (
+                getCardLabel(resultsByTest[19], 19)
+              ) : (
+                <>
+                  Life <br /> Path
+                </>
+              )}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Most Sure Things */}
       <div className="space-y-2">
         <p
           style={{
@@ -181,27 +342,23 @@ export function SoulRevealScreen() {
         </p>
 
         <div className="flex flex-wrap gap-[6px] justify-center">
-          {[
-            "Goals-oriented and disciplined",
-            "Connected to the earth",
-            "Deeply empathetic",
-            "You are a Visionary Empath",
-          ].map((tag) => (
-            <span
-              key={tag}
-              style={{
-                fontFamily: "var(--font-gotham)",
-                fontWeight: "325",
-              }}
-              className="p-1 rounded-[7px] border border-[#F2D08C]/40 text-[13px] text-[#F2D08C]"
-            >
-              {tag}
-            </span>
-          ))}
+          {(sureThings.length > 0 ? sureThings : MOST_SURE_DEFAULT_TAGS)
+            .slice(0, 4)
+            .map((tag) => (
+              <span
+                key={tag}
+                style={{
+                  fontFamily: "var(--font-gotham)",
+                  fontWeight: "325",
+                }}
+                className="p-1 rounded-[7px] border border-[#F2D08C]/40 text-[13px] text-[#F2D08C]"
+              >
+                {tag}
+              </span>
+            ))}
         </div>
       </div>
 
-      {/* CTA */}
       <button
         style={{
           fontFamily: "var(--font-arp80)",
@@ -214,7 +371,6 @@ export function SoulRevealScreen() {
         Reveal my Full Synthesis
       </button>
 
-      {/* Daily Message */}
       <div className="relative z-0 rounded-[14px] bg-[#F2D08C33] border border-[#F2D08C]/50 p-4 pt-6 space-y-2">
         <span className="absolute z-5 left-4 top-[-2] h-[2px] w-[130px] bg-black" />
 
@@ -238,14 +394,28 @@ export function SoulRevealScreen() {
         >
           ✨ Cosmic Energy:
           <br />
-          Today is touched by the Solstice’s lingering energy — a turning point
-          of light and inner clarity. Scorpio's deep waters flow steadily under
-          this brightness, inviting reflection without isolation. You might feel
-          a quiet pull to observe more than act.
+          {dailyMessageError && (
+            <span className="text-[#9ca3af]">Daily message unavailable.</span>
+          )}
+          {!dailyMessageError && !dailyMessage && (
+            <span className="text-[#9ca3af]">Loading today’s message…</span>
+          )}
+          {!dailyMessageError &&
+            dailyMessage &&
+            dailyMessage.message.split("\n").map((line, i) => (
+              <span key={i}>
+                {i > 0 && <br />}
+                {line}
+              </span>
+            ))}
         </p>
       </div>
       <p className="text-xs italic text-[#F2D08C] text-center">
-        “Your silence speaks in sacred language.”
+        {dailyMessage
+          ? `"${dailyMessage.quote}"`
+          : dailyMessageError
+            ? ""
+            : '"Your silence speaks in sacred language."'}
       </p>
     </div>
   );

@@ -15,7 +15,48 @@ interface TestResultViewProps {
   result?: TestResultResponse | null;
 }
 
-// Mock data for different test types
+function ensureStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map((x) => (typeof x === "string" ? x : String(x)));
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+    // If LLM returned a stringified array like "['A', 'B']" or '["A","B"]', try to parse it.
+    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+      try {
+        const normalized = trimmed.replace(/'/g, '"');
+        const parsed = JSON.parse(normalized);
+        if (Array.isArray(parsed)) {
+          return parsed.map((x) => (typeof x === "string" ? x : String(x)));
+        }
+      } catch {
+        // fall through to single-item handling
+      }
+    }
+    return [trimmed];
+  }
+  return [];
+}
+
+function ensureSynchronicities(
+  value: unknown,
+): { test: string; connection: string }[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(
+      (x): x is Record<string, unknown> => x != null && typeof x === "object",
+    )
+    .map((x) => ({
+      test: typeof x.test === "string" ? x.test : String(x.test ?? ""),
+      connection:
+        typeof x.connection === "string"
+          ? x.connection
+          : String(x.connection ?? ""),
+    }))
+    .filter((s) => s.test || s.connection);
+}
+
 const testResultsData: Record<
   number,
   {
@@ -26,6 +67,8 @@ const testResultsData: Record<
     strengths: string[];
     challenges: string[];
     spiritualInsight: string;
+    tryThis?: string[];
+    avoidThis?: string[];
     chartData: {
       number: string;
       title: string;
@@ -291,8 +334,18 @@ const defaultResult = {
   challenges: ["May overthink", "Can be too self-critical"],
   spiritualInsight:
     "Your journey is about continuous growth and self-discovery. Trust the process.",
-  chartData: [],
-  synchronicities: [],
+  tryThis: [
+    "Revisit your answers as you grow.",
+    "Explore more tests for a fuller picture.",
+  ],
+  avoidThis: ["Rushing to conclusions.", "Comparing yourself to others."],
+  chartData: [] as {
+    number: string;
+    title: string;
+    line2: string;
+    line3: string;
+  }[],
+  synchronicities: [] as { test: string; connection: string }[],
 };
 
 export function TestResultView({
@@ -304,21 +357,64 @@ export function TestResultView({
 }: TestResultViewProps) {
   const shellRef = useRef<HTMLDivElement>(null);
   const mockResult = testResultsData[testId] || defaultResult;
-  const result = apiResult
+  const llm = apiResult?.llm_result_json;
+  const result: {
+    subtitle: string;
+    mainResult: string;
+    description: string;
+    coreTraits: string[];
+    strengths: string[];
+    challenges: string[];
+    spiritualInsight: string;
+    tryThis: string[];
+    avoidThis: string[];
+    chartData: {
+      number: string;
+      title: string;
+      line2: string;
+      line3: string;
+    }[];
+    synchronicities: { test: string; connection: string }[];
+  } = apiResult
     ? {
         subtitle: "Your Result",
-        mainResult: apiResult.personality_type ?? mockResult.mainResult,
+        mainResult:
+          llm?.title ?? apiResult.personality_type ?? mockResult.mainResult,
         description:
+          (llm?.summary && llm.summary.trim()) ||
           (apiResult.narrative && apiResult.narrative.trim()) ||
           mockResult.description,
-        coreTraits: apiResult.insights?.slice(0, 5) ?? mockResult.coreTraits,
-        strengths: apiResult.insights ?? mockResult.strengths,
-        challenges: apiResult.recommendations ?? mockResult.challenges,
-        spiritualInsight: mockResult.spiritualInsight,
-        chartData: mockResult.chartData,
-        synchronicities: mockResult.synchronicities,
+        coreTraits:
+          ensureStringArray(llm?.coreTraits ?? apiResult.insights).length > 0
+            ? ensureStringArray(llm?.coreTraits ?? apiResult.insights)
+            : mockResult.coreTraits,
+        strengths:
+          ensureStringArray(llm?.strengths ?? apiResult.insights).length > 0
+            ? ensureStringArray(llm?.strengths ?? apiResult.insights)
+            : mockResult.strengths,
+        challenges:
+          ensureStringArray(llm?.challenges ?? apiResult.recommendations)
+            .length > 0
+            ? ensureStringArray(llm?.challenges ?? apiResult.recommendations)
+            : mockResult.challenges,
+        spiritualInsight:
+          (llm?.spiritualInsight && llm.spiritualInsight.trim()) ||
+          mockResult.spiritualInsight,
+        tryThis: ensureStringArray(llm?.tryThis),
+        avoidThis: ensureStringArray(llm?.avoidThis),
+        chartData: (Array.isArray(llm?.chartData)
+          ? llm.chartData
+          : mockResult.chartData) as typeof mockResult.chartData,
+        synchronicities:
+          ensureSynchronicities(llm?.synchronicities).length > 0
+            ? ensureSynchronicities(llm?.synchronicities)
+            : mockResult.synchronicities,
       }
-    : mockResult;
+    : {
+        ...mockResult,
+        tryThis: mockResult.tryThis ?? defaultResult.tryThis,
+        avoidThis: mockResult.avoidThis ?? defaultResult.avoidThis,
+      };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
@@ -327,7 +423,7 @@ export function TestResultView({
         className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto"
       >
         <PageLoader>
-          <div className="sticky top-0 flex items-center justify-between w-full bg-black px-[24px] py-2 border-b border-gray-800/30 z-10">
+          <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-4 z-40 relative px-[24px] shrink-0">
             <button onClick={onBack} className="cursor-pointer p-1">
               <Icon icon="icons8:left-arrow" color="#D9D9D9" width={24} />
             </button>
@@ -379,7 +475,7 @@ export function TestResultView({
                 Core Traits
               </h3>
               <div className="flex flex-wrap gap-1">
-                {result.coreTraits.map((trait, idx) => (
+                {result.coreTraits.map((trait: string, idx: number) => (
                   <span
                     key={idx}
                     className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
@@ -394,13 +490,6 @@ export function TestResultView({
                   </span>
                 ))}
               </div>
-              <p
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[13px] font-[300] text-[#FFFFFF] mt-3"
-              >
-                You walk the hidden paths of knowledge, questioning reality and
-                searching for truth that others often overlook.
-              </p>
             </div>
 
             <div className="text-left mb-4">
@@ -411,7 +500,7 @@ export function TestResultView({
                 Strengths
               </h3>
               <div className="flex flex-wrap gap-2">
-                {result.strengths.map((strength, idx) => (
+                {result.strengths.map((strength: string, idx: number) => (
                   <span
                     key={idx}
                     className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
@@ -436,7 +525,7 @@ export function TestResultView({
                 Challenges
               </h3>
               <div className="flex flex-wrap gap-2">
-                {result.challenges.map((challenge, idx) => (
+                {result?.challenges?.map((challenge: string, idx: number) => (
                   <span
                     key={idx}
                     className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
@@ -467,6 +556,56 @@ export function TestResultView({
                 {result.spiritualInsight}
               </p>
             </div>
+
+            {result.tryThis && result.tryThis.length > 0 && (
+              <div className="text-left mb-4">
+                <h3
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                    lineHeight: "24px",
+                  }}
+                  className="text-[15px] font-[600] text-white mb-2"
+                >
+                  Try This
+                </h3>
+                <ul className="list-disc list-inside space-y-1">
+                  {result.tryThis.map((item: string, idx: number) => (
+                    <li
+                      key={idx}
+                      style={{ fontFamily: "var(--font-gotham)" }}
+                      className="text-[13px] font-[300] text-[#F2D08C]"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {result.avoidThis && result.avoidThis.length > 0 && (
+              <div className="text-left mb-4">
+                <h3
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                    lineHeight: "24px",
+                  }}
+                  className="text-[15px] font-[600] text-white mb-2"
+                >
+                  Avoid This
+                </h3>
+                <ul className="list-disc list-inside space-y-1">
+                  {result.avoidThis.map((item: string, idx: number) => (
+                    <li
+                      key={idx}
+                      style={{ fontFamily: "var(--font-gotham)" }}
+                      className="text-[13px] font-[300] text-white/90"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {result.chartData.length > 0 && (
               <div className="text-left mb-4">
@@ -527,18 +666,23 @@ export function TestResultView({
                   This Life Path overlaps with your:
                 </p>
                 <div className="space-y-2">
-                  {result.synchronicities.map((sync, idx) => (
-                    <p
-                      key={idx}
-                      style={{
-                        fontFamily: "var(--font-gotham)",
-                      }}
-                      className="text-[13px] font-[300] text-white"
-                    >
-                      • <span className="font-[600]">{sync.test}</span>:{" "}
-                      {sync.connection}
-                    </p>
-                  ))}
+                  {result.synchronicities.map(
+                    (
+                      sync: { test: string; connection: string },
+                      idx: number,
+                    ) => (
+                      <p
+                        key={idx}
+                        style={{
+                          fontFamily: "var(--font-gotham)",
+                        }}
+                        className="text-[13px] font-[300] text-white"
+                      >
+                        • <span className="font-[600]">{sync.test}</span>:{" "}
+                        {sync.connection}
+                      </p>
+                    ),
+                  )}
                 </div>
               </div>
             )}

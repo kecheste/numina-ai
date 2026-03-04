@@ -1,10 +1,16 @@
 "use client";
 
 import { TestFlow } from "@/components/test/test-flow";
+import { apiEnsureOnboardingLifePath } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
 
 export default function OnboardingMbtiTestPage() {
   const router = useRouter();
+
+  const handleOnboardingNext = () => {
+    apiEnsureOnboardingLifePath().catch(() => {});
+    router.replace("/home");
+  };
 
   return (
     <TestFlow
@@ -12,7 +18,7 @@ export default function OnboardingMbtiTestPage() {
       testTitle="MBTI Type"
       category="Psychological"
       onClose={() => router.replace("/onboarding/test/chakra")}
-      onboardingNext={() => router.replace("/home")}
+      onboardingNext={handleOnboardingNext}
     />
   );
 }

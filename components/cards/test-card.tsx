@@ -50,15 +50,15 @@ export function TestCard({ test, onSelect }: TestCardProps) {
         md:min-h-[120px]
         md:px-4
         `,
-        test.locked || !test.alreadyTaken
-          ? "border-[#F2D08C66] cursor-not-allowed"
-          : "border-[#F2D08C] cursor-pointer",
+        test.alreadyTaken
+          ? "border-[#F2D08C] cursor-pointer"
+          : "border-[#F2D08C66] cursor-not-allowed",
       )}
     >
       <div
         className={cn(
           "flex items-center justify-center max-w-[68px] h-[68px]",
-          test.locked || (!test.alreadyTaken && "opacity-40"),
+          test.alreadyTaken ? "opacity-100" : "opacity-40",
         )}
       >
         {test.icon}
@@ -71,8 +71,10 @@ export function TestCard({ test, onSelect }: TestCardProps) {
           lineHeight: "1.2",
         }}
         className={cn(
-          "text-center text-white text-[11px] sm:text-[11px] md:text-[13px]",
-          test.locked && !test.alreadyTaken && "opacity-60",
+          "text-center text-white text-[11px]",
+          test.alreadyTaken
+            ? "opacity-100 font-medium"
+            : "opacity-60 font-normal",
         )}
       >
         {test.title}
