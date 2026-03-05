@@ -32,17 +32,26 @@ export function saveBirthDataToSession(data: BirthData): void {
   sessionStorage.setItem(SESSION_KEYS.birthTime, data.birthTime);
   sessionStorage.setItem(SESSION_KEYS.birthPlace, data.birthPlace);
   if (data.birthPlaceLat != null) {
-    sessionStorage.setItem(SESSION_KEYS.birthPlaceLat, String(data.birthPlaceLat));
+    sessionStorage.setItem(
+      SESSION_KEYS.birthPlaceLat,
+      String(data.birthPlaceLat),
+    );
   } else {
     sessionStorage.removeItem(SESSION_KEYS.birthPlaceLat);
   }
   if (data.birthPlaceLng != null) {
-    sessionStorage.setItem(SESSION_KEYS.birthPlaceLng, String(data.birthPlaceLng));
+    sessionStorage.setItem(
+      SESSION_KEYS.birthPlaceLng,
+      String(data.birthPlaceLng),
+    );
   } else {
     sessionStorage.removeItem(SESSION_KEYS.birthPlaceLng);
   }
   if (data.birthPlaceTimezone != null && data.birthPlaceTimezone !== "") {
-    sessionStorage.setItem(SESSION_KEYS.birthPlaceTimezone, data.birthPlaceTimezone);
+    sessionStorage.setItem(
+      SESSION_KEYS.birthPlaceTimezone,
+      data.birthPlaceTimezone,
+    );
   } else {
     sessionStorage.removeItem(SESSION_KEYS.birthPlaceTimezone);
   }
@@ -78,4 +87,21 @@ export function clearBirthDataFromSession(): void {
 export function hasBirthDataInSession(): boolean {
   if (typeof window === "undefined") return false;
   return sessionStorage.getItem(SESSION_KEYS.dateOfBirth) !== null;
+}
+
+const DOB_FLOW_INTENT_KEY = "numina_dob_flow_intent";
+
+export function setDobFlowIntent(): void {
+  if (typeof window === "undefined") return;
+  sessionStorage.setItem(DOB_FLOW_INTENT_KEY, "1");
+}
+
+export function hasDobFlowIntent(): boolean {
+  if (typeof window === "undefined") return false;
+  return sessionStorage.getItem(DOB_FLOW_INTENT_KEY) !== null;
+}
+
+export function clearDobFlowIntent(): void {
+  if (typeof window === "undefined") return;
+  sessionStorage.removeItem(DOB_FLOW_INTENT_KEY);
 }

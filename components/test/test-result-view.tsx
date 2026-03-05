@@ -22,7 +22,6 @@ function ensureStringArray(value: unknown): string[] {
   if (typeof value === "string") {
     const trimmed = value.trim();
     if (!trimmed) return [];
-    // If LLM returned a stringified array like "['A', 'B']" or '["A","B"]', try to parse it.
     if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
       try {
         const normalized = trimmed.replace(/'/g, '"');
@@ -30,9 +29,7 @@ function ensureStringArray(value: unknown): string[] {
         if (Array.isArray(parsed)) {
           return parsed.map((x) => (typeof x === "string" ? x : String(x)));
         }
-      } catch {
-        // fall through to single-item handling
-      }
+      } catch {}
     }
     return [trimmed];
   }
@@ -78,7 +75,6 @@ const testResultsData: Record<
     synchronicities: { test: string; connection: string }[];
   }
 > = {
-  // Astrology Chart (ID: 1)
   1: {
     subtitle: "Your Astrological Profile",
     mainResult: "Scorpio Sun",
@@ -135,7 +131,6 @@ const testResultsData: Record<
       },
     ],
   },
-  // Numerology (ID: 2)
   2: {
     subtitle: "Your Life Path Number",
     mainResult: "7 - The Seeker",
@@ -417,13 +412,29 @@ export function TestResultView({
       };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
       <div
         ref={shellRef}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto"
+        className="
+          w-full
+          relative
+          h-dvh 
+          sm:h-auto
+          sm:min-h-0
+          sm:max-w-[450px]
+          sm:aspect-[9/20]
+          bg-black
+          flex
+          flex-col
+          items-center
+          text-center
+          pt-4
+          pb-4
+          overflow-hidden
+        "
       >
         <PageLoader>
-          <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-4 z-40 relative px-[24px] shrink-0">
+          <div className="flex items-center border-b justify-between w-full bg-black pb-4 px-[24px] z-40 shrink-0">
             <button onClick={onBack} className="cursor-pointer p-1">
               <Icon icon="icons8:left-arrow" color="#D9D9D9" width={24} />
             </button>
@@ -435,7 +446,7 @@ export function TestResultView({
             />
           </div>
 
-          <div className="px-[24px] py-6 pb-12">
+          <div className="px-[24px] py-6 pb-12 flex-1 overflow-y-scroll">
             <div className="text-center">
               <h1
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}

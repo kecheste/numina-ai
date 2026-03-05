@@ -102,7 +102,8 @@ function getCardLabel(
   }
   const title =
     result.llm_result_json?.title ?? result.personality_type ?? null;
-  if (title) return title;
+  const refinedTitle = title ? title.replace("The ", "") : null;
+  if (refinedTitle) return refinedTitle;
   if (testId === 13) return "Chakra";
   if (testId === 7) return result.personality_type ?? "MBTI";
   if (testId === 19) return "Life Path";
@@ -207,7 +208,7 @@ export function SoulRevealScreen() {
   }, []);
 
   return (
-    <div className="bg-black text-white pr-1 pb-24 space-y-6">
+    <div className="bg-black text-white pr-1 pb-16 space-y-6">
       <div className="mb-4 w-full relative">
         <div className="h-[15px] w-full rounded-full bg-transparent border border-[#F2D08C]/50 overflow-hidden">
           <div
@@ -270,8 +271,9 @@ export function SoulRevealScreen() {
               style={{
                 fontFamily: "var(--font-gotham)",
                 fontWeight: 350,
+                lineHeight: "20px",
               }}
-              className="border border-[#FFFFFF]/50 rounded-[7px] p-3 h-[72px] text-[15px] text-[#F2D08C]"
+              className="border border-[#FFFFFF]/50 rounded-[7px] py-3 px-1 h-[72px] text-[14px] text-[#F2D08C]"
             >
               {zodiacSign && ZODIAC_SUMMARY[zodiacSign]
                 ? ZODIAC_SUMMARY[zodiacSign]
@@ -341,7 +343,7 @@ export function SoulRevealScreen() {
           MOST SURE THINGS
         </p>
 
-        <div className="flex flex-wrap gap-[6px] justify-center">
+        <div className="flex flex-wrap gap-[5px] justify-center">
           {(sureThings.length > 0 ? sureThings : MOST_SURE_DEFAULT_TAGS)
             .slice(0, 4)
             .map((tag) => (
@@ -351,7 +353,7 @@ export function SoulRevealScreen() {
                   fontFamily: "var(--font-gotham)",
                   fontWeight: "325",
                 }}
-                className="p-1 rounded-[7px] border border-[#F2D08C]/40 text-[13px] text-[#F2D08C]"
+                className="p-1 rounded-[7px] border border-[#F2D08C]/40 text-[12px] text-[#F2D08C]"
               >
                 {tag}
               </span>

@@ -293,7 +293,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   }
 
   return (
-    <div className="pb-24 space-y-6">
+    <div className="pb-16 space-y-6">
       <div className="text-center">
         <h1
           style={{

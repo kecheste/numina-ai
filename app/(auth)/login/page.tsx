@@ -2,6 +2,7 @@
 
 import { LoginScreen } from "@/components/auth/login-screen";
 import { useAuth } from "@/contexts/auth-context";
+import { setDobFlowIntent } from "@/lib/birth-data";
 import { useRequestTracker } from "@/hooks/use-request-tracker";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -44,7 +45,10 @@ export default function LoginPage() {
       error={loginTracker.errorMessage}
       isPending={loginTracker.isPending}
       onLoginSuccess={handleLoginSuccess}
-      onSwitchToRegister={() => router.push("/dob")}
+      onSwitchToRegister={() => {
+        setDobFlowIntent();
+        router.push("/dob");
+      }}
       onForgotPassword={() => router.push("/forgot-password")}
     />
   );

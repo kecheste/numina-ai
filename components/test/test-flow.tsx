@@ -496,9 +496,9 @@ export function TestFlow({
       <div
         ref={shellRef}
         style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center pb-4"
+        className="relative pt-4 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center pb-4"
       >
-        <div className="flex items-center border-b border-gray-500/30 justify-between w-full bg-black px-[28px] py-2 shrink-0 z-10">
+        <div className="flex items-center border-b justify-between w-full bg-black pb-4 px-[24px] z-40 shrink-0">
           <button onClick={handleBack} className="cursor-pointer">
             <Icon
               icon="icons8:left-arrow"
@@ -518,7 +518,7 @@ export function TestFlow({
         <div className="flex flex-col flex-1 overflow-y-auto">
           <div className="flex flex-col px-[32px] flex-1 w-full">
             <p
-              className="mt-16 text-center text-white text-[21px] font-[300]"
+              className="mt-8 text-center text-white text-[21px] font-[300]"
               style={{ lineHeight: "33px" }}
             >
               {testTitle}
