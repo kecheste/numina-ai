@@ -515,221 +515,225 @@ export function TestFlow({
           />
         </div>
 
-        <div className="flex flex-col px-[32px] flex-1 w-full">
-          <p
-            className="mt-16 text-center text-white text-[21px] font-[300]"
-            style={{ lineHeight: "33px" }}
-          >
-            {testTitle}
-          </p>
+        <div className="flex flex-col flex-1 overflow-y-auto">
+          <div className="flex flex-col px-[32px] flex-1 w-full">
+            <p
+              className="mt-16 text-center text-white text-[21px] font-[300]"
+              style={{ lineHeight: "33px" }}
+            >
+              {testTitle}
+            </p>
 
-          <div className="my-[27px] relative w-full">
-            <div className="h-[17px] w-full rounded-full border border-[#F2D08C] overflow-hidden">
-              <div
-                className="h-full"
-                style={{ width: `${progressPct}%`, backgroundColor: GOLD }}
-              />
-            </div>
-            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px]">
-              {step + 1}/{activeQuestions.length}
-            </span>
-          </div>
-
-          <h2
-            className="text-center text-[21px] mb-6 text-[#F2D08C] font-[400]"
-            style={{ lineHeight: "33px" }}
-          >
-            {current?.question}
-          </h2>
-
-          <div className="flex-1 w-full space-y-4">
-            {current?.type === "text" && (
-              <textarea
-                className="w-full h-[160px] rounded-xl bg-[#FFFFFF1C] border border-[#FFFFFF]/50 outline-none text-white p-4"
-                value={(answers[current.id] as string) ?? ""}
-                onChange={(e) =>
-                  setAnswers((a) => ({ ...a, [current.id]: e.target.value }))
-                }
-                placeholder="Type your answer…"
-              />
-            )}
-
-            {current?.type === "date" && (
-              <input
-                type="date"
-                className="w-full h-12 rounded-xl bg-[#FFFFFF1C] border border-white/50 outline-none text-white px-4"
-                value={(answers[current.id] as string) ?? ""}
-                onChange={(e) =>
-                  setAnswers((a) => ({ ...a, [current.id]: e.target.value }))
-                }
-              />
-            )}
-
-            {current?.type === "time" && (
-              <input
-                type="time"
-                className="w-full h-12 rounded-xl bg-[#FFFFFF1C] border border-white/50 outline-none text-white px-4"
-                value={(answers[current.id] as string) ?? ""}
-                onChange={(e) =>
-                  setAnswers((a) => ({ ...a, [current.id]: e.target.value }))
-                }
-              />
-            )}
-
-            {current?.type === "color" && (
-              <div className="space-y-3">
-                {current.options!.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() =>
-                      setAnswers((a) => ({ ...a, [current.id]: color }))
-                    }
-                    className="w-full h-[48px] rounded-lg text-left px-4 font-[300] text-[15px]"
-                    style={{
-                      backgroundColor: color.toLowerCase(),
-                      color:
-                        color === "Yellow" || color === "White"
-                          ? "black"
-                          : "white",
-                      opacity: answers[current.id] === color ? 1 : 0.6,
-                    }}
-                  >
-                    {color}
-                  </button>
-                ))}
+            <div className="my-[27px] relative w-full">
+              <div className="h-[17px] w-full rounded-full border border-[#F2D08C] overflow-hidden">
+                <div
+                  className="h-full"
+                  style={{ width: `${progressPct}%`, backgroundColor: GOLD }}
+                />
               </div>
-            )}
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-[10px]">
+                {step + 1}/{activeQuestions.length}
+              </span>
+            </div>
 
-            {current?.type === "single_choice" &&
-              (() => {
-                const opts = getOptions(current, answers);
-                return opts.length > 0 ? (
-                  <div className="space-y-4">
-                    {opts.map((opt) => (
-                      <button
-                        key={opt}
-                        onClick={() =>
-                          setAnswers((a) => ({ ...a, [current.id]: opt }))
-                        }
-                        className={`w-full min-h-[56px] rounded-xl border text-left px-4 py-3 transition ${
-                          answers[current.id] === opt
-                            ? "bg-[#F2D08C] text-black border-[#F2D08C]"
-                            : "border-[#5A4A2A] text-white"
-                        }`}
-                      >
-                        {opt}
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-white/70 text-sm">
-                    Answer the previous question first.
-                  </p>
-                );
-              })()}
+            <h2
+              className="text-center text-[21px] mb-6 text-[#F2D08C] font-[400]"
+              style={{ lineHeight: "33px" }}
+            >
+              {current?.question}
+            </h2>
 
-            {current?.type === "multiple_choice" &&
-              (() => {
-                const opts = getOptions(current, answers);
-                const selected =
-                  (answers[current.id] as string[] | undefined) ?? [];
-                const maxSel = current.max_selections ?? undefined;
-                return opts.length > 0 ? (
-                  <div className="space-y-3">
-                    {maxSel != null && (
-                      <p className="text-[#F2D08C] text-sm">
-                        Select exactly {maxSel} (selected: {selected.length})
-                      </p>
-                    )}
-                    {opts.map((opt) => {
-                      const checked = selected.includes(opt);
-                      const atMax =
-                        maxSel != null && selected.length >= maxSel && !checked;
-                      return (
-                        <label
-                          key={opt}
-                          className={`flex items-center gap-3 w-full min-h-[56px] rounded-xl border px-4 py-3 cursor-pointer transition ${
-                            checked
-                              ? "bg-[#F2D08C] text-black border-[#F2D08C]"
-                              : atMax
-                                ? "border-[#5A4A2A] text-white opacity-60 cursor-not-allowed"
-                                : "border-[#5A4A2A] text-white"
-                          }`}
-                          onClick={() => {
-                            if (atMax) return;
-                            const next = checked
-                              ? selected.filter((x) => x !== opt)
-                              : maxSel != null && selected.length >= maxSel
-                                ? selected
-                                : [...selected, opt];
-                            setAnswers((a) => ({ ...a, [current.id]: next }));
-                          }}
-                        >
-                          <span className="text-white">{opt}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-white/70 text-sm">
-                    Answer the previous question first.
-                  </p>
-                );
-              })()}
+            <div className="flex-1 w-full space-y-4">
+              {current?.type === "text" && (
+                <textarea
+                  className="w-full h-[160px] rounded-xl bg-[#FFFFFF1C] border border-[#FFFFFF]/50 outline-none text-white p-4"
+                  value={(answers[current.id] as string) ?? ""}
+                  onChange={(e) =>
+                    setAnswers((a) => ({ ...a, [current.id]: e.target.value }))
+                  }
+                  placeholder="Type your answer…"
+                />
+              )}
 
-            {current?.type === "slider" &&
-              (() => {
-                const value =
-                  (answers[current.id] as number) ??
-                  Math.round((current.slider_min + current.slider_max) / 2);
-                const range = current.slider_max - current.slider_min || 1;
-                const pct = ((value - current.slider_min) / range) * 100;
-                return (
-                  <div className="px-2">
-                    <input
-                      type="range"
-                      min={current.slider_min}
-                      max={current.slider_max}
-                      value={value}
-                      onChange={(e) =>
-                        setAnswers((a) => ({
-                          ...a,
-                          [current.id]: Number(e.target.value),
-                        }))
+              {current?.type === "date" && (
+                <input
+                  type="date"
+                  className="w-full h-12 rounded-xl bg-[#FFFFFF1C] border border-white/50 outline-none text-white px-4"
+                  value={(answers[current.id] as string) ?? ""}
+                  onChange={(e) =>
+                    setAnswers((a) => ({ ...a, [current.id]: e.target.value }))
+                  }
+                />
+              )}
+
+              {current?.type === "time" && (
+                <input
+                  type="time"
+                  className="w-full h-12 rounded-xl bg-[#FFFFFF1C] border border-white/50 outline-none text-white px-4"
+                  value={(answers[current.id] as string) ?? ""}
+                  onChange={(e) =>
+                    setAnswers((a) => ({ ...a, [current.id]: e.target.value }))
+                  }
+                />
+              )}
+
+              {current?.type === "color" && (
+                <div className="space-y-3">
+                  {current.options!.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() =>
+                        setAnswers((a) => ({ ...a, [current.id]: color }))
                       }
-                      className="w-full custom-range"
-                      style={{ ["--value" as string]: pct }}
-                    />
-                    <p className="text-[#F2D08C] text-sm mt-2">{value}</p>
-                  </div>
-                );
-              })()}
+                      className="w-full h-[48px] rounded-lg text-left px-4 font-[300] text-[15px]"
+                      style={{
+                        backgroundColor: color.toLowerCase(),
+                        color:
+                          color === "Yellow" || color === "White"
+                            ? "black"
+                            : "white",
+                        opacity: answers[current.id] === color ? 1 : 0.6,
+                      }}
+                    >
+                      {color}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {current?.type === "single_choice" &&
+                (() => {
+                  const opts = getOptions(current, answers);
+                  return opts.length > 0 ? (
+                    <div className="space-y-4">
+                      {opts.map((opt) => (
+                        <button
+                          key={opt}
+                          onClick={() =>
+                            setAnswers((a) => ({ ...a, [current.id]: opt }))
+                          }
+                          className={`w-full min-h-[56px] rounded-xl border text-left px-4 py-3 transition ${
+                            answers[current.id] === opt
+                              ? "bg-[#F2D08C] text-black border-[#F2D08C]"
+                              : "border-[#5A4A2A] text-white"
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-white/70 text-sm">
+                      Answer the previous question first.
+                    </p>
+                  );
+                })()}
+
+              {current?.type === "multiple_choice" &&
+                (() => {
+                  const opts = getOptions(current, answers);
+                  const selected =
+                    (answers[current.id] as string[] | undefined) ?? [];
+                  const maxSel = current.max_selections ?? undefined;
+                  return opts.length > 0 ? (
+                    <div className="space-y-3">
+                      {maxSel != null && (
+                        <p className="text-[#F2D08C] text-sm">
+                          Select exactly {maxSel} (selected: {selected.length})
+                        </p>
+                      )}
+                      {opts.map((opt) => {
+                        const checked = selected.includes(opt);
+                        const atMax =
+                          maxSel != null &&
+                          selected.length >= maxSel &&
+                          !checked;
+                        return (
+                          <label
+                            key={opt}
+                            className={`flex items-center gap-3 w-full min-h-[56px] rounded-xl border px-4 py-3 cursor-pointer transition ${
+                              checked
+                                ? "bg-[#F2D08C] text-black border-[#F2D08C]"
+                                : atMax
+                                  ? "border-[#5A4A2A] text-white opacity-60 cursor-not-allowed"
+                                  : "border-[#5A4A2A] text-white"
+                            }`}
+                            onClick={() => {
+                              if (atMax) return;
+                              const next = checked
+                                ? selected.filter((x) => x !== opt)
+                                : maxSel != null && selected.length >= maxSel
+                                  ? selected
+                                  : [...selected, opt];
+                              setAnswers((a) => ({ ...a, [current.id]: next }));
+                            }}
+                          >
+                            <span className="text-white">{opt}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-white/70 text-sm">
+                      Answer the previous question first.
+                    </p>
+                  );
+                })()}
+
+              {current?.type === "slider" &&
+                (() => {
+                  const value =
+                    (answers[current.id] as number) ??
+                    Math.round((current.slider_min + current.slider_max) / 2);
+                  const range = current.slider_max - current.slider_min || 1;
+                  const pct = ((value - current.slider_min) / range) * 100;
+                  return (
+                    <div className="px-2">
+                      <input
+                        type="range"
+                        min={current.slider_min}
+                        max={current.slider_max}
+                        value={value}
+                        onChange={(e) =>
+                          setAnswers((a) => ({
+                            ...a,
+                            [current.id]: Number(e.target.value),
+                          }))
+                        }
+                        className="w-full custom-range"
+                        style={{ ["--value" as string]: pct }}
+                      />
+                      <p className="text-[#F2D08C] text-sm mt-2">{value}</p>
+                    </div>
+                  );
+                })()}
+            </div>
           </div>
-        </div>
 
-        {submitError && (
-          <p className="text-red-400 text-sm px-6">{submitError}</p>
-        )}
+          {submitError && (
+            <p className="text-red-400 text-sm px-6">{submitError}</p>
+          )}
 
-        <div className="px-[32px] w-full mt-auto pt-8">
-          <Button
-            className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[67px] text-black"
-            style={{
-              backgroundColor: GOLD,
-              color: "black",
-              fontFamily: "var(--font-arp80)",
-              fontWeight: "400",
-              lineHeight: "33px",
-            }}
-            disabled={!isAnswered() || submitting}
-            onClick={handleContinue}
-          >
-            {submitting
-              ? "Submitting…"
-              : step === questions.length - 1
-                ? "Submit"
-                : "Continue"}
-          </Button>
+          <div className="px-[32px] w-full mt-auto pt-8">
+            <Button
+              className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[67px] text-black"
+              style={{
+                backgroundColor: GOLD,
+                color: "black",
+                fontFamily: "var(--font-arp80)",
+                fontWeight: "400",
+                lineHeight: "33px",
+              }}
+              disabled={!isAnswered() || submitting}
+              onClick={handleContinue}
+            >
+              {submitting
+                ? "Submitting…"
+                : step === questions.length - 1
+                  ? "Submit"
+                  : "Continue"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
