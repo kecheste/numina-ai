@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
@@ -7,7 +8,11 @@ import { AppDrawer } from "@/components/navigation/app-drawer";
 import { SunIcon } from "@/components/icons/sun-icon";
 import { MoonIcon } from "@/components/icons/moon-icon";
 import { RisingIcon } from "@/components/icons/rising-icon";
-import type { AstrologyChartResponse } from "@/lib/api-client";
+import {
+  apiFetchOnboardingAstrologyBlueprint,
+  type AstrologyChartResponse,
+  type AstrologyBlueprintResponse,
+} from "@/lib/api-client";
 
 function formatSign(s: string): string {
   return s.replace(/\b\w/g, (c) => c.toUpperCase());
@@ -24,6 +29,14 @@ export function AstrologyChartResultView({
   shellRef: React.RefObject<HTMLDivElement | null>;
   onLogout: () => void;
 }) {
+  const [blueprint, setBlueprint] = useState<AstrologyBlueprintResponse | null | undefined>(undefined);
+
+  useEffect(() => {
+    apiFetchOnboardingAstrologyBlueprint()
+      .then(setBlueprint)
+      .catch(() => setBlueprint(null));
+  }, []);
+
   const el = chart.element_distribution;
   const elements = [
     el.fire > 0 && { name: "Fire", count: el.fire },
@@ -31,6 +44,11 @@ export function AstrologyChartResultView({
     el.air > 0 && { name: "Air", count: el.air },
     el.water > 0 && { name: "Water", count: el.water },
   ].filter(Boolean) as { name: string; count: number }[];
+
+  const sunDesc = blueprint?.sun_description;
+  const moonDesc = blueprint?.moon_description;
+  const risingDesc = blueprint?.rising_description;
+  const cosmicSummary = blueprint?.cosmic_traits_summary;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
@@ -62,6 +80,11 @@ export function AstrologyChartResultView({
             <div className="col-span-4">
               <h3 className="text-[15px] font-[350] text-white mb-0.5">Sun Sign</h3>
               <p className="text-[13px] font-[400] text-[#F2D08C]">{formatSign(chart.sun_sign)}</p>
+              {sunDesc && (
+                <p className="text-[13px] font-[350] text-white/90 mt-1.5" style={{ lineHeight: "20px" }}>
+                  {sunDesc}
+                </p>
+              )}
             </div>
           </div>
 
@@ -72,23 +95,33 @@ export function AstrologyChartResultView({
             <div className="col-span-4">
               <h3 className="text-[15px] font-[350] text-white mb-0.5">Moon Sign</h3>
               <p className="text-[13px] font-[400] text-[#F2D08C]">{formatSign(chart.moon_sign)}</p>
+              {moonDesc && (
+                <p className="text-[13px] font-[350] text-white/90 mt-1.5" style={{ lineHeight: "20px" }}>
+                  {moonDesc}
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-5 gap-2 w-full text-left mb-6">
+          <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
             <div className="col-span-1">
               <RisingIcon />
             </div>
             <div className="col-span-4">
               <h3 className="text-[15px] font-[350] text-white mb-0.5">Rising Sign</h3>
               <p className="text-[13px] font-[400] text-[#F2D08C]">{formatSign(chart.rising_sign)}</p>
+              {risingDesc && (
+                <p className="text-[13px] font-[350] text-white/90 mt-1.5" style={{ lineHeight: "20px" }}>
+                  {risingDesc}
+                </p>
+              )}
             </div>
           </div>
 
           <h3 className="text-[18px] font-[400] text-[#F2D08C] mb-2" style={{ lineHeight: "33px" }}>
             Element distribution
           </h3>
-          <div className="flex flex-wrap gap-2 mb-6">
+          <div className="flex flex-wrap gap-2 mb-4">
             {elements.length > 0 ? (
               elements.map(({ name, count }) => (
                 <span
@@ -102,6 +135,20 @@ export function AstrologyChartResultView({
               <span className="text-[13px] text-white/70">—</span>
             )}
           </div>
+
+          {cosmicSummary && (
+            <>
+              <h3 className="text-[18px] font-[400] text-[#F2D08C] mb-2" style={{ lineHeight: "33px" }}>
+                Cosmic traits summary
+              </h3>
+              <p
+                className="text-[13px] font-[350] text-white/90 mb-6 whitespace-pre-line"
+                style={{ lineHeight: "20px" }}
+              >
+                {cosmicSummary}
+              </p>
+            </>
+          )}
 
           <Button
             onClick={onClose}

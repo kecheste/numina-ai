@@ -4,8 +4,7 @@ import { useRef } from "react";
 import {
   CognitiveStyleResult,
   MbtiTypeResult,
-  AstrologyBlueprintResult,
-  ChakraAlignmentResult,
+  ChakraPreviewResult,
   type MbtiResultData,
 } from "./result-view";
 
@@ -61,14 +60,10 @@ export function TestResults({
           />
         )}
 
-        {testId === TEST_IDS.ASTROLOGY_CHART && (
-          <AstrologyBlueprintResult onClose={onClose} shellRef={shellRef} />
-        )}
-
         {testId === TEST_IDS.CHAKRA_ASSESSMENT && (
-          <ChakraAlignmentResult
-            testTitle="Chakra Alignment"
-            onBack={onClose}
+          <ChakraPreviewResult
+            onClose={onClose}
+            shellRef={shellRef}
           />
         )}
 

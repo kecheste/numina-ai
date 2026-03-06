@@ -286,7 +286,8 @@ export async function apiFetchTestQuestions(
   if (res.status === 409) {
     const err = await res.json().catch(() => ({}));
     throw new Error(
-      (err as { detail?: string }).detail ?? "You have already taken this test.",
+      (err as { detail?: string }).detail ??
+        "You have already taken this test.",
     );
   }
   if (!res.ok) {
@@ -344,6 +345,53 @@ export async function apiFetchNumerology(): Promise<NumerologyResponse> {
     );
   }
   if (!res.ok) throw new Error("Failed to load numerology");
+  return res.json();
+}
+
+export interface AstrologyBlueprintResponse {
+  sun_description: string;
+  moon_description: string;
+  rising_description: string;
+  cosmic_traits_summary: string;
+}
+
+export async function apiFetchOnboardingAstrologyBlueprint(): Promise<AstrologyBlueprintResponse> {
+  const res = await fetchWithAuth(
+    "/api/v1/tests/onboarding/astrology-blueprint",
+  );
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (res.status === 404) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Birth data incomplete.",
+    );
+  }
+  if (!res.ok) throw new Error("Failed to load astrology blueprint");
+  return res.json();
+}
+
+export interface NumerologyBlueprintItem {
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface NumerologyBlueprintResponse {
+  items: NumerologyBlueprintItem[];
+}
+
+export async function apiFetchOnboardingNumerologyBlueprint(): Promise<NumerologyBlueprintResponse> {
+  const res = await fetchWithAuth(
+    "/api/v1/tests/onboarding/numerology-blueprint",
+  );
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (res.status === 404) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Birth date and name required.",
+    );
+  }
+  if (!res.ok) throw new Error("Failed to load numerology blueprint");
   return res.json();
 }
 

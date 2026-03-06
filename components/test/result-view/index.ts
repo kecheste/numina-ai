@@ -5,3 +5,4 @@ export { MbtiTypeResult, type MbtiResultData } from "./mbti-type-result";
 export { AstrologyBlueprintResult } from "./astrology-blueprint-result";
 export { StarseedOriginResult } from "./starseed-origin-result";
 export { ChakraAlignmentResult } from "./chakra-alignment-result";
+export { ChakraPreviewResult } from "./chakra-preview-result";

@@ -6,16 +6,55 @@ import { AppDrawer } from "@/components/navigation/app-drawer";
 import { SunIcon } from "@/components/icons/sun-icon";
 import { MoonIcon } from "@/components/icons/moon-icon";
 import { RisingIcon } from "@/components/icons/rising-icon";
+import type { AstrologyBlueprintResponse } from "@/lib/api-client";
 
 interface AstrologyBlueprintResultProps {
   onClose: () => void;
   shellRef: React.RefObject<HTMLDivElement | null>;
+  content?: AstrologyBlueprintResponse | null;
 }
+
+const DEFAULT_SUN =
+  "Your sun sign shapes your core personality and life direction.";
+const DEFAULT_MOON =
+  "Your moon sign reveals how you process emotions and seek comfort.";
+const DEFAULT_RISING =
+  "Your rising sign reflects how others see you and your outward style.";
+const DEFAULT_COSMIC =
+  "Your cosmic blueprint is unique. Explore more to deepen your understanding.";
 
 export function AstrologyBlueprintResult({
   onClose,
   shellRef,
+  content = undefined,
 }: AstrologyBlueprintResultProps) {
+  const sunDesc = content?.sun_description ?? DEFAULT_SUN;
+  const moonDesc = content?.moon_description ?? DEFAULT_MOON;
+  const risingDesc = content?.rising_description ?? DEFAULT_RISING;
+  const cosmicSummary = content?.cosmic_traits_summary ?? DEFAULT_COSMIC;
+  const isLoading = content === null;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-full bg-black">
+        <div className="flex items-center justify-between w-full bg-black px-[24px] py-2 border-b border-gray-800/30">
+          <div className="w-10" />
+          <NuminaLogoIcon />
+          <div className="w-10" />
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center px-8">
+          <div className="h-10 w-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin mb-4" />
+          <p
+            style={{ fontFamily: "var(--font-gotham)" }}
+            className="text-[14px] font-[350] text-[#F2D08C]"
+          >
+            Preparing your astrological blueprint…
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between w-full bg-black px-[24px] py-2 border-b border-gray-800/30">
@@ -65,14 +104,7 @@ export function AstrologyBlueprintResult({
               style={{ fontFamily: "var(--font-gotham)" }}
               className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
             >
-              Core personality: Intense, intuitive, transformative
-            </p>
-            <p
-              style={{ fontFamily: "var(--font-gotham)" }}
-              className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
-            >
-              You're driven by depth, truth, and emotional mastery. You rarely
-              settle for surface-level anything.
+              {sunDesc}
             </p>
           </div>
         </div>
@@ -92,14 +124,7 @@ export function AstrologyBlueprintResult({
               style={{ fontFamily: "var(--font-gotham)" }}
               className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
             >
-              Emotional self: [e.g. Sensitive, nurturing, private]
-            </p>
-            <p
-              style={{ fontFamily: "var(--font-gotham)" }}
-              className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
-            >
-              Your inner world is shaped by your moon sign, revealing how you
-              process feelings and seek comfort.
+              {moonDesc}
             </p>
           </div>
         </div>
@@ -119,14 +144,7 @@ export function AstrologyBlueprintResult({
               style={{ fontFamily: "var(--font-gotham)" }}
               className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
             >
-              How others see you: [e.g. Magnetic, mysterious, calm]
-            </p>
-            <p
-              style={{ fontFamily: "var(--font-gotham)" }}
-              className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
-            >
-              Your rising sign reflects your outward vibe — the way you move
-              through the world and first impressions.
+              {risingDesc}
             </p>
           </div>
         </div>
@@ -138,25 +156,14 @@ export function AstrologyBlueprintResult({
               style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
               className="text-[21px] font-[400] text-[#F2D08C] mb-2"
             >
-              Cosmic Traits Summary:
+              Cosmic Traits Summary
             </h3>
-            <div
-              className="space-y-0.5"
+            <p
               style={{ fontFamily: "var(--font-gotham)", lineHeight: "21px" }}
+              className="text-[13px] font-[350] text-white whitespace-pre-line"
             >
-              <p className="text-[13px] font-[350] text-white">
-                △ Element: [Water / Earth / Fire / Air]
-              </p>
-              <p className="text-[13px] font-[350] text-white">
-                ♂ Modality: [Fixed / Mutable / Cardinal]
-              </p>
-              <p className="text-[13px] font-[350] text-white">
-                ♇ Ruling Planet: [Pluto, etc.]
-              </p>
-              <p className="text-[13px] font-[350] text-white">
-                🏠 Most active house: [e.g. 7th – Partnerships]
-              </p>
-            </div>
+              {cosmicSummary}
+            </p>
           </div>
         </div>
 
@@ -169,7 +176,7 @@ export function AstrologyBlueprintResult({
           }}
           className="cursor-pointer mb-auto mt-[10px] hover:bg-[#F2D08CC0] w-full h-[60px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[18px] transition-colors flex-shrink-0"
         >
-          Done
+          Next Step
         </Button>
       </div>
     </div>

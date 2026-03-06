@@ -332,16 +332,11 @@ export function TestFlow({
   }
 
   if (showResults) {
-    // If we have a completed result, use the new structured TestResultView for most tests.
     if (completedResult) {
-      // Keep custom result screens for some legacy flows.
-      if (
-        testId === 1 || // Astrology chart handled earlier
-        testId === 3 || // Starseed origins uses its own view elsewhere
-        testId === 7 || // MBTI
-        testId === 11 || // Cognitive Style
-        testId === 13 // Chakra Assessment
-      ) {
+      const useOnboardingBlueprint =
+        onboardingNext != null &&
+        (testId === 3 || testId === 7 || testId === 11 || testId === 13);
+      if (useOnboardingBlueprint) {
         const resultData = {
           personalityType:
             completedResult.personality_type ?? "Reflective Explorer",
@@ -372,7 +367,6 @@ export function TestFlow({
       );
     }
 
-    // AI didn’t finish in time or is unavailable – show exit and stop polling.
     if (resultUnavailable) {
       return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 px-6">
