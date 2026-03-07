@@ -23,6 +23,8 @@ export interface TestResultsResultData {
   recommendations: string[];
   score: number;
   narrative?: string | null;
+  strongestChakra?: string | null;
+  needsBalance?: string | null;
 }
 
 interface TestResultsProps {
@@ -64,6 +66,8 @@ export function TestResults({
           <ChakraPreviewResult
             onClose={onClose}
             shellRef={shellRef}
+            strongestChakra={resultData?.strongestChakra}
+            needsBalance={resultData?.needsBalance}
           />
         )}
 

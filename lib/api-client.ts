@@ -154,6 +154,9 @@ export interface UserProfile {
   is_active: boolean;
   role: string;
   life_path_number: number | null;
+  mbti_type: string | null;
+  mbti_descriptor: string | null;
+  strongest_chakra: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -431,7 +434,6 @@ export interface TestResultResponse {
   insights: string[] | null;
   recommendations: string[] | null;
   narrative: string | null;
-  /** Structured LLM output: title, summary, coreTraits, strengths, challenges, spiritualInsight, tryThis, avoidThis, synchronicities */
   llm_result_json?: {
     title?: string;
     summary?: string;
@@ -443,6 +445,8 @@ export interface TestResultResponse {
     avoidThis?: string[];
     synchronicities?: { test: string; connection: string }[];
     chartData?: unknown[];
+    strongestChakra?: string;
+    needsRebalancing?: string;
   } | null;
 }
 

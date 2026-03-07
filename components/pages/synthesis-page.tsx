@@ -117,7 +117,7 @@ export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
         </h1>
         {synthesis && completedTests.length > 0 && (
           <div className="w-full overflow-x-auto no-scrollbar">
-            <div className="flex items-center gap-[9px] min-w-max snap-x snap-mandatory">
+            <div className="flex items-center justify-center gap-[9px] min-w-max snap-x snap-mandatory">
               {completedTests.map((test) => (
                 <div key={test.id} className="flex-shrink-0 snap-start h-auto">
                   <TestCard

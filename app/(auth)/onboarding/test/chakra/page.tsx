@@ -12,7 +12,7 @@ export default function OnboardingChakraTestPage() {
       testTitle="Chakra Alignment Scan"
       category="Energy"
       onClose={() => router.replace("/onboarding")}
-      onboardingNext={() => router.replace("/onboarding/test/mbti")}
+      onboardingNext={() => router.replace("/onboarding/test/cognitive-style")}
     />
   );
 }

@@ -16,6 +16,12 @@ export default function HomeIndexPage() {
     let cancelled = false;
 
     const navigateAfterChecks = async () => {
+      try {
+        await refreshUser();
+      } catch {}
+
+      if (cancelled) return;
+
       const subscription = searchParams.get("subscription");
 
       if (subscription === "success") {

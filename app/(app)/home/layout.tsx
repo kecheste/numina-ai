@@ -56,7 +56,7 @@ export default function HomeLayout({
           flex-col
           items-center
           text-center
-          pt-4
+          pt-2
           pb-4
           overflow-hidden
         "

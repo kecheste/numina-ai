@@ -11,7 +11,6 @@ import {
 import type { TestResultResponse } from "@/lib/api-client";
 import { RootChakraIcon } from "../icons/mysoul/chakra";
 import { InfjIcon } from "../icons/mysoul/infj";
-import { LifePathIcon } from "../icons/mysoul/lifepath";
 import { ScorpioIcon } from "../icons/zodiac/scorpio";
 import { PiscesIcon } from "../icons/zodiac/pisces";
 import { AquariusIcon } from "../icons/zodiac/aquarius";
@@ -283,7 +282,7 @@ export function SoulRevealScreen() {
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
+          <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-1 py-2.5">
             <RootChakraIcon />
             <p
               style={{
@@ -291,12 +290,14 @@ export function SoulRevealScreen() {
                 fontWeight: "325",
                 lineHeight: "17px",
               }}
-              className="text-[13px] text-[#ffffff] font-book text-center"
+              className="text-[13px] text-white text-center line-clamp-2"
             >
-              {getCardLabel(resultsByTest[13], 13)}
+              {user?.strongest_chakra
+                ? `${user.strongest_chakra} Strong`
+                : getCardLabel(resultsByTest[13], 13)}
             </p>
           </div>
-          <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
+          <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-1 py-2.5">
             <InfjIcon />
             <p
               style={{
@@ -304,13 +305,28 @@ export function SoulRevealScreen() {
                 fontWeight: "325",
                 lineHeight: "17px",
               }}
-              className="text-[13px] text-[#ffffff] font-book text-center"
+              className="text-[12px] text-white text-center line-clamp-2 leading-[18px]"
             >
-              {getCardLabel(resultsByTest[7], 7)}
+              {user?.mbti_type
+                ? [user.mbti_type, user.mbti_descriptor]
+                    .filter(Boolean)
+                    .join(" – ")
+                : getCardLabel(resultsByTest[7], 7)}
             </p>
           </div>
           <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
-            <LifePathIcon />
+            <div className="flex items-center justify-center h-[65px] w-[65px] rounded-full border-2 border-[#F2D08C]">
+              <span
+                style={{
+                  fontFamily: "var(--font-gotham)",
+                  fontWeight: 400,
+                  lineHeight: "17px",
+                }}
+                className="text-[48px] sm:text-[56px] text-[#F2D08C]"
+              >
+                {user?.life_path_number ?? "—"}
+              </span>
+            </div>
             <p
               style={{
                 fontFamily: "var(--font-gotham)",
@@ -319,13 +335,7 @@ export function SoulRevealScreen() {
               }}
               className="text-[13px] text-[#ffffff] font-book text-center"
             >
-              {resultsByTest[19] ? (
-                getCardLabel(resultsByTest[19], 19)
-              ) : (
-                <>
-                  Life <br /> Path
-                </>
-              )}
+              Life <br /> Path
             </p>
           </div>
         </div>
