@@ -226,7 +226,7 @@ export function AstrologyChartResultView({
                 Your blueprint
               </h3>
               <div
-                className="text-[13px] font-[350] text-white/90 mb-6 whitespace-pre-line"
+                className="text-[12px] font-[300] text-white/90 mb-6 whitespace-pre-line"
                 style={{ lineHeight: "20px" }}
               >
                 {narrative.narrative}
@@ -236,7 +236,7 @@ export function AstrologyChartResultView({
 
           {((narrative?.strengths?.length ?? 0) > 0 ||
             (narrative?.challenges?.length ?? 0) > 0) && (
-            <>
+            <div className="text-left">
               <h3
                 className="text-[18px] font-[400] text-[#F2D08C] mb-2"
                 style={{ lineHeight: "33px" }}
@@ -269,11 +269,11 @@ export function AstrologyChartResultView({
                   </div>
                 ) : null}
               </div>
-            </>
+            </div>
           )}
 
           {narrative?.avoid_this && narrative.avoid_this.length > 0 && (
-            <>
+            <div className="text-left">
               <h3
                 className="text-[18px] font-[400] text-[#F2D08C] mb-2"
                 style={{ lineHeight: "33px" }}
@@ -285,11 +285,11 @@ export function AstrologyChartResultView({
                   <li key={a}>{a}</li>
                 ))}
               </ul>
-            </>
+            </div>
           )}
 
           {narrative?.overlaps && narrative.overlaps.length > 0 && (
-            <>
+            <div className="text-left">
               <h3
                 className="text-[18px] font-[400] text-[#F2D08C] mb-2"
                 style={{ lineHeight: "33px" }}
@@ -311,11 +311,11 @@ export function AstrologyChartResultView({
                   </li>
                 ))}
               </ul>
-            </>
+            </div>
           )}
 
           {narrative?.try_this && narrative.try_this.length > 0 && (
-            <>
+            <div className="text-left">
               <h3
                 className="text-[18px] font-[400] text-[#F2D08C] mb-2"
                 style={{ lineHeight: "33px" }}
@@ -327,7 +327,7 @@ export function AstrologyChartResultView({
                   <li key={t}>{t}</li>
                 ))}
               </ul>
-            </>
+            </div>
           )}
 
           {narrative?.spiritual_insight && (
