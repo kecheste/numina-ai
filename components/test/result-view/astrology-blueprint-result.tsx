@@ -28,9 +28,10 @@ export function AstrologyBlueprintResult({
   shellRef,
   content = undefined,
 }: AstrologyBlueprintResultProps) {
-  const sunDesc = content?.sun_description ?? DEFAULT_SUN;
-  const moonDesc = content?.moon_description ?? DEFAULT_MOON;
-  const risingDesc = content?.rising_description ?? DEFAULT_RISING;
+  const sunDesc = content?.sun_description?.split(". ")[0] ?? DEFAULT_SUN;
+  const moonDesc = content?.moon_description?.split(". ")[0] ?? DEFAULT_MOON;
+  const risingDesc =
+    content?.rising_description?.split(". ")[0] ?? DEFAULT_RISING;
   const cosmicSummary = content?.cosmic_traits_summary ?? DEFAULT_COSMIC;
   const isLoading = content === null;
 
