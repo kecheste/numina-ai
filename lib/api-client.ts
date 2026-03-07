@@ -373,6 +373,36 @@ export async function apiFetchOnboardingAstrologyBlueprint(): Promise<AstrologyB
   return res.json();
 }
 
+export interface AstrologyChartNarrativeOverlap {
+  label: string;
+  description: string;
+}
+
+export interface AstrologyChartNarrativeResponse {
+  title: string;
+  core_traits: string[];
+  narrative: string;
+  strengths: string[];
+  challenges: string[];
+  avoid_this: string[];
+  overlaps: AstrologyChartNarrativeOverlap[];
+  try_this: string[];
+  spiritual_insight: string;
+}
+
+export async function apiFetchAstrologyChartNarrative(): Promise<AstrologyChartNarrativeResponse> {
+  const res = await fetchWithAuth("/api/v1/tests/astrology-chart-narrative");
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (res.status === 404) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Birth data incomplete.",
+    );
+  }
+  if (!res.ok) throw new Error("Failed to load astrology chart narrative");
+  return res.json();
+}
+
 export interface NumerologyBlueprintItem {
   number: string;
   title: string;
@@ -443,10 +473,24 @@ export interface TestResultResponse {
     spiritualInsight?: string;
     tryThis?: string[];
     avoidThis?: string[];
-    synchronicities?: { test: string; connection: string }[];
+    synchronicities?: {
+      test?: string;
+      connection?: string;
+      label?: string;
+      description?: string;
+    }[];
     chartData?: unknown[];
     strongestChakra?: string;
     needsRebalancing?: string;
+    statusSummary?: string;
+    chakras?: {
+      id: string;
+      name: string;
+      status: string;
+      description: string;
+      tryItems?: string | null;
+      avoidItems?: string | null;
+    }[];
   } | null;
 }
 

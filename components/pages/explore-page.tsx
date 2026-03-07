@@ -214,8 +214,19 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
         <StarseedOriginResult testTitle={test.title} onBack={onBackResult} />
       );
     } else if (test.id === 13) {
+      if (viewingResultData === undefined) {
+        return (
+          <div className="pb-24 flex items-center justify-center min-h-[200px]">
+            <p className="text-[#F2D08C] font-[325]">Loading your result…</p>
+          </div>
+        );
+      }
       return (
-        <ChakraAlignmentResult testTitle={test.title} onBack={onBackResult} />
+        <ChakraAlignmentResult
+          testTitle={test.title}
+          onBack={onBackResult}
+          content={viewingResultData?.llm_result_json ?? undefined}
+        />
       );
     } else if (test.id === 1) {
       if (autoResultLoading || (!astrologyChart && !autoResultError)) {

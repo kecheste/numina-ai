@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
@@ -10,8 +9,10 @@ import { MoonIcon } from "@/components/icons/moon-icon";
 import { RisingIcon } from "@/components/icons/rising-icon";
 import {
   apiFetchOnboardingAstrologyBlueprint,
+  apiFetchAstrologyChartNarrative,
   type AstrologyChartResponse,
   type AstrologyBlueprintResponse,
+  type AstrologyChartNarrativeResponse,
 } from "@/lib/api-client";
 
 function formatSign(s: string): string {
@@ -29,12 +30,23 @@ export function AstrologyChartResultView({
   shellRef: React.RefObject<HTMLDivElement | null>;
   onLogout: () => void;
 }) {
-  const [blueprint, setBlueprint] = useState<AstrologyBlueprintResponse | null | undefined>(undefined);
+  const [blueprint, setBlueprint] = useState<
+    AstrologyBlueprintResponse | null | undefined
+  >(undefined);
+  const [narrative, setNarrative] = useState<
+    AstrologyChartNarrativeResponse | null | undefined
+  >(undefined);
 
   useEffect(() => {
     apiFetchOnboardingAstrologyBlueprint()
       .then(setBlueprint)
       .catch(() => setBlueprint(null));
+  }, []);
+
+  useEffect(() => {
+    apiFetchAstrologyChartNarrative()
+      .then(setNarrative)
+      .catch(() => setNarrative(null));
   }, []);
 
   const el = chart.element_distribution;
@@ -59,29 +71,64 @@ export function AstrologyChartResultView({
       >
         <div className="flex items-center border-b border-gray-500/30 justify-between w-full bg-black px-[28px] py-2 flex-shrink-0">
           <button onClick={onClose} className="cursor-pointer">
-            <Icon icon="icons8:left-arrow" color="#D9D9D9" width={30} className="mt-1.5" />
+            <Icon
+              icon="icons8:left-arrow"
+              color="#D9D9D9"
+              width={30}
+              className="mt-1.5"
+            />
           </button>
           <NuminaLogoIcon className="mb-2" />
-          <AppDrawer isPremium={false} portalContainer={shellRef} onLogout={onLogout} />
+          <AppDrawer
+            isPremium={false}
+            portalContainer={shellRef}
+            onLogout={onLogout}
+          />
         </div>
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[400] text-white mb-2" style={{ lineHeight: "33px" }}>
-            Your Astrology Chart
+          <h1
+            className="text-[21px] font-[400] text-white mb-2"
+            style={{ lineHeight: "33px" }}
+          >
+            {narrative?.title ?? "Your Astrology Chart"}
           </h1>
-          <p className="text-[14px] font-[350] text-white/90 mb-8" style={{ lineHeight: "21px" }}>
+          <p
+            className="text-[14px] font-[350] text-white/90 mb-4"
+            style={{ lineHeight: "21px" }}
+          >
             Based on your birth date, time, and place
           </p>
+
+          {narrative?.core_traits && narrative.core_traits.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-6">
+              {narrative.core_traits.map((trait) => (
+                <span
+                  key={trait}
+                  className="border border-[#F2D08C]/50 rounded-[8px] px-3 py-1.5 text-[13px] font-[350] text-[#F2D08C]"
+                >
+                  {trait}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
             <div className="col-span-1">
               <SunIcon />
             </div>
             <div className="col-span-4">
-              <h3 className="text-[15px] font-[350] text-white mb-0.5">Sun Sign</h3>
-              <p className="text-[13px] font-[400] text-[#F2D08C]">{formatSign(chart.sun_sign)}</p>
+              <h3 className="text-[15px] font-[350] text-white mb-0.5">
+                Sun Sign
+              </h3>
+              <p className="text-[13px] font-[400] text-[#F2D08C]">
+                {formatSign(chart.sun_sign)}
+              </p>
               {sunDesc && (
-                <p className="text-[13px] font-[350] text-white/90 mt-1.5" style={{ lineHeight: "20px" }}>
+                <p
+                  className="text-[13px] font-[350] text-white/90 mt-1.5"
+                  style={{ lineHeight: "20px" }}
+                >
                   {sunDesc}
                 </p>
               )}
@@ -93,10 +140,17 @@ export function AstrologyChartResultView({
               <MoonIcon />
             </div>
             <div className="col-span-4">
-              <h3 className="text-[15px] font-[350] text-white mb-0.5">Moon Sign</h3>
-              <p className="text-[13px] font-[400] text-[#F2D08C]">{formatSign(chart.moon_sign)}</p>
+              <h3 className="text-[15px] font-[350] text-white mb-0.5">
+                Moon Sign
+              </h3>
+              <p className="text-[13px] font-[400] text-[#F2D08C]">
+                {formatSign(chart.moon_sign)}
+              </p>
               {moonDesc && (
-                <p className="text-[13px] font-[350] text-white/90 mt-1.5" style={{ lineHeight: "20px" }}>
+                <p
+                  className="text-[13px] font-[350] text-white/90 mt-1.5"
+                  style={{ lineHeight: "20px" }}
+                >
                   {moonDesc}
                 </p>
               )}
@@ -108,20 +162,30 @@ export function AstrologyChartResultView({
               <RisingIcon />
             </div>
             <div className="col-span-4">
-              <h3 className="text-[15px] font-[350] text-white mb-0.5">Rising Sign</h3>
-              <p className="text-[13px] font-[400] text-[#F2D08C]">{formatSign(chart.rising_sign)}</p>
+              <h3 className="text-[15px] font-[350] text-white mb-0.5">
+                Rising Sign
+              </h3>
+              <p className="text-[13px] font-[400] text-[#F2D08C]">
+                {formatSign(chart.rising_sign)}
+              </p>
               {risingDesc && (
-                <p className="text-[13px] font-[350] text-white/90 mt-1.5" style={{ lineHeight: "20px" }}>
+                <p
+                  className="text-[13px] font-[350] text-white/90 mt-1.5"
+                  style={{ lineHeight: "20px" }}
+                >
                   {risingDesc}
                 </p>
               )}
             </div>
           </div>
 
-          <h3 className="text-[18px] font-[400] text-[#F2D08C] mb-2" style={{ lineHeight: "33px" }}>
+          <h3
+            className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+            style={{ lineHeight: "33px" }}
+          >
             Element distribution
           </h3>
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-6">
             {elements.length > 0 ? (
               elements.map(({ name, count }) => (
                 <span
@@ -138,7 +202,10 @@ export function AstrologyChartResultView({
 
           {cosmicSummary && (
             <>
-              <h3 className="text-[18px] font-[400] text-[#F2D08C] mb-2" style={{ lineHeight: "33px" }}>
+              <h3
+                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                style={{ lineHeight: "33px" }}
+              >
                 Cosmic traits summary
               </h3>
               <p
@@ -150,12 +217,135 @@ export function AstrologyChartResultView({
             </>
           )}
 
-          <Button
-            onClick={onClose}
-            className="w-full text-[16px] rounded-[10px] h-[56px] bg-[#F2D08C] text-black font-[400] mt-auto"
-          >
-            Done
-          </Button>
+          {narrative?.narrative && (
+            <>
+              <h3
+                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                style={{ lineHeight: "33px" }}
+              >
+                Your blueprint
+              </h3>
+              <div
+                className="text-[13px] font-[350] text-white/90 mb-6 whitespace-pre-line"
+                style={{ lineHeight: "20px" }}
+              >
+                {narrative.narrative}
+              </div>
+            </>
+          )}
+
+          {((narrative?.strengths?.length ?? 0) > 0 ||
+            (narrative?.challenges?.length ?? 0) > 0) && (
+            <>
+              <h3
+                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                style={{ lineHeight: "33px" }}
+              >
+                Strengths & Challenges
+              </h3>
+              <div className="mb-6 space-y-2">
+                {narrative?.strengths?.length ? (
+                  <div>
+                    <p className="text-[13px] font-[400] text-[#F2D08C] mb-1">
+                      Strengths
+                    </p>
+                    <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 space-y-0.5">
+                      {narrative.strengths.map((s) => (
+                        <li key={s}>{s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                {narrative?.challenges?.length ? (
+                  <div>
+                    <p className="text-[13px] font-[400] text-[#F2D08C] mb-1">
+                      Challenges
+                    </p>
+                    <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 space-y-0.5">
+                      {narrative.challenges.map((c) => (
+                        <li key={c}>{c}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
+            </>
+          )}
+
+          {narrative?.avoid_this && narrative.avoid_this.length > 0 && (
+            <>
+              <h3
+                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                style={{ lineHeight: "33px" }}
+              >
+                Avoid This
+              </h3>
+              <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 mb-6 space-y-0.5">
+                {narrative.avoid_this.map((a) => (
+                  <li key={a}>{a}</li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {narrative?.overlaps && narrative.overlaps.length > 0 && (
+            <>
+              <h3
+                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                style={{ lineHeight: "33px" }}
+              >
+                Overlaps
+              </h3>
+              <ul className="space-y-2 mb-6">
+                {narrative.overlaps.map((o) => (
+                  <li key={o.label}>
+                    <span className="text-[13px] font-[400] text-[#F2D08C]">
+                      {o.label}:
+                    </span>{" "}
+                    <span
+                      className="text-[13px] font-[350] text-white/90"
+                      style={{ lineHeight: "20px" }}
+                    >
+                      {o.description}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {narrative?.try_this && narrative.try_this.length > 0 && (
+            <>
+              <h3
+                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                style={{ lineHeight: "33px" }}
+              >
+                Try This
+              </h3>
+              <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 mb-6 space-y-0.5">
+                {narrative.try_this.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {narrative?.spiritual_insight && (
+            <>
+              <h3
+                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                style={{ lineHeight: "33px" }}
+              >
+                Spiritual Insight
+              </h3>
+              <p
+                className="text-[13px] font-[350] text-white/90"
+                style={{ lineHeight: "20px" }}
+              >
+                {narrative.spiritual_insight}
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>

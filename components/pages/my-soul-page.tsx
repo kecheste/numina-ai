@@ -111,7 +111,7 @@ function getCardLabel(
 
 export function SoulRevealScreen() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [resultsByTest, setResultsByTest] = useState<
     Record<number, TestResultResponse>
   >({});
@@ -159,6 +159,24 @@ export function SoulRevealScreen() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (user == null || user.life_path_number != null) return;
+    let cancelled = false;
+    const t1 = window.setTimeout(() => {
+      if (cancelled) return;
+      refreshUser();
+    }, 1500);
+    const t2 = window.setTimeout(() => {
+      if (cancelled) return;
+      refreshUser();
+    }, 4500);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [user?.id, user?.life_path_number, refreshUser]);
 
   useEffect(() => {
     let cancelled = false;

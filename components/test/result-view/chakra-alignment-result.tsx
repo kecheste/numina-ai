@@ -6,9 +6,31 @@ import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
 import { Button } from "@/components/ui/button";
 
+export interface ChakraAlignmentChakra {
+  id: string;
+  name: string;
+  status: string;
+  description: string;
+  tryItems?: string | null;
+  avoidItems?: string | null;
+}
+
+export interface ChakraAlignmentContent {
+  statusSummary?: string | null;
+  chakras?: ChakraAlignmentChakra[] | null;
+  strengths?: string[] | null;
+  challenges?: string[] | null;
+  synchronicities?: { label?: string; description?: string; test?: string; connection?: string }[] | null;
+  coreTraits?: string[] | null;
+  tryThis?: string[] | null;
+  avoidThis?: string[] | null;
+}
+
 interface ChakraAlignmentResultProps {
   testTitle: string;
   onBack: () => void;
+  /** Dynamic content from LLM (result.llm_result_json). When null/undefined, fallback defaults are used. */
+  content?: ChakraAlignmentContent | null;
 }
 
 const CHAKRA_COLORS: Record<string, string> = {
@@ -21,95 +43,64 @@ const CHAKRA_COLORS: Record<string, string> = {
   crown: "#F2D08C",
 };
 
-const CHAKRAS = [
-  {
-    id: "root",
-    name: "Root Chakra",
-    status: "Blocked",
-    description: "You may feel anxious, ungrounded, or unstable.",
-    tryItems: "nature walks, grounding foods, physical routines",
-    avoidItems: "chaos, skipping meals, constant stimulation",
-  },
-  {
-    id: "sacral",
-    name: "Sacral Chakra",
-    status: "Balanced",
-    description:
-      "You express emotions well and enjoy sensory and creative experiences. You are emotionally fluid and open.",
-    tryItems: null as string | null,
-    avoidItems: null as string | null,
-  },
-  {
-    id: "solarPlexus",
-    name: "Solar Plexus Chakra",
-    status: "Slightly Blocked",
-    description:
-      "There might be hesitation to assert yourself or take leadership.",
-    tryItems: "making decisions, building confidence",
-    avoidItems: "excessive self-doubt or passivity",
-  },
-  {
-    id: "heart",
-    name: "Heart Chakra",
-    status: "Balanced",
-    description:
-      "You're compassionate, emotionally open, and able to love deeply.",
-    tryItems: null as string | null,
-    avoidItems: null as string | null,
-  },
-  {
-    id: "throat",
-    name: "Throat Chakra",
-    status: "Balanced",
-    description:
-      "You communicate clearly, authentically, and know when to listen.",
-    tryItems: null as string | null,
-    avoidItems: null as string | null,
-  },
-  {
-    id: "thirdEye",
-    name: "Third Eye Chakra",
-    status: "Open",
-    description:
-      'Strong intuition and inner knowing. You often trust your "gut" and can see beyond surface appearances.',
-    tryItems: null as string | null,
-    avoidItems: null as string | null,
-  },
-  {
-    id: "crown",
-    name: "Crown Chakra",
-    status: "Overactive",
-    description:
-      "You may be too focused on spiritual ideals or abstract thinking.",
-    tryItems: "grounding meditation, focusing on the body",
-    avoidItems: "overthinking, spiritual escapism",
-  },
+const DEFAULT_CHAKRAS: ChakraAlignmentChakra[] = [
+  { id: "root", name: "Root Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
+  { id: "sacral", name: "Sacral Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
+  { id: "solarPlexus", name: "Solar Plexus Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
+  { id: "heart", name: "Heart Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
+  { id: "throat", name: "Throat Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
+  { id: "thirdEye", name: "Third Eye Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
+  { id: "crown", name: "Crown Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
 ];
 
-const STRENGTHS = [
-  "Deep spiritual insight",
-  "Emotional expression",
-  "Intuitive awareness",
-];
+const DEFAULT_STRENGTHS = ["Self-awareness", "Willingness to explore"];
+const DEFAULT_CHALLENGES = ["Patience", "Integration"];
+const DEFAULT_SYNCHRONICITIES: { label: string; description: string }[] = [];
+const DEFAULT_CORE_TRAITS = ["Reflective", "Growing"];
+const DEFAULT_TRY_THIS = ["Revisit your answers as you grow.", "Explore more tests for a fuller picture."];
+const DEFAULT_AVOID_THIS = ["Rushing to conclusions.", "Comparing yourself to others."];
+const DEFAULT_STATUS_SUMMARY = "Your chakra balance reflects your current energy flow.";
 
-const CHALLENGES = [
-  "Disconnection from body or routine",
-  'Hard to feel "present" in the now',
-  "May overthink instead of act",
-];
+function normalizeChakras(raw: unknown): ChakraAlignmentChakra[] {
+  if (!Array.isArray(raw) || raw.length === 0) return DEFAULT_CHAKRAS;
+  const out: ChakraAlignmentChakra[] = [];
+  const ids = ["root", "sacral", "solarPlexus", "heart", "throat", "thirdEye", "crown"];
+  const names = ["Root Chakra", "Sacral Chakra", "Solar Plexus Chakra", "Heart Chakra", "Throat Chakra", "Third Eye Chakra", "Crown Chakra"];
+  for (let i = 0; i < 7; i++) {
+    const c = raw[i];
+    if (c && typeof c === "object" && "id" in c) {
+      const id = String((c as Record<string, unknown>).id ?? ids[i]);
+      out.push({
+        id: ids.includes(id) ? id : ids[i],
+        name: String((c as Record<string, unknown>).name ?? names[i]),
+        status: String((c as Record<string, unknown>).status ?? "Balanced"),
+        description: String((c as Record<string, unknown>).description ?? "This energy center is in balance."),
+        tryItems: (c as Record<string, unknown>).tryItems != null ? String((c as Record<string, unknown>).tryItems) : null,
+        avoidItems: (c as Record<string, unknown>).avoidItems != null ? String((c as Record<string, unknown>).avoidItems) : null,
+      });
+    } else {
+      out.push(DEFAULT_CHAKRAS[i] ?? { id: ids[i], name: names[i], status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null });
+    }
+  }
+  return out;
+}
 
-const SYNCHRONICITIES = [
-  { label: "Life Path 7", description: "Mystic, seeker, spiritual insight" },
-  { label: "INFJ", description: "Intuitive and visionary" },
-  {
-    label: "Scorpio Sun",
-    description: "Intensifies emotional & intuitive energy",
-  },
-];
+function normalizeStrings(raw: unknown, fallback: string[]): string[] {
+  if (!Array.isArray(raw)) return fallback;
+  return raw.map((x) => (x != null ? String(x) : "")).filter(Boolean);
+}
 
-const CORE_TRAITS = ["Deep thinker", "Empathic", "Needs solitude"];
-const TRY_THIS = ["Take solo nature walks", "Practice grounding breathwork"];
-const AVOID_THIS = ["Don't isolate for too long", "Watch for escapism"];
+function normalizeSynchronicities(raw: unknown): { label: string; description: string }[] {
+  if (!Array.isArray(raw)) return DEFAULT_SYNCHRONICITIES;
+  return raw
+    .filter((s): s is Record<string, unknown> => s != null && typeof s === "object")
+    .map((s) => ({
+      label: String(s.label ?? s.test ?? ""),
+      description: String(s.description ?? s.connection ?? ""),
+    }))
+    .filter((s) => s.label || s.description)
+    .slice(0, 6);
+}
 
 const sectionHeadingClass = "text-[15px] font-[350] text-white mb-2";
 const sectionHeadingStyle = {
@@ -125,8 +116,18 @@ const bodyTextStyle = {
 export function ChakraAlignmentResult({
   testTitle: _testTitle,
   onBack,
+  content,
 }: ChakraAlignmentResultProps) {
   const shellRef = useRef<HTMLDivElement>(null);
+
+  const statusSummary = (content?.statusSummary?.trim() || DEFAULT_STATUS_SUMMARY);
+  const chakras = content?.chakras?.length === 7 ? content.chakras : normalizeChakras(content?.chakras);
+  const strengths = normalizeStrings(content?.strengths, DEFAULT_STRENGTHS);
+  const challenges = normalizeStrings(content?.challenges, DEFAULT_CHALLENGES);
+  const synchronicities = content?.synchronicities?.length ? content.synchronicities : normalizeSynchronicities(content?.synchronicities);
+  const coreTraits = normalizeStrings(content?.coreTraits, DEFAULT_CORE_TRAITS);
+  const tryThis = normalizeStrings(content?.tryThis, DEFAULT_TRY_THIS);
+  const avoidThis = normalizeStrings(content?.avoidThis, DEFAULT_AVOID_THIS);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
@@ -167,16 +168,11 @@ export function ChakraAlignmentResult({
               style={bodyTextStyle}
               className="text-[13px] font-[300] text-[#FFFFFF]"
             >
-              You are spiritually tuned but may lack grounding. Your{" "}
-              <span className="font-[600] text-[#FFFFFF]">Crown Chakra</span> is
-              overactive, while your{" "}
-              <span className="font-[600] text-[#FFFFFF]">Root Chakra</span> is{" "}
-              <span className="font-[600] text-[#FFFFFF]">blocked</span>,
-              creating an energetic imbalance.
+              {statusSummary}
             </p>
           </div>
 
-          {CHAKRAS.map((chakra) => {
+          {chakras.map((chakra) => {
             const color = CHAKRA_COLORS[chakra.id] ?? "#F2D08C";
             const showTryAvoid =
               chakra.status !== "Balanced" &&
@@ -239,7 +235,7 @@ export function ChakraAlignmentResult({
               Strengths
             </h2>
             <div className="flex flex-wrap gap-2">
-              {STRENGTHS.map((item, idx) => (
+              {strengths.map((item, idx) => (
                 <span
                   key={idx}
                   className="border border-[#F2D08C]/50 rounded-[7px] px-2 py-1 flex items-center"
@@ -261,7 +257,7 @@ export function ChakraAlignmentResult({
               Challenges
             </h2>
             <div className="flex flex-wrap gap-2">
-              {CHALLENGES.map((item, idx) => (
+              {challenges.map((item, idx) => (
                 <span
                   key={idx}
                   className="border border-[#F2D08C]/50 rounded-[7px] px-2 py-1 flex items-center"
@@ -278,31 +274,33 @@ export function ChakraAlignmentResult({
             </div>
           </div>
 
-          <div className="mb-6 text-left">
-            <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
-              Synchronicities
-            </h2>
-            <div className="space-y-2">
-              {SYNCHRONICITIES.map(({ label, description }) => (
-                <p
-                  key={label}
-                  style={bodyTextStyle}
-                  className="text-[13px] font-[300] text-[#FFFFFF]"
-                >
-                  <span className="font-[600] text-[#FFFFFF]">{label}</span>
-                  <span className="text-[#F2D08C] mx-1">→</span>
-                  {description}
-                </p>
-              ))}
+          {synchronicities.length > 0 && (
+            <div className="mb-6 text-left">
+              <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
+                Synchronicities
+              </h2>
+              <div className="space-y-2">
+                {synchronicities.map(({ label, description }, idx) => (
+                  <p
+                    key={label || idx}
+                    style={bodyTextStyle}
+                    className="text-[13px] font-[300] text-[#FFFFFF]"
+                  >
+                    <span className="font-[600] text-[#FFFFFF]">{label}</span>
+                    <span className="text-[#F2D08C] mx-1">→</span>
+                    {description}
+                  </p>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="mb-6 text-left">
             <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
               Core Traits
             </h2>
             <div className="flex flex-wrap gap-2">
-              {CORE_TRAITS.map((item, idx) => (
+              {coreTraits.map((item, idx) => (
                 <span
                   key={idx}
                   className="border border-[#F2D08C]/50 rounded-[7px] px-2 py-1 flex items-center"
@@ -327,9 +325,15 @@ export function ChakraAlignmentResult({
               style={bodyTextStyle}
               className="text-[13px] font-[300] text-[#FFFFFF]"
             >
-              <span className="underline">{TRY_THIS[0]}</span>
-              <span className="mx-1">or</span>
-              <span className="underline">{TRY_THIS[1]}</span>
+              {tryThis.length >= 2 ? (
+                <>
+                  <span className="underline">{tryThis[0]}</span>
+                  <span className="mx-1">or</span>
+                  <span className="underline">{tryThis[1]}</span>
+                </>
+              ) : (
+                tryThis[0] ?? "Revisit your answers as you grow."
+              )}
             </p>
           </div>
 
@@ -341,9 +345,15 @@ export function ChakraAlignmentResult({
               style={bodyTextStyle}
               className="text-[13px] font-[300] text-[#FFFFFF]"
             >
-              <span className="underline">{AVOID_THIS[0]}</span>
-              <span className="mx-1">or</span>
-              <span className="underline">{AVOID_THIS[1]}</span>
+              {avoidThis.length >= 2 ? (
+                <>
+                  <span className="underline">{avoidThis[0]}</span>
+                  <span className="mx-1">or</span>
+                  <span className="underline">{avoidThis[1]}</span>
+                </>
+              ) : (
+                avoidThis[0] ?? "Rushing to conclusions."
+              )}
             </p>
           </div>
           <Button
