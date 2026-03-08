@@ -16,6 +16,16 @@ const DEFAULT_NUMEROLOGY_DATA: NumerologyBlueprintResponse["items"] = [
     title: "Soul Urge",
     description: "Your soul urge reveals what your heart truly desires.",
   },
+  {
+    number: "6",
+    title: "Birthday Number",
+    description: "Your birthday number adds a personal layer to your cosmic profile.",
+  },
+  {
+    number: "3",
+    title: "Expression",
+    description: "Your expression number reflects how you show up in the world.",
+  },
 ];
 
 const MAX_DESCRIPTION_LENGTH = 70;

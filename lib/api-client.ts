@@ -334,6 +334,8 @@ export async function apiFetchAstrologyChart(): Promise<AstrologyChartResponse> 
 export interface NumerologyResponse {
   life_path: number;
   soul_urge: number;
+  birthday_number: number;
+  expression_number: number;
 }
 
 /** Fetch current user's numerology. Auth required. 404 if birth date or name missing. */
