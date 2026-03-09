@@ -49,6 +49,8 @@ export function AstrologyChartResultView({
       .catch(() => setNarrative(null));
   }, []);
 
+  const isLoading = blueprint === undefined || narrative === undefined;
+
   const el = chart.element_distribution;
   const elements = [
     el.fire > 0 && { name: "Fire", count: el.fire },
@@ -87,263 +89,275 @@ export function AstrologyChartResultView({
         </div>
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            className="text-[21px] font-[400] text-white mb-2"
-            style={{ lineHeight: "33px" }}
-          >
-            {narrative?.title ?? "Your Astrology Chart"}
-          </h1>
-          <p
-            className="text-[14px] font-[350] text-white/90 mb-4"
-            style={{ lineHeight: "21px" }}
-          >
-            Based on your birth date, time, and place
-          </p>
-
-          {narrative?.core_traits && narrative.core_traits.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {narrative.core_traits.map((trait) => (
-                <span
-                  key={trait}
-                  className="border border-[#F2D08C]/50 rounded-[8px] px-3 py-1.5 text-[13px] font-[350] text-[#F2D08C]"
-                >
-                  {trait}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
-            <div className="col-span-1">
-              <SunIcon />
-            </div>
-            <div className="col-span-4">
-              <h3 className="text-[15px] font-[350] text-white mb-0.5">
-                Sun Sign
-              </h3>
-              <p className="text-[13px] font-[400] text-[#F2D08C]">
-                {formatSign(chart.sun_sign)}
-              </p>
-              {sunDesc && (
-                <p
-                  className="text-[13px] font-[350] text-white/90 mt-1.5"
-                  style={{ lineHeight: "20px" }}
-                >
-                  {sunDesc}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
-            <div className="col-span-1">
-              <MoonIcon />
-            </div>
-            <div className="col-span-4">
-              <h3 className="text-[15px] font-[350] text-white mb-0.5">
-                Moon Sign
-              </h3>
-              <p className="text-[13px] font-[400] text-[#F2D08C]">
-                {formatSign(chart.moon_sign)}
-              </p>
-              {moonDesc && (
-                <p
-                  className="text-[13px] font-[350] text-white/90 mt-1.5"
-                  style={{ lineHeight: "20px" }}
-                >
-                  {moonDesc}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
-            <div className="col-span-1">
-              <RisingIcon />
-            </div>
-            <div className="col-span-4">
-              <h3 className="text-[15px] font-[350] text-white mb-0.5">
-                Rising Sign
-              </h3>
-              <p className="text-[13px] font-[400] text-[#F2D08C]">
-                {formatSign(chart.rising_sign)}
-              </p>
-              {risingDesc && (
-                <p
-                  className="text-[13px] font-[350] text-white/90 mt-1.5"
-                  style={{ lineHeight: "20px" }}
-                >
-                  {risingDesc}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <h3
-            className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-            style={{ lineHeight: "33px" }}
-          >
-            Element distribution
-          </h3>
-          <div className="flex flex-wrap gap-2 mb-6">
-            {elements.length > 0 ? (
-              elements.map(({ name, count }) => (
-                <span
-                  key={name}
-                  className="border border-[#F2D08C]/50 rounded-[8px] px-3 py-1.5 text-[13px] font-[350] text-[#F2D08C]"
-                >
-                  {name} {count}
-                </span>
-              ))
-            ) : (
-              <span className="text-[13px] text-white/70">—</span>
-            )}
-          </div>
-
-          {cosmicSummary && (
-            <>
-              <h3
-                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-                style={{ lineHeight: "33px" }}
-              >
-                Cosmic traits summary
-              </h3>
+          {isLoading ? (
+            <div className="flex flex-col flex-1 items-center justify-center text-center py-12">
+              <div className="h-10 w-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin mb-4" />
               <p
-                className="text-[13px] font-[350] text-white/90 mb-6 whitespace-pre-line"
-                style={{ lineHeight: "20px" }}
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="text-[14px] font-[350] text-[#F2D08C]"
               >
-                {cosmicSummary}
+                Preparing your astrology chart…
               </p>
-            </>
-          )}
-
-          {narrative?.narrative && (
+            </div>
+          ) : (
             <>
-              <h3
-                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-                style={{ lineHeight: "33px" }}
-              >
-                Your blueprint
-              </h3>
-              <div
-                className="text-[12px] font-[300] text-white/90 mb-6 whitespace-pre-line"
-                style={{ lineHeight: "20px" }}
-              >
-                {narrative.narrative}
-              </div>
-            </>
-          )}
+              <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-2">
+                Your Astrology Chart
+              </h1>
+              <h1 className="text-[18px] font-[300] text-[#F2D08C] mb-2">
+                {narrative?.title?.replace("Astrology Chart – ", "")?.trim() ??
+                  "Your Astrology Chart"}
+              </h1>
+              <p className="text-[13px] font-[300] text-white/90 mb-4">
+                Based on your birth date, time, and place
+              </p>
 
-          {((narrative?.strengths?.length ?? 0) > 0 ||
-            (narrative?.challenges?.length ?? 0) > 0) && (
-            <div className="text-left">
-              <h3
-                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-                style={{ lineHeight: "33px" }}
-              >
-                Strengths & Challenges
-              </h3>
-              <div className="mb-6 space-y-2">
-                {narrative?.strengths?.length ? (
-                  <div>
-                    <p className="text-[13px] font-[400] text-[#F2D08C] mb-1">
-                      Strengths
-                    </p>
-                    <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 space-y-0.5">
-                      {narrative.strengths.map((s) => (
-                        <li key={s}>{s}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-                {narrative?.challenges?.length ? (
-                  <div>
-                    <p className="text-[13px] font-[400] text-[#F2D08C] mb-1">
-                      Challenges
-                    </p>
-                    <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 space-y-0.5">
-                      {narrative.challenges.map((c) => (
-                        <li key={c}>{c}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          )}
-
-          {narrative?.avoid_this && narrative.avoid_this.length > 0 && (
-            <div className="text-left">
-              <h3
-                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-                style={{ lineHeight: "33px" }}
-              >
-                Avoid This
-              </h3>
-              <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 mb-6 space-y-0.5">
-                {narrative.avoid_this.map((a) => (
-                  <li key={a}>{a}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {narrative?.overlaps && narrative.overlaps.length > 0 && (
-            <div className="text-left">
-              <h3
-                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-                style={{ lineHeight: "33px" }}
-              >
-                Overlaps
-              </h3>
-              <ul className="space-y-2 mb-6">
-                {narrative.overlaps.map((o) => (
-                  <li key={o.label}>
-                    <span className="text-[13px] font-[400] text-[#F2D08C]">
-                      {o.label}:
-                    </span>{" "}
+              {narrative?.core_traits && narrative.core_traits.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {narrative.core_traits.map((trait) => (
                     <span
-                      className="text-[13px] font-[350] text-white/90"
+                      key={trait}
+                      className="border border-[#F2D08C]/50 rounded-[20px] px-2 text-[12px] font-[350] text-[#F2D08C]"
+                    >
+                      {trait}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
+                <div className="col-span-1">
+                  <SunIcon />
+                </div>
+                <div className="col-span-4">
+                  <h3 className="text-[15px] font-[350] text-white mb-0.5">
+                    Sun Sign
+                  </h3>
+                  <p className="text-[13px] font-[400] text-[#F2D08C]">
+                    {formatSign(chart.sun_sign)}
+                  </p>
+                  {sunDesc && (
+                    <p
+                      className="text-[13px] font-[350] text-white/90 mt-1.5"
                       style={{ lineHeight: "20px" }}
                     >
-                      {o.description}
+                      {sunDesc}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
+                <div className="col-span-1">
+                  <MoonIcon />
+                </div>
+                <div className="col-span-4">
+                  <h3 className="text-[15px] font-[350] text-white mb-0.5">
+                    Moon Sign
+                  </h3>
+                  <p className="text-[13px] font-[400] text-[#F2D08C]">
+                    {formatSign(chart.moon_sign)}
+                  </p>
+                  {moonDesc && (
+                    <p
+                      className="text-[13px] font-[350] text-white/90 mt-1.5"
+                      style={{ lineHeight: "20px" }}
+                    >
+                      {moonDesc}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
+                <div className="col-span-1">
+                  <RisingIcon />
+                </div>
+                <div className="col-span-4">
+                  <h3 className="text-[15px] font-[350] text-white mb-0.5">
+                    Rising Sign
+                  </h3>
+                  <p className="text-[13px] font-[400] text-[#F2D08C]">
+                    {formatSign(chart.rising_sign)}
+                  </p>
+                  {risingDesc && (
+                    <p
+                      className="text-[13px] font-[350] text-white/90 mt-1.5"
+                      style={{ lineHeight: "20px" }}
+                    >
+                      {risingDesc}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <h3
+                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                style={{ lineHeight: "33px" }}
+              >
+                Element distribution
+              </h3>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {elements.length > 0 ? (
+                  elements.map(({ name, count }) => (
+                    <span
+                      key={name}
+                      className="border border-[#F2D08C]/50 rounded-[20px] px-2 text-[12px] font-[350] text-[#F2D08C]"
+                    >
+                      {name} {count}
                     </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+                  ))
+                ) : (
+                  <span className="text-[13px] text-white/70">—</span>
+                )}
+              </div>
 
-          {narrative?.try_this && narrative.try_this.length > 0 && (
-            <div className="text-left">
-              <h3
-                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-                style={{ lineHeight: "33px" }}
-              >
-                Try This
-              </h3>
-              <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 mb-6 space-y-0.5">
-                {narrative.try_this.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+              {cosmicSummary && (
+                <>
+                  <h3
+                    className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                    style={{ lineHeight: "33px" }}
+                  >
+                    Cosmic traits summary
+                  </h3>
+                  <p
+                    className="text-[13px] font-[350] text-left text-white/90 mb-6 whitespace-pre-line"
+                    style={{ lineHeight: "20px" }}
+                  >
+                    {cosmicSummary}
+                  </p>
+                </>
+              )}
 
-          {narrative?.spiritual_insight && (
-            <>
-              <h3
-                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-                style={{ lineHeight: "33px" }}
-              >
-                Spiritual Insight
-              </h3>
-              <p
-                className="text-[13px] font-[350] text-white/90"
-                style={{ lineHeight: "20px" }}
-              >
-                {narrative.spiritual_insight}
-              </p>
+              {narrative?.narrative && (
+                <>
+                  <h3
+                    className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                    style={{ lineHeight: "33px" }}
+                  >
+                    Your blueprint
+                  </h3>
+                  <div
+                    className="text-[12px] font-[300] text-white/90 mb-6 whitespace-pre-line"
+                    style={{ lineHeight: "20px" }}
+                  >
+                    {narrative.narrative}
+                  </div>
+                </>
+              )}
+
+              {((narrative?.strengths?.length ?? 0) > 0 ||
+                (narrative?.challenges?.length ?? 0) > 0) && (
+                <div className="text-left">
+                  <h3
+                    className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                    style={{ lineHeight: "33px" }}
+                  >
+                    Strengths & Challenges
+                  </h3>
+                  <div className="mb-6 space-y-2">
+                    {narrative?.strengths?.length ? (
+                      <div>
+                        <p className="text-[13px] font-[400] text-[#F2D08C] mb-1">
+                          Strengths
+                        </p>
+                        <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 space-y-0.5">
+                          {narrative.strengths.map((s) => (
+                            <li key={s}>{s}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
+                    {narrative?.challenges?.length ? (
+                      <div>
+                        <p className="text-[13px] font-[400] text-[#F2D08C] mb-1">
+                          Challenges
+                        </p>
+                        <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 space-y-0.5">
+                          {narrative.challenges.map((c) => (
+                            <li key={c}>{c}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              )}
+
+              {narrative?.avoid_this && narrative.avoid_this.length > 0 && (
+                <div className="text-left">
+                  <h3
+                    className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                    style={{ lineHeight: "33px" }}
+                  >
+                    Avoid This
+                  </h3>
+                  <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 mb-6 space-y-0.5">
+                    {narrative.avoid_this.map((a) => (
+                      <li key={a}>{a}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {narrative?.overlaps && narrative.overlaps.length > 0 && (
+                <div className="text-left">
+                  <h3
+                    className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                    style={{ lineHeight: "33px" }}
+                  >
+                    Overlaps
+                  </h3>
+                  <ul className="space-y-2 mb-6">
+                    {narrative.overlaps.map((o) => (
+                      <li key={o.label}>
+                        <span className="text-[13px] font-[400] text-[#F2D08C]">
+                          {o.label}:
+                        </span>{" "}
+                        <span
+                          className="text-[13px] font-[350] text-white/90"
+                          style={{ lineHeight: "20px" }}
+                        >
+                          {o.description}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {narrative?.try_this && narrative.try_this.length > 0 && (
+                <div className="text-left">
+                  <h3
+                    className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                    style={{ lineHeight: "33px" }}
+                  >
+                    Try This
+                  </h3>
+                  <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 mb-6 space-y-0.5">
+                    {narrative.try_this.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {narrative?.spiritual_insight && (
+                <>
+                  <h3
+                    className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                    style={{ lineHeight: "33px" }}
+                  >
+                    Spiritual Insight
+                  </h3>
+                  <p
+                    className="text-[13px] font-[350] text-white/90"
+                    style={{ lineHeight: "20px" }}
+                  >
+                    {narrative.spiritual_insight}
+                  </p>
+                </>
+              )}
             </>
           )}
         </div>

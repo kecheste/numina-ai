@@ -20,7 +20,14 @@ export interface ChakraAlignmentContent {
   chakras?: ChakraAlignmentChakra[] | null;
   strengths?: string[] | null;
   challenges?: string[] | null;
-  synchronicities?: { label?: string; description?: string; test?: string; connection?: string }[] | null;
+  synchronicities?:
+    | {
+        label?: string;
+        description?: string;
+        test?: string;
+        connection?: string;
+      }[]
+    | null;
   coreTraits?: string[] | null;
   tryThis?: string[] | null;
   avoidThis?: string[] | null;
@@ -29,7 +36,6 @@ export interface ChakraAlignmentContent {
 interface ChakraAlignmentResultProps {
   testTitle: string;
   onBack: () => void;
-  /** Dynamic content from LLM (result.llm_result_json). When null/undefined, fallback defaults are used. */
   content?: ChakraAlignmentContent | null;
 }
 
@@ -44,28 +50,100 @@ const CHAKRA_COLORS: Record<string, string> = {
 };
 
 const DEFAULT_CHAKRAS: ChakraAlignmentChakra[] = [
-  { id: "root", name: "Root Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
-  { id: "sacral", name: "Sacral Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
-  { id: "solarPlexus", name: "Solar Plexus Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
-  { id: "heart", name: "Heart Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
-  { id: "throat", name: "Throat Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
-  { id: "thirdEye", name: "Third Eye Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
-  { id: "crown", name: "Crown Chakra", status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null },
+  {
+    id: "root",
+    name: "Root Chakra",
+    status: "Balanced",
+    description: "This energy center is in balance.",
+    tryItems: null,
+    avoidItems: null,
+  },
+  {
+    id: "sacral",
+    name: "Sacral Chakra",
+    status: "Balanced",
+    description: "This energy center is in balance.",
+    tryItems: null,
+    avoidItems: null,
+  },
+  {
+    id: "solarPlexus",
+    name: "Solar Plexus Chakra",
+    status: "Balanced",
+    description: "This energy center is in balance.",
+    tryItems: null,
+    avoidItems: null,
+  },
+  {
+    id: "heart",
+    name: "Heart Chakra",
+    status: "Balanced",
+    description: "This energy center is in balance.",
+    tryItems: null,
+    avoidItems: null,
+  },
+  {
+    id: "throat",
+    name: "Throat Chakra",
+    status: "Balanced",
+    description: "This energy center is in balance.",
+    tryItems: null,
+    avoidItems: null,
+  },
+  {
+    id: "thirdEye",
+    name: "Third Eye Chakra",
+    status: "Balanced",
+    description: "This energy center is in balance.",
+    tryItems: null,
+    avoidItems: null,
+  },
+  {
+    id: "crown",
+    name: "Crown Chakra",
+    status: "Balanced",
+    description: "This energy center is in balance.",
+    tryItems: null,
+    avoidItems: null,
+  },
 ];
 
 const DEFAULT_STRENGTHS = ["Self-awareness", "Willingness to explore"];
 const DEFAULT_CHALLENGES = ["Patience", "Integration"];
 const DEFAULT_SYNCHRONICITIES: { label: string; description: string }[] = [];
 const DEFAULT_CORE_TRAITS = ["Reflective", "Growing"];
-const DEFAULT_TRY_THIS = ["Revisit your answers as you grow.", "Explore more tests for a fuller picture."];
-const DEFAULT_AVOID_THIS = ["Rushing to conclusions.", "Comparing yourself to others."];
-const DEFAULT_STATUS_SUMMARY = "Your chakra balance reflects your current energy flow.";
+const DEFAULT_TRY_THIS = [
+  "Revisit your answers as you grow.",
+  "Explore more tests for a fuller picture.",
+];
+const DEFAULT_AVOID_THIS = [
+  "Rushing to conclusions.",
+  "Comparing yourself to others.",
+];
+const DEFAULT_STATUS_SUMMARY =
+  "Your chakra balance reflects your current energy flow.";
 
 function normalizeChakras(raw: unknown): ChakraAlignmentChakra[] {
   if (!Array.isArray(raw) || raw.length === 0) return DEFAULT_CHAKRAS;
   const out: ChakraAlignmentChakra[] = [];
-  const ids = ["root", "sacral", "solarPlexus", "heart", "throat", "thirdEye", "crown"];
-  const names = ["Root Chakra", "Sacral Chakra", "Solar Plexus Chakra", "Heart Chakra", "Throat Chakra", "Third Eye Chakra", "Crown Chakra"];
+  const ids = [
+    "root",
+    "sacral",
+    "solarPlexus",
+    "heart",
+    "throat",
+    "thirdEye",
+    "crown",
+  ];
+  const names = [
+    "Root Chakra",
+    "Sacral Chakra",
+    "Solar Plexus Chakra",
+    "Heart Chakra",
+    "Throat Chakra",
+    "Third Eye Chakra",
+    "Crown Chakra",
+  ];
   for (let i = 0; i < 7; i++) {
     const c = raw[i];
     if (c && typeof c === "object" && "id" in c) {
@@ -74,12 +152,30 @@ function normalizeChakras(raw: unknown): ChakraAlignmentChakra[] {
         id: ids.includes(id) ? id : ids[i],
         name: String((c as Record<string, unknown>).name ?? names[i]),
         status: String((c as Record<string, unknown>).status ?? "Balanced"),
-        description: String((c as Record<string, unknown>).description ?? "This energy center is in balance."),
-        tryItems: (c as Record<string, unknown>).tryItems != null ? String((c as Record<string, unknown>).tryItems) : null,
-        avoidItems: (c as Record<string, unknown>).avoidItems != null ? String((c as Record<string, unknown>).avoidItems) : null,
+        description: String(
+          (c as Record<string, unknown>).description ??
+            "This energy center is in balance.",
+        ),
+        tryItems:
+          (c as Record<string, unknown>).tryItems != null
+            ? String((c as Record<string, unknown>).tryItems)
+            : null,
+        avoidItems:
+          (c as Record<string, unknown>).avoidItems != null
+            ? String((c as Record<string, unknown>).avoidItems)
+            : null,
       });
     } else {
-      out.push(DEFAULT_CHAKRAS[i] ?? { id: ids[i], name: names[i], status: "Balanced", description: "This energy center is in balance.", tryItems: null, avoidItems: null });
+      out.push(
+        DEFAULT_CHAKRAS[i] ?? {
+          id: ids[i],
+          name: names[i],
+          status: "Balanced",
+          description: "This energy center is in balance.",
+          tryItems: null,
+          avoidItems: null,
+        },
+      );
     }
   }
   return out;
@@ -90,10 +186,14 @@ function normalizeStrings(raw: unknown, fallback: string[]): string[] {
   return raw.map((x) => (x != null ? String(x) : "")).filter(Boolean);
 }
 
-function normalizeSynchronicities(raw: unknown): { label: string; description: string }[] {
+function normalizeSynchronicities(
+  raw: unknown,
+): { label: string; description: string }[] {
   if (!Array.isArray(raw)) return DEFAULT_SYNCHRONICITIES;
   return raw
-    .filter((s): s is Record<string, unknown> => s != null && typeof s === "object")
+    .filter(
+      (s): s is Record<string, unknown> => s != null && typeof s === "object",
+    )
     .map((s) => ({
       label: String(s.label ?? s.test ?? ""),
       description: String(s.description ?? s.connection ?? ""),
@@ -120,11 +220,17 @@ export function ChakraAlignmentResult({
 }: ChakraAlignmentResultProps) {
   const shellRef = useRef<HTMLDivElement>(null);
 
-  const statusSummary = (content?.statusSummary?.trim() || DEFAULT_STATUS_SUMMARY);
-  const chakras = content?.chakras?.length === 7 ? content.chakras : normalizeChakras(content?.chakras);
+  const statusSummary =
+    content?.statusSummary?.trim() || DEFAULT_STATUS_SUMMARY;
+  const chakras =
+    content?.chakras?.length === 7
+      ? content.chakras
+      : normalizeChakras(content?.chakras);
   const strengths = normalizeStrings(content?.strengths, DEFAULT_STRENGTHS);
   const challenges = normalizeStrings(content?.challenges, DEFAULT_CHALLENGES);
-  const synchronicities = content?.synchronicities?.length ? content.synchronicities : normalizeSynchronicities(content?.synchronicities);
+  const synchronicities = content?.synchronicities?.length
+    ? content.synchronicities
+    : normalizeSynchronicities(content?.synchronicities);
   const coreTraits = normalizeStrings(content?.coreTraits, DEFAULT_CORE_TRAITS);
   const tryThis = normalizeStrings(content?.tryThis, DEFAULT_TRY_THIS);
   const avoidThis = normalizeStrings(content?.avoidThis, DEFAULT_AVOID_THIS);
@@ -332,7 +438,7 @@ export function ChakraAlignmentResult({
                   <span className="underline">{tryThis[1]}</span>
                 </>
               ) : (
-                tryThis[0] ?? "Revisit your answers as you grow."
+                (tryThis[0] ?? "Revisit your answers as you grow.")
               )}
             </p>
           </div>
@@ -352,21 +458,10 @@ export function ChakraAlignmentResult({
                   <span className="underline">{avoidThis[1]}</span>
                 </>
               ) : (
-                avoidThis[0] ?? "Rushing to conclusions."
+                (avoidThis[0] ?? "Rushing to conclusions.")
               )}
             </p>
           </div>
-          <Button
-            onClick={onBack}
-            style={{
-              fontFamily: "var(--font-gotham)",
-              fontWeight: 400,
-              lineHeight: "33px",
-            }}
-            className="cursor-pointer mt-4 mb-2 w-full h-[60px] bg-[#F2D08CE0] text-black rounded-[10px] text-[18px] hover:bg-[#F2D08CC0] transition-colors"
-          >
-            Continue
-          </Button>
         </div>
       </div>
     </div>

@@ -428,15 +428,20 @@ export function TestResultView({
           flex-col
           items-center
           text-center
-          pt-4
+          pt-2
           pb-4
           overflow-hidden
         "
       >
         <PageLoader>
           <div className="flex items-center border-b justify-between w-full bg-black pb-4 px-[24px] z-40 shrink-0">
-            <button onClick={onBack} className="cursor-pointer p-1">
-              <Icon icon="icons8:left-arrow" color="#D9D9D9" width={24} />
+            <button onClick={onBack} className="cursor-pointer ">
+              <Icon
+                icon="icons8:left-arrow"
+                color="#D9D9D9"
+                width={30}
+                className="mt-1.5"
+              />
             </button>
             <NuminaLogoIcon />
             <AppDrawer
