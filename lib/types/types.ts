@@ -1,0 +1,16 @@
+export type MBTIType =
+  | "INTJ"
+  | "INTP"
+  | "ENTJ"
+  | "ENTP"
+  | "INFJ"
+  | "INFP"
+  | "ESTJ"
+  | "ESFJ"
+  | "ENFJ"
+  | "ISFJ"
+  | "ISTJ"
+  | "ISTP"
+  | "ISFP"
+  | "ESFP"
+  | "ESTP";

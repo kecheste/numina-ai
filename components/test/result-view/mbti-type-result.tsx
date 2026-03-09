@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
 import { InfjIcon } from "@/components/icons/mysoul/infj";
+import AppBar from "@/components/navigation/appBar";
+import { useRouter } from "next/navigation";
 
 export interface MbtiResultData {
   personalityType: string;
@@ -34,24 +36,22 @@ export function MbtiTypeResult({
   shellRef,
   resultData,
 }: MbtiTypeResultProps) {
+  const router = useRouter();
   const typeLabel = resultData?.personalityType ?? "INFJ – The Advocate";
   const description =
-    (resultData?.narrative && resultData.narrative.trim()) || DEFAULT_DESCRIPTION;
+    (resultData?.narrative && resultData.narrative.trim()) ||
+    DEFAULT_DESCRIPTION;
   const displayTraits = resultData?.insights?.length
     ? resultData.insights
     : DEFAULT_TRAITS;
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between w-full bg-black px-[24px] py-2 border-b border-gray-800/30">
-        <div className="w-10" />
-        <NuminaLogoIcon />
-        <AppDrawer
-          isPremium={false}
-          portalContainer={shellRef}
-          onLogout={() => {}}
-        />
-      </div>
+      <AppBar
+        hideBackButton
+        handleLogout={() => router.push("/welcome")}
+        shellRef={shellRef}
+      />
 
       <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-6 pb-12">
         <h1

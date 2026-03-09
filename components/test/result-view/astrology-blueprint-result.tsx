@@ -7,6 +7,8 @@ import { SunIcon } from "@/components/icons/sun-icon";
 import { MoonIcon } from "@/components/icons/moon-icon";
 import { RisingIcon } from "@/components/icons/rising-icon";
 import type { AstrologyBlueprintResponse } from "@/lib/api-client";
+import AppBar from "@/components/navigation/appBar";
+import { useRouter } from "next/navigation";
 
 interface AstrologyBlueprintResultProps {
   onClose: () => void;
@@ -28,6 +30,7 @@ export function AstrologyBlueprintResult({
   shellRef,
   content = undefined,
 }: AstrologyBlueprintResultProps) {
+  const router = useRouter();
   const sunDesc = content?.sun_description?.split(". ")[0] ?? DEFAULT_SUN;
   const moonDesc = content?.moon_description?.split(". ")[0] ?? DEFAULT_MOON;
   const risingDesc =
@@ -69,15 +72,11 @@ export function AstrologyBlueprintResult({
         style={{ fontFamily: "var(--font-gotham)" }}
         className="relative pt-4 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center"
       >
-        <div className="flex items-center border-b justify-between w-full bg-black pb-4 px-[24px] z-40 shrink-0">
-          <div className="w-10" />
-          <NuminaLogoIcon />
-          <AppDrawer
-            isPremium={false}
-            portalContainer={shellRef}
-            onLogout={() => {}}
-          />
-        </div>
+        <AppBar
+          hideBackButton
+          shellRef={shellRef}
+          handleLogout={() => router.push("/welcome")}
+        />
 
         <div className="flex flex-col flex-1 overflow-y-auto pb-4">
           <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-6 pb-12 overflow-y-auto">

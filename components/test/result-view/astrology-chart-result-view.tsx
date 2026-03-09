@@ -8,12 +8,11 @@ import { SunIcon } from "@/components/icons/sun-icon";
 import { MoonIcon } from "@/components/icons/moon-icon";
 import { RisingIcon } from "@/components/icons/rising-icon";
 import {
-  apiFetchOnboardingAstrologyBlueprint,
   apiFetchAstrologyChartNarrative,
   type AstrologyChartResponse,
-  type AstrologyBlueprintResponse,
   type AstrologyChartNarrativeResponse,
 } from "@/lib/api-client";
+import AppBar from "@/components/navigation/appBar";
 
 function formatSign(s: string): string {
   return s.replace(/\b\w/g, (c) => c.toUpperCase());
@@ -30,26 +29,50 @@ export function AstrologyChartResultView({
   shellRef: React.RefObject<HTMLDivElement | null>;
   onLogout: () => void;
 }) {
-  const [blueprint, setBlueprint] = useState<
-    AstrologyBlueprintResponse | null | undefined
-  >(undefined);
+  const [isLoading, setIsLoading] = useState(true);
   const [narrative, setNarrative] = useState<
     AstrologyChartNarrativeResponse | null | undefined
   >(undefined);
 
   useEffect(() => {
-    apiFetchOnboardingAstrologyBlueprint()
-      .then(setBlueprint)
-      .catch(() => setBlueprint(null));
-  }, []);
+    let cancelled = false;
 
-  useEffect(() => {
-    apiFetchAstrologyChartNarrative()
-      .then(setNarrative)
-      .catch(() => setNarrative(null));
-  }, []);
+    const fetchWithPolling = async (delayMs: number) => {
+      if (cancelled) return;
+      try {
+        const data = await apiFetchAstrologyChartNarrative();
+        if (cancelled) return;
+        setNarrative(data);
+        setIsLoading(false);
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : String(err ?? "Unknown error");
+        // When the worker has not finished refining the astrology chart result yet,
+        // apiFetchAstrologyChartNarrative throws this specific message. In that case
+        // we keep showing the loading screen and poll again after a short delay.
+        if (
+          message.includes(
+            "Astrology chart narrative has not been generated yet",
+          )
+        ) {
+          setIsLoading(true);
+          setTimeout(() => fetchWithPolling(Math.min(delayMs * 2, 8000)), delayMs);
+        } else {
+          // Hard failure: stop loading and show empty narrative state.
+          setIsLoading(false);
+          setNarrative(null);
+        }
+      }
+    };
 
-  const isLoading = blueprint === undefined || narrative === undefined;
+    // Start with a short delay so the worker has time to compute after
+    // /tests/astrology-chart has created/enqueued the test result.
+    fetchWithPolling(1000);
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const el = chart.element_distribution;
   const elements = [
@@ -59,10 +82,10 @@ export function AstrologyChartResultView({
     el.water > 0 && { name: "Water", count: el.water },
   ].filter(Boolean) as { name: string; count: number }[];
 
-  const sunDesc = blueprint?.sun_description;
-  const moonDesc = blueprint?.moon_description;
-  const risingDesc = blueprint?.rising_description;
-  const cosmicSummary = blueprint?.cosmic_traits_summary;
+  const sunDesc = narrative?.sun_description ?? null;
+  const moonDesc = narrative?.moon_description ?? null;
+  const risingDesc = narrative?.rising_description ?? null;
+  const cosmicSummary = null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
@@ -71,22 +94,11 @@ export function AstrologyChartResultView({
         style={{ fontFamily: "var(--font-gotham)" }}
         className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col"
       >
-        <div className="flex items-center border-b border-gray-500/30 justify-between w-full bg-black px-[28px] py-2 flex-shrink-0">
-          <button onClick={onClose} className="cursor-pointer">
-            <Icon
-              icon="icons8:left-arrow"
-              color="#D9D9D9"
-              width={30}
-              className="mt-1.5"
-            />
-          </button>
-          <NuminaLogoIcon className="mb-2" />
-          <AppDrawer
-            isPremium={false}
-            portalContainer={shellRef}
-            onLogout={onLogout}
-          />
-        </div>
+        <AppBar
+          handleBack={onClose}
+          handleLogout={onLogout}
+          shellRef={shellRef}
+        />
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
           {isLoading ? (

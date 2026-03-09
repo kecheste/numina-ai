@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
 import type { NumerologyBlueprintResponse } from "@/lib/api-client";
+import AppBar from "@/components/navigation/appBar";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_NUMEROLOGY_DATA: NumerologyBlueprintResponse["items"] = [
   {
@@ -19,26 +21,36 @@ const DEFAULT_NUMEROLOGY_DATA: NumerologyBlueprintResponse["items"] = [
   {
     number: "6",
     title: "Birthday Number",
-    description: "Your birthday number adds a personal layer to your cosmic profile.",
+    description:
+      "Your birthday number adds a personal layer to your cosmic profile.",
   },
   {
     number: "3",
     title: "Expression",
-    description: "Your expression number reflects how you show up in the world.",
+    description:
+      "Your expression number reflects how you show up in the world.",
   },
 ];
 
 const MAX_DESCRIPTION_LENGTH = 70;
 
-function oneSentenceMaxChars(text: string, maxLen: number = MAX_DESCRIPTION_LENGTH): string {
+function oneSentenceMaxChars(
+  text: string,
+  maxLen: number = MAX_DESCRIPTION_LENGTH,
+): string {
   const trimmed = text.trim();
   const match = trimmed.match(/^[^.!?]*[.!?]/);
   const one = match ? match[0].trim() : trimmed;
   if (one.length <= maxLen) return one;
   const cut = one.slice(0, maxLen + 1);
   const lastSpace = cut.lastIndexOf(" ");
-  const out = lastSpace > maxLen >> 1 ? cut.slice(0, lastSpace) : cut.slice(0, maxLen);
-  return (out.endsWith(".") || out.endsWith("!") || out.endsWith("?") ? out : out + ".").trim();
+  const out =
+    lastSpace > maxLen >> 1 ? cut.slice(0, lastSpace) : cut.slice(0, maxLen);
+  return (
+    out.endsWith(".") || out.endsWith("!") || out.endsWith("?")
+      ? out
+      : out + "."
+  ).trim();
 }
 
 interface NumerologyBlueprintResultProps {
@@ -52,6 +64,7 @@ export function NumerologyBlueprintResult({
   shellRef,
   content = undefined,
 }: NumerologyBlueprintResultProps) {
+  const router = useRouter();
   const items =
     content && content.length > 0 ? content : DEFAULT_NUMEROLOGY_DATA;
   const isLoading = content === null;
@@ -90,15 +103,11 @@ export function NumerologyBlueprintResult({
         style={{ fontFamily: "var(--font-gotham)" }}
         className="relative pt-4 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center"
       >
-        <div className="flex items-center border-b justify-between w-full bg-black pb-4 px-[24px] z-40 shrink-0">
-          <div className="w-10" />
-          <NuminaLogoIcon />
-          <AppDrawer
-            isPremium={false}
-            portalContainer={shellRef}
-            onLogout={() => {}}
-          />
-        </div>
+        <AppBar
+          hideBackButton
+          handleLogout={() => router.push("/welcome")}
+          shellRef={shellRef}
+        />
 
         <div className="flex flex-col flex-1 overflow-y-auto pb-4">
           <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-8">

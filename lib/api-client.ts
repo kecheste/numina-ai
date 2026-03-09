@@ -383,6 +383,9 @@ export interface AstrologyChartNarrativeOverlap {
 export interface AstrologyChartNarrativeResponse {
   title: string;
   core_traits: string[];
+  sun_description: string;
+  moon_description: string;
+  rising_description: string;
   narrative: string;
   strengths: string[];
   challenges: string[];
@@ -393,16 +396,42 @@ export interface AstrologyChartNarrativeResponse {
 }
 
 export async function apiFetchAstrologyChartNarrative(): Promise<AstrologyChartNarrativeResponse> {
-  const res = await fetchWithAuth("/api/v1/tests/astrology-chart-narrative");
-  if (res.status === 401) throw new Error("Unauthorized");
-  if (res.status === 404) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(
-      (err as { detail?: string }).detail ?? "Birth data incomplete.",
-    );
+  const results = await apiListTestResults(1);
+  const latest = results.find((r) => r.test_id === 1 && !!r.llm_result_json);
+  if (!latest || !latest.llm_result_json) {
+    throw new Error("Astrology chart narrative has not been generated yet.");
   }
-  if (!res.ok) throw new Error("Failed to load astrology chart narrative");
-  return res.json();
+  const data = latest.llm_result_json as unknown as {
+    title?: string;
+    coreTraits?: string[];
+    sunDescription?: string;
+    moonDescription?: string;
+    risingDescription?: string;
+    narrative?: string;
+    strengths?: string[];
+    challenges?: string[];
+    avoidThis?: string[];
+    overlaps?: AstrologyChartNarrativeOverlap[];
+    tryThis?: string[];
+    spiritualInsight?: string;
+  };
+  return {
+    title: data.title ?? "Your Astrology Chart",
+    core_traits: data.coreTraits ?? [],
+    sun_description: data.sunDescription ?? "",
+    moon_description: data.moonDescription ?? "",
+    rising_description: data.risingDescription ?? "",
+    narrative: data.narrative ?? "",
+    strengths: data.strengths ?? [],
+    challenges: data.challenges ?? [],
+    avoid_this: data.avoidThis ?? [],
+    overlaps: (data.overlaps ?? []).map((o) => ({
+      label: o.label,
+      description: o.description,
+    })),
+    try_this: data.tryThis ?? [],
+    spiritual_insight: data.spiritualInsight ?? "",
+  };
 }
 
 export interface NumerologyBlueprintItem {

@@ -18,6 +18,7 @@ import {
   type QuestionFromApi,
   type TestResultResponse,
 } from "@/lib/api-client";
+import AppBar from "../navigation/appBar";
 
 const GOLD = "#F2D08C";
 
@@ -493,22 +494,11 @@ export function TestFlow({
         style={{ fontFamily: "var(--font-gotham)" }}
         className="relative pt-4 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center pb-4"
       >
-        <div className="flex items-center border-b justify-between w-full bg-black pb-4 px-[24px] z-40 shrink-0">
-          <button onClick={handleBack} className="cursor-pointer">
-            <Icon
-              icon="icons8:left-arrow"
-              color="#D9D9D9"
-              width={30}
-              className="mt-1.5"
-            />
-          </button>
-          <NuminaLogoIcon className="mb-2" />
-          <AppDrawer
-            isPremium={false}
-            portalContainer={shellRef}
-            onLogout={() => router.push("/welcome")}
-          />
-        </div>
+        <AppBar
+          shellRef={shellRef}
+          handleLogout={() => router.push("/welcome")}
+          handleBack={handleBack}
+        />
 
         <div className="flex flex-col flex-1 overflow-y-auto">
           <div className="flex flex-col px-[32px] flex-1 w-full">

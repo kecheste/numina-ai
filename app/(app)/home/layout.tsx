@@ -3,6 +3,7 @@
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
+import AppBar from "@/components/navigation/appBar";
 import { BottomNavigation } from "@/components/navigation/bottom-navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
@@ -61,15 +62,12 @@ export default function HomeLayout({
           overflow-hidden
         "
       >
-        <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-4 z-40 relative px-[24px] shrink-0">
-          <div />
-          <NuminaLogoIcon />
-          <AppDrawer
-            isPremium={user?.is_premium ?? false}
-            portalContainer={shellRef}
-            onLogout={handleLogout}
-          />
-        </div>
+        <AppBar
+          user={user}
+          handleLogout={handleLogout}
+          shellRef={shellRef}
+          hideBackButton
+        />
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto w-full">
           <div className="py-4">{children}</div>

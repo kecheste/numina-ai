@@ -13,7 +13,6 @@ interface SynthesisPageProps {
   isPremium: boolean;
 }
 
-const SYNTHESIS_FULL_MIN = 6;
 const TOTAL_TEST_COUNT = 24;
 
 export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {

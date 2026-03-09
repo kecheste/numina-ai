@@ -5,6 +5,9 @@ import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
 import { Button } from "@/components/ui/button";
+import { CHAKRA_COLORS } from "@/lib/constants/keys";
+import AppBar from "@/components/navigation/appBar";
+import { useRouter } from "next/navigation";
 
 export interface ChakraAlignmentChakra {
   id: string;
@@ -38,16 +41,6 @@ interface ChakraAlignmentResultProps {
   onBack: () => void;
   content?: ChakraAlignmentContent | null;
 }
-
-const CHAKRA_COLORS: Record<string, string> = {
-  root: "#C62828",
-  sacral: "#EF6C00",
-  solarPlexus: "#F9A825",
-  heart: "#2E7D32",
-  throat: "#1565C0",
-  thirdEye: "#6A1B9A",
-  crown: "#F2D08C",
-};
 
 const DEFAULT_CHAKRAS: ChakraAlignmentChakra[] = [
   {
@@ -218,6 +211,7 @@ export function ChakraAlignmentResult({
   onBack,
   content,
 }: ChakraAlignmentResultProps) {
+  const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
 
   const statusSummary =
@@ -241,17 +235,11 @@ export function ChakraAlignmentResult({
         ref={shellRef}
         className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto"
       >
-        <div className="sticky top-0 flex items-center justify-between w-full bg-black px-[24px] py-2 border-b border-gray-800/30 z-10">
-          <button onClick={onBack} className="cursor-pointer p-1">
-            <Icon icon="icons8:left-arrow" color="#D9D9D9" width={24} />
-          </button>
-          <NuminaLogoIcon />
-          <AppDrawer
-            isPremium={false}
-            portalContainer={shellRef}
-            onLogout={() => {}}
-          />
-        </div>
+        <AppBar
+          handleBack={onBack}
+          handleLogout={() => router.push("/welcom")}
+          shellRef={shellRef}
+        />
 
         <div className="px-[24px] py-6 pb-12">
           <div className="text-center mb-6">

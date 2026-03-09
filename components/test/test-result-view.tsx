@@ -6,6 +6,8 @@ import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 import { AppDrawer } from "../navigation/app-drawer";
 import PageLoader from "../custom/loader";
 import type { TestResultResponse } from "@/lib/api-client";
+import AppBar from "../navigation/appBar";
+import { useRouter } from "next/navigation";
 
 interface TestResultViewProps {
   testId: number;
@@ -350,6 +352,7 @@ export function TestResultView({
   onBack,
   result: apiResult,
 }: TestResultViewProps) {
+  const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
   const mockResult = testResultsData[testId] || defaultResult;
   const llm = apiResult?.llm_result_json;
@@ -434,22 +437,11 @@ export function TestResultView({
         "
       >
         <PageLoader>
-          <div className="flex items-center border-b justify-between w-full bg-black pb-4 px-[24px] z-40 shrink-0">
-            <button onClick={onBack} className="cursor-pointer ">
-              <Icon
-                icon="icons8:left-arrow"
-                color="#D9D9D9"
-                width={30}
-                className="mt-1.5"
-              />
-            </button>
-            <NuminaLogoIcon />
-            <AppDrawer
-              isPremium={false}
-              portalContainer={shellRef}
-              onLogout={() => {}}
-            />
-          </div>
+          <AppBar
+            handleBack={onBack}
+            handleLogout={() => router.push("/welcome")}
+            shellRef={shellRef}
+          />
 
           <div className="px-[24px] py-6 pb-12 flex-1 overflow-y-scroll">
             <div className="text-center">
@@ -482,7 +474,6 @@ export function TestResultView({
               </p>
             </div>
 
-            {/* Core Traits */}
             <div className="text-left my-4">
               <h3
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}

@@ -22,57 +22,16 @@ import { SagittariusIcon } from "../icons/zodiac/sagittarius";
 import { TaurusIcon } from "../icons/zodiac/taurus";
 import { GeminiIcon } from "../icons/zodiac/gemini";
 import { CancerIcon } from "../icons/zodiac/cancer";
-
-function getFirstName(name: string | null | undefined): string {
-  if (!name?.trim()) return "";
-  return name.trim().split(/\s+/)[0] ?? "";
-}
-
-function getZodiacSign(
-  month: number | null | undefined,
-  day: number | null | undefined,
-): string {
-  if (month == null || day == null) return "";
-  const d = month * 100 + day;
-  if (d >= 1222 || d <= 119) return "Capricorn";
-  if (d <= 218) return "Aquarius";
-  if (d <= 320) return "Pisces";
-  if (d <= 419) return "Aries";
-  if (d <= 520) return "Taurus";
-  if (d <= 620) return "Gemini";
-  if (d <= 722) return "Cancer";
-  if (d <= 822) return "Leo";
-  if (d <= 922) return "Virgo";
-  if (d <= 1022) return "Libra";
-  if (d <= 1121) return "Scorpio";
-  return "Sagittarius";
-}
+import {
+  MBTI_SUMMARY,
+  MOST_SURE_DEFAULT_TAGS,
+  ZODIAC_SUMMARY,
+} from "@/lib/constants/keys";
+import { getFirstName, getZodiacSign } from "@/lib/utils";
 
 const ONBOARDING_TEST_IDS = [13, 7, 19] as const;
 
 const TOTAL_TEST_COUNT = 24;
-
-const ZODIAC_SUMMARY: Record<string, string> = {
-  Aries: "Bold and fearless, always ready to lead the charge.",
-  Taurus: "Grounded and loyal, steady in love and ambition.",
-  Gemini: "Curious and quick-minded, thriving on ideas.",
-  Cancer: "Deeply intuitive, protective, and emotionally wise.",
-  Leo: "Radiant and expressive, leading with heart and fire.",
-  Virgo: "Precise and thoughtful, devoted to meaningful service.",
-  Libra: "Charming and diplomatic, seeking harmony and beauty.",
-  Scorpio: "Intense and transformative, drawn to hidden truths.",
-  Sagittarius: "Adventurous and optimistic, chasing wisdom.",
-  Capricorn: "Disciplined and ambitious, building lasting success.",
-  Aquarius: "Visionary and unconventional, shaping the future.",
-  Pisces: "Compassionate and dreamy, flowing with imagination.",
-};
-
-const MOST_SURE_DEFAULT_TAGS = [
-  "Goals-oriented and disciplined",
-  "Connected to the earth",
-  "Deeply empathetic",
-  "You are a Visionary Empath",
-];
 
 function getLatestResultByTestId(
   results: TestResultResponse[],
@@ -224,6 +183,13 @@ export function SoulRevealScreen() {
     };
   }, []);
 
+  const mbtiType = user?.mbti_type as keyof typeof MBTI_SUMMARY | undefined;
+
+  const mbtiLabel =
+    mbtiType && MBTI_SUMMARY[mbtiType]
+      ? `${mbtiType} - The ${MBTI_SUMMARY[mbtiType]}`
+      : getCardLabel(resultsByTest[7], 7);
+
   return (
     <div className="bg-black text-white pr-1 pb-16 space-y-6">
       <div className="mb-4 w-full relative">
@@ -325,11 +291,7 @@ export function SoulRevealScreen() {
               }}
               className="text-[12px] text-white text-center line-clamp-2 leading-[18px]"
             >
-              {user?.mbti_type
-                ? [user.mbti_type, user.mbti_descriptor]
-                    .filter(Boolean)
-                    .join(" – ")
-                : getCardLabel(resultsByTest[7], 7)}
+              {mbtiLabel}
             </p>
           </div>
           <div className="max-w-[115px] h-[135px] border border-[#ffffff]/50 rounded-[10px] flex flex-col items-center justify-between px-3 py-2.5">
