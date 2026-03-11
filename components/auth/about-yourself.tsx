@@ -29,23 +29,42 @@ export default function AboutYourself({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [touched, setTouched] = useState({ name: false, email: false, password: false });
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    password: false,
+  });
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
   const nameValidation = validateFullName(fullName);
-  const emailValidation = registrationMode ? validateEmail(email) : { valid: true };
-  const passwordValidation = registrationMode ? validatePassword(password) : { valid: true };
+  const emailValidation = registrationMode
+    ? validateEmail(email)
+    : { valid: true };
+  const passwordValidation = registrationMode
+    ? validatePassword(password)
+    : { valid: true };
 
   const isFormValid =
     nameValidation.valid && emailValidation.valid && passwordValidation.valid;
 
-  const showNameError = (touched.name || submitAttempted) && !nameValidation.valid;
-  const showEmailError = (touched.email || submitAttempted) && registrationMode && !emailValidation.valid;
-  const showPasswordError = (touched.password || submitAttempted) && registrationMode && !passwordValidation.valid;
+  const showNameError =
+    (touched.name || submitAttempted) && !nameValidation.valid;
+  const showEmailError =
+    (touched.email || submitAttempted) &&
+    registrationMode &&
+    !emailValidation.valid;
+  const showPasswordError =
+    (touched.password || submitAttempted) &&
+    registrationMode &&
+    !passwordValidation.valid;
 
   const handleSubmit = () => {
     setSubmitAttempted(true);
-    if (!nameValidation.valid || (registrationMode && (!emailValidation.valid || !passwordValidation.valid))) {
+    if (
+      !nameValidation.valid ||
+      (registrationMode &&
+        (!emailValidation.valid || !passwordValidation.valid))
+    ) {
       return;
     }
     onContinue({
@@ -112,7 +131,7 @@ export default function AboutYourself({
           <div className="mt-10 space-y-4">
             <div>
               <GoldInput
-                placeholder="Your Full Name (e.g. John Doe)"
+                placeholder="Your Full Name (e.g. John Alex Doe)"
                 value={fullName}
                 onChange={(v) => {
                   setFullName(v);
@@ -122,7 +141,9 @@ export default function AboutYourself({
                 ariaInvalid={showNameError}
               />
               {showNameError && (
-                <p className="text-sm text-red-400 mt-1 text-left">{nameValidation.message}</p>
+                <p className="text-sm text-red-400 mt-1 text-left">
+                  {nameValidation.message}
+                </p>
               )}
             </div>
             {registrationMode && (
@@ -140,7 +161,9 @@ export default function AboutYourself({
                     ariaInvalid={showEmailError}
                   />
                   {showEmailError && (
-                    <p className="text-sm text-red-400 mt-1 text-left">{emailValidation.message}</p>
+                    <p className="text-sm text-red-400 mt-1 text-left">
+                      {emailValidation.message}
+                    </p>
                   )}
                 </div>
                 <div>
@@ -156,7 +179,9 @@ export default function AboutYourself({
                     ariaInvalid={showPasswordError}
                   />
                   {showPasswordError && (
-                    <p className="text-sm text-red-400 mt-1 text-left">{passwordValidation.message}</p>
+                    <p className="text-sm text-red-400 mt-1 text-left">
+                      {passwordValidation.message}
+                    </p>
                   )}
                 </div>
               </>
