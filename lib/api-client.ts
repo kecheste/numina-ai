@@ -535,6 +535,12 @@ export interface TestResultResponse {
       tryItems?: string | null;
       avoidItems?: string | null;
     }[];
+    primaryShadow?: string;
+    secondaryShadow?: string;
+    howItShowsUp?: string;
+    hiddenStrength?: string;
+    growthEdge?: string;
+    extracted_json?: any;
   } | null;
 }
 

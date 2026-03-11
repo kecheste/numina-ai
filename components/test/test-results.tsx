@@ -5,6 +5,7 @@ import {
   CognitiveStyleResult,
   MbtiTypeResult,
   ChakraPreviewResult,
+  ShadowWorkResult,
   type MbtiResultData,
 } from "./result-view";
 
@@ -13,6 +14,7 @@ export const TEST_IDS = {
   NUMEROLOGY: 2,
   STARSEED_ORIGINS: 3,
   MBTI_TYPE: 7,
+  SHADOW_WORK_LENS: 8,
   COGNITIVE_STYLE: 11,
   CHAKRA_ASSESSMENT: 13,
 } as const;
@@ -26,6 +28,7 @@ export interface TestResultsResultData {
   strongestChakra?: string | null;
   needsBalance?: string | null;
   extracted_json?: any | null;
+  llm_result_json?: any | null;
 }
 
 interface TestResultsProps {
@@ -72,10 +75,19 @@ export function TestResults({
           />
         )}
 
+        {testId === TEST_IDS.SHADOW_WORK_LENS && (
+          <ShadowWorkResult
+            onClose={onClose}
+            shellRef={shellRef}
+            content={resultData?.llm_result_json}
+          />
+        )}
+
         {testId !== TEST_IDS.COGNITIVE_STYLE &&
           testId !== TEST_IDS.MBTI_TYPE &&
           testId !== TEST_IDS.ASTROLOGY_CHART &&
-          testId !== TEST_IDS.CHAKRA_ASSESSMENT && (
+          testId !== TEST_IDS.CHAKRA_ASSESSMENT &&
+          testId !== TEST_IDS.SHADOW_WORK_LENS && (
             <CognitiveStyleResult onClose={onClose} />
           )}
       </div>
