@@ -157,6 +157,16 @@ export interface UserProfile {
   mbti_type: string | null;
   mbti_descriptor: string | null;
   strongest_chakra: string | null;
+  // Astrology Blueprint
+  sun_sign: string | null;
+  sun_description: string | null;
+  moon_sign: string | null;
+  moon_description: string | null;
+  rising_sign: string | null;
+  rising_description: string | null;
+  cosmic_traits_summary: string | null;
+  // Numerology Blueprint
+  numerology_blueprint: any[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -313,6 +323,10 @@ export interface AstrologyChartResponse {
     air: number;
     water: number;
   };
+  sun_description: string | null;
+  moon_description: string | null;
+  rising_description: string | null;
+  cosmic_traits_summary: string | null;
 }
 
 /** Fetch current user's astrology chart. Auth required. 404 if birth data incomplete. */
@@ -354,10 +368,12 @@ export async function apiFetchNumerology(): Promise<NumerologyResponse> {
 }
 
 export interface AstrologyBlueprintResponse {
-  sun_description: string;
-  moon_description: string;
-  rising_description: string;
-  cosmic_traits_summary: string;
+  status: "pending_ai" | "completed";
+  result_id?: number;
+  sun_description?: string;
+  moon_description?: string;
+  rising_description?: string;
+  cosmic_traits_summary?: string;
 }
 
 export async function apiFetchOnboardingAstrologyBlueprint(): Promise<AstrologyBlueprintResponse> {
@@ -381,57 +397,32 @@ export interface AstrologyChartNarrativeOverlap {
 }
 
 export interface AstrologyChartNarrativeResponse {
-  title: string;
-  core_traits: string[];
-  sun_description: string;
-  moon_description: string;
-  rising_description: string;
-  narrative: string;
-  strengths: string[];
-  challenges: string[];
-  avoid_this: string[];
-  overlaps: AstrologyChartNarrativeOverlap[];
-  try_this: string[];
-  spiritual_insight: string;
+  status: "pending_ai" | "completed";
+  result_id?: number;
+  title?: string;
+  core_traits?: string[];
+  sun_description?: string;
+  moon_description?: string;
+  rising_description?: string;
+  narrative?: string;
+  strengths?: string[];
+  challenges?: string[];
+  avoid_this?: string[];
+  overlaps?: AstrologyChartNarrativeOverlap[];
+  try_this?: string[];
+  spiritual_insight?: string;
+  cosmic_traits_summary?: string;
 }
 
 export async function apiFetchAstrologyChartNarrative(): Promise<AstrologyChartNarrativeResponse> {
-  const results = await apiListTestResults(1);
-  const latest = results.find((r) => r.test_id === 1 && !!r.llm_result_json);
-  if (!latest || !latest.llm_result_json) {
-    throw new Error("Astrology chart narrative has not been generated yet.");
+  const res = await fetchWithAuth("/api/v1/tests/astrology-chart-narrative");
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (res.status === 404) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as { detail?: string }).detail ?? "Not found");
   }
-  const data = latest.llm_result_json as unknown as {
-    title?: string;
-    coreTraits?: string[];
-    sunDescription?: string;
-    moonDescription?: string;
-    risingDescription?: string;
-    narrative?: string;
-    strengths?: string[];
-    challenges?: string[];
-    avoidThis?: string[];
-    overlaps?: AstrologyChartNarrativeOverlap[];
-    tryThis?: string[];
-    spiritualInsight?: string;
-  };
-  return {
-    title: data.title ?? "Your Astrology Chart",
-    core_traits: data.coreTraits ?? [],
-    sun_description: data.sunDescription ?? "",
-    moon_description: data.moonDescription ?? "",
-    rising_description: data.risingDescription ?? "",
-    narrative: data.narrative ?? "",
-    strengths: data.strengths ?? [],
-    challenges: data.challenges ?? [],
-    avoid_this: data.avoidThis ?? [],
-    overlaps: (data.overlaps ?? []).map((o) => ({
-      label: o.label,
-      description: o.description,
-    })),
-    try_this: data.tryThis ?? [],
-    spiritual_insight: data.spiritualInsight ?? "",
-  };
+  if (!res.ok) throw new Error("Failed to load astrology chart narrative");
+  return res.json();
 }
 
 export interface NumerologyBlueprintItem {
@@ -441,7 +432,9 @@ export interface NumerologyBlueprintItem {
 }
 
 export interface NumerologyBlueprintResponse {
-  items: NumerologyBlueprintItem[];
+  status: "pending_ai" | "completed";
+  result_id?: number;
+  items?: NumerologyBlueprintItem[];
 }
 
 export async function apiFetchOnboardingNumerologyBlueprint(): Promise<NumerologyBlueprintResponse> {
@@ -456,6 +449,17 @@ export async function apiFetchOnboardingNumerologyBlueprint(): Promise<Numerolog
     );
   }
   if (!res.ok) throw new Error("Failed to load numerology blueprint");
+  return res.json();
+}
+
+export async function apiFinishOnboarding(): Promise<{ message: string }> {
+  const res = await fetchWithAuth("/api/v1/tests/onboarding/finish", {
+    method: "POST",
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as { detail?: string }).detail ?? "Failed to finish onboarding");
+  }
   return res.json();
 }
 
@@ -619,22 +623,3 @@ export async function apiGetTestResult(
   return res.json();
 }
 
-/** Ensure Life Path (19) result is queued after onboarding. Call when user finishes Chakra + MBTI onboarding. */
-export async function apiEnsureOnboardingLifePath(): Promise<{
-  queued: boolean;
-  already_exists?: boolean;
-  reason?: string;
-  result_id?: number;
-}> {
-  const res = await fetchWithAuth("/api/v1/tests/ensure-onboarding-life-path", {
-    method: "POST",
-  });
-  if (res.status === 401) throw new Error("Unauthorized");
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(
-      (err as { detail?: string }).detail ?? "Ensure onboarding failed",
-    );
-  }
-  return res.json();
-}

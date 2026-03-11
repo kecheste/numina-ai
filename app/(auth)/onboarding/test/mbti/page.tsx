@@ -6,9 +6,9 @@ import { AstrologyBlueprintResult } from "@/components/test/result-view/astrolog
 import { NumerologyBlueprintResult } from "@/components/test/result-view/numerology-blueprint-result";
 import { useAuth } from "@/contexts/auth-context";
 import {
-  apiEnsureOnboardingLifePath,
   apiFetchOnboardingAstrologyBlueprint,
   apiFetchOnboardingNumerologyBlueprint,
+  apiFinishOnboarding,
   type AstrologyBlueprintResponse,
   type NumerologyBlueprintItem,
 } from "@/lib/api-client";
@@ -31,10 +31,22 @@ export default function OnboardingMbtiTestPage() {
   useEffect(() => {
     if (step !== 1) return;
     setAstrologyContent(null);
-    apiFetchOnboardingAstrologyBlueprint()
-      .then(setAstrologyContent)
-      .catch(() => {
+
+    let interval: NodeJS.Timeout;
+
+    const poll = async () => {
+      try {
+        const res = await apiFetchOnboardingAstrologyBlueprint();
+        if (res.status === "completed") {
+          setAstrologyContent(res);
+          clearInterval(interval);
+        } else {
+          setAstrologyContent(null);
+        }
+      } catch (err) {
+        console.error("Astrology blueprint failed", err);
         setAstrologyContent({
+          status: "completed",
           sun_description:
             "Your sun sign shapes your core personality and life direction.",
           moon_description:
@@ -44,15 +56,32 @@ export default function OnboardingMbtiTestPage() {
           cosmic_traits_summary:
             "🜂 Element: —\n☌ Modality: —\n♇ Ruling Planet: —\n🌠 Most active house: —",
         });
-      });
+        clearInterval(interval);
+      }
+    };
+
+    poll();
+    interval = setInterval(poll, 3000);
+    return () => clearInterval(interval);
   }, [step]);
 
   useEffect(() => {
     if (step !== 2) return;
     setNumerologyContent(null);
-    apiFetchOnboardingNumerologyBlueprint()
-      .then((res) => setNumerologyContent(res.items))
-      .catch(() => {
+
+    let interval: NodeJS.Timeout;
+
+    const poll = async () => {
+      try {
+        const res = await apiFetchOnboardingNumerologyBlueprint();
+        if (res.status === "completed") {
+          setNumerologyContent(res.items);
+          clearInterval(interval);
+        } else {
+          setNumerologyContent(null);
+        }
+      } catch (err) {
+        console.error("Numerology blueprint failed", err);
         setNumerologyContent([
           {
             number: "1",
@@ -62,15 +91,24 @@ export default function OnboardingMbtiTestPage() {
           {
             number: "1",
             title: "Soul Urge",
-            description:
-              "Your soul urge reveals what your heart truly desires.",
+            description: "Your soul urge reveals what your heart truly desires.",
           },
         ]);
-      });
+        clearInterval(interval);
+      }
+    };
+
+    poll();
+    interval = setInterval(poll, 3000);
+    return () => clearInterval(interval);
   }, [step]);
 
   const handleFinishOnboarding = async () => {
-    await apiEnsureOnboardingLifePath().catch(() => {});
+    try {
+      await apiFinishOnboarding();
+    } catch (err) {
+      console.error("Failed to finish onboarding", err);
+    }
     await refreshUser();
     router.replace("/home");
   };

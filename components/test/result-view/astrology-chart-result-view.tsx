@@ -42,31 +42,23 @@ export function AstrologyChartResultView({
       try {
         const data = await apiFetchAstrologyChartNarrative();
         if (cancelled) return;
-        setNarrative(data);
-        setIsLoading(false);
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : String(err ?? "Unknown error");
-        // When the worker has not finished refining the astrology chart result yet,
-        // apiFetchAstrologyChartNarrative throws this specific message. In that case
-        // we keep showing the loading screen and poll again after a short delay.
-        if (
-          message.includes(
-            "Astrology chart narrative has not been generated yet",
-          )
-        ) {
+
+        if (data.status === "pending_ai") {
           setIsLoading(true);
-          setTimeout(() => fetchWithPolling(Math.min(delayMs * 2, 8000)), delayMs);
+          setTimeout(
+            () => fetchWithPolling(Math.min(delayMs * 2, 8000)),
+            delayMs,
+          );
         } else {
-          // Hard failure: stop loading and show empty narrative state.
+          setNarrative(data);
           setIsLoading(false);
-          setNarrative(null);
         }
+      } catch (err) {
+        setIsLoading(false);
+        setNarrative(null);
       }
     };
 
-    // Start with a short delay so the worker has time to compute after
-    // /tests/astrology-chart has created/enqueued the test result.
     fetchWithPolling(1000);
 
     return () => {
@@ -82,10 +74,11 @@ export function AstrologyChartResultView({
     el.water > 0 && { name: "Water", count: el.water },
   ].filter(Boolean) as { name: string; count: number }[];
 
-  const sunDesc = narrative?.sun_description ?? null;
-  const moonDesc = narrative?.moon_description ?? null;
-  const risingDesc = narrative?.rising_description ?? null;
-  const cosmicSummary = null;
+  const sunDesc = narrative?.sun_description ?? chart.sun_description;
+  const moonDesc = narrative?.moon_description ?? chart.moon_description;
+  const risingDesc = narrative?.rising_description ?? chart.rising_description;
+  const cosmicSummary =
+    narrative?.cosmic_traits_summary ?? chart.cosmic_traits_summary;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
@@ -146,16 +139,8 @@ export function AstrologyChartResultView({
                     Sun Sign
                   </h3>
                   <p className="text-[13px] font-[400] text-[#F2D08C]">
-                    {formatSign(chart.sun_sign)}
+                    {sunDesc}
                   </p>
-                  {sunDesc && (
-                    <p
-                      className="text-[13px] font-[350] text-white/90 mt-1.5"
-                      style={{ lineHeight: "20px" }}
-                    >
-                      {sunDesc}
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -168,16 +153,8 @@ export function AstrologyChartResultView({
                     Moon Sign
                   </h3>
                   <p className="text-[13px] font-[400] text-[#F2D08C]">
-                    {formatSign(chart.moon_sign)}
+                    {moonDesc}
                   </p>
-                  {moonDesc && (
-                    <p
-                      className="text-[13px] font-[350] text-white/90 mt-1.5"
-                      style={{ lineHeight: "20px" }}
-                    >
-                      {moonDesc}
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -190,16 +167,8 @@ export function AstrologyChartResultView({
                     Rising Sign
                   </h3>
                   <p className="text-[13px] font-[400] text-[#F2D08C]">
-                    {formatSign(chart.rising_sign)}
+                    {risingDesc}
                   </p>
-                  {risingDesc && (
-                    <p
-                      className="text-[13px] font-[350] text-white/90 mt-1.5"
-                      style={{ lineHeight: "20px" }}
-                    >
-                      {risingDesc}
-                    </p>
-                  )}
                 </div>
               </div>
 
