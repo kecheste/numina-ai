@@ -248,11 +248,16 @@ export function AstrologyChartResultView({
                         <p className="text-[13px] font-[400] text-[#F2D08C] mb-1">
                           Strengths
                         </p>
-                        <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 space-y-0.5">
+                        <div className="flex flex-wrap gap-1 mb-6">
                           {narrative.strengths.map((s) => (
-                            <li key={s}>{s}</li>
+                            <p
+                              className="border-1 border-[#fff] text-[13px] font-[300] rounded-md px-2 h-[20px]"
+                              key={s}
+                            >
+                              {s}
+                            </p>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     ) : null}
                     {narrative?.challenges?.length ? (
@@ -260,11 +265,16 @@ export function AstrologyChartResultView({
                         <p className="text-[13px] font-[400] text-[#F2D08C] mb-1">
                           Challenges
                         </p>
-                        <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 space-y-0.5">
+                        <div className="flex flex-wrap gap-1 mb-6">
                           {narrative.challenges.map((c) => (
-                            <li key={c}>{c}</li>
+                            <p
+                              className="border-1 border-[#fff] text-[13px] font-[300] rounded-md px-2 h-[20px]"
+                              key={c}
+                            >
+                              {c}
+                            </p>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     ) : null}
                   </div>
@@ -279,11 +289,16 @@ export function AstrologyChartResultView({
                   >
                     Avoid This
                   </h3>
-                  <ul className="list-disc list-inside text-[13px] font-[350] text-white/90 mb-6 space-y-0.5">
+                  <div className="flex flex-wrap gap-1 mb-6">
                     {narrative.avoid_this.map((a) => (
-                      <li key={a}>{a}</li>
+                      <p
+                        className="border-1 border-[#fff] text-[13px] font-[300] rounded-md px-2 h-[20px]"
+                        key={a}
+                      >
+                        {a}
+                      </p>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
 
