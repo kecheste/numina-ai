@@ -13,6 +13,10 @@ export interface MbtiResultData {
   recommendations: string[];
   score: number;
   narrative?: string | null;
+  extracted_json?: {
+    confidence?: Record<string, number>;
+    [key: string]: any;
+  } | null;
 }
 
 const DEFAULT_DESCRIPTION =
@@ -78,13 +82,12 @@ export function MbtiTypeResult({
         </div>
 
         <p
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "21px",
-          }}
-          className="text-[14px] font-[350] text-[#FFFFFF] mb-6 px-2"
+          className="text-[13px] font-[300] text-[#FFFFFF] mb-8 px-2"
+          style={{ fontFamily: "var(--font-gotham)", lineHeight: "21px" }}
         >
-          {description}
+          {resultData?.extracted_json?.shortDescription || 
+           resultData?.narrative?.split('\n').filter(Boolean)[0] || 
+           description}
         </p>
 
         <h2

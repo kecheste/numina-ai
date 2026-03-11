@@ -75,6 +75,7 @@ const testResultsData: Record<
       line3: string;
     }[];
     synchronicities: { test: string; connection: string }[];
+    extracted_json?: any | null;
   }
 > = {
   1: {
@@ -343,6 +344,7 @@ const defaultResult = {
     line3: string;
   }[],
   synchronicities: [] as { test: string; connection: string }[],
+  extracted_json: null as any | null,
 };
 
 export function TestResultView({
@@ -373,6 +375,7 @@ export function TestResultView({
       line3: string;
     }[];
     synchronicities: { test: string; connection: string }[];
+    extracted_json?: any | null;
   } = apiResult
     ? {
         subtitle: "Your Result",
@@ -407,6 +410,7 @@ export function TestResultView({
           ensureSynchronicities(llm?.synchronicities).length > 0
             ? ensureSynchronicities(llm?.synchronicities)
             : mockResult.synchronicities,
+        extracted_json: apiResult.extracted_json ?? mockResult.extracted_json,
       }
     : {
         ...mockResult,
@@ -453,26 +457,54 @@ export function TestResultView({
               </h1>
               <p
                 style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[13px] font-[300] text-[#F2D08C]"
+                className="text-[13px] mt-4 font-[300] text-[#F2D08C]"
               >
                 {result.subtitle}
               </p>
             </div>
 
-            <div className="text-center">
+            <div className="text-center mb-4">
               <h2
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
-                className="text-[21px] font-[400] text-white mb-1"
+                className="text-[21px] font-[400] text-white mb-6"
               >
                 {result.mainResult}
               </h2>
-              <p
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[13px] font-[300] text-[#FFFFFF] mt-2 px-4"
-              >
-                {result.description}
-              </p>
             </div>
+
+            {result?.extracted_json?.confidence &&
+              Object.keys(result.extracted_json.confidence).length > 0 && (
+                <div className="w-full px-2 mb-6 flex flex-col gap-[14px]">
+                  <h3
+                    style={{ fontFamily: "var(--font-gotham)" }}
+                    className="text-[14px] font-[400] text-[#F2D08C] text-left uppercase tracking-wide"
+                  >
+                    Dimension Profile
+                  </h3>
+                  {Object.entries(result.extracted_json.confidence).map(
+                    ([trait, pct]) => (
+                      <div
+                        key={trait}
+                        className="flex flex-col gap-2 w-full text-left"
+                      >
+                        <div
+                          className="flex justify-between text-[#FFFFFF] text-[13px] font-[300]"
+                          style={{ fontFamily: "var(--font-gotham)" }}
+                        >
+                          <span>{trait}</span>
+                          <span className="text-[#F2D08C]">{String(pct)}%</span>
+                        </div>
+                        <div className="w-full h-[6px] bg-white/10 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-[#F2D08C] rounded-full"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
+              )}
 
             <div className="text-left my-4">
               <h3
@@ -564,6 +596,27 @@ export function TestResultView({
               </p>
             </div>
 
+            <div className="text-center mb-4">
+              <h2
+                style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
+                className="text-[21px] font-[400] text-[#F2D08C] mb-2"
+              >
+                Your Blueprint
+              </h2>
+              <div
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="flex flex-col gap-6 text-[13px] font-[300] text-[#FFFFFF] text-left"
+              >
+                {result.description
+                  .replace(/\\n/g, "\n")
+                  .split("\n")
+                  .filter((line) => line.trim().length > 0)
+                  .map((paragraph, idx) => (
+                    <p key={idx}>{paragraph.trim()}</p>
+                  ))}
+              </div>
+            </div>
+
             {result.tryThis && result.tryThis.length > 0 && (
               <div className="text-left mb-4">
                 <h3
@@ -615,7 +668,7 @@ export function TestResultView({
             )}
 
             {result.chartData.length > 0 && (
-              <div className="text-left mb-4">
+              <div className="text-center mb-4">
                 <h3
                   style={{
                     fontFamily: "var(--font-gotham)",
@@ -625,7 +678,7 @@ export function TestResultView({
                 >
                   {testTitle} in Your Chart
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-3 text-left">
                   {result.chartData.map((item, idx) => (
                     <div key={idx}>
                       <p
@@ -659,7 +712,7 @@ export function TestResultView({
                     fontFamily: "var(--font-gotham)",
                     lineHeight: "24px",
                   }}
-                  className="text-[15px] font-[600] text-white mb-1"
+                  className="text-[15px] text-center font-[600] text-white mb-1"
                 >
                   Synchronicities
                 </h3>

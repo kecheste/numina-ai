@@ -142,7 +142,6 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
       });
       return;
     }
-    // Auto-generated: only Astrology Chart (1) uses direct fetch; all others go through TestFlow → compute + LLM → result.
     if (test.auto_generated && test.id === 1) {
       setViewingResult(test.id);
       setViewingResultData(undefined);

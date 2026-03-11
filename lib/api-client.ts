@@ -165,6 +165,7 @@ export interface UserProfile {
   rising_sign: string | null;
   rising_description: string | null;
   cosmic_traits_summary: string | null;
+  astrology_blueprint: any | null;
   // Numerology Blueprint
   numerology_blueprint: any[] | null;
   created_at: string;
@@ -374,6 +375,12 @@ export interface AstrologyBlueprintResponse {
   moon_description?: string;
   rising_description?: string;
   cosmic_traits_summary?: string;
+  strengths?: string[];
+  challenges?: string[];
+  avoid_this?: string[];
+  overlaps?: AstrologyChartNarrativeOverlap[];
+  try_this?: string[];
+  spiritual_insight?: string;
 }
 
 export async function apiFetchOnboardingAstrologyBlueprint(): Promise<AstrologyBlueprintResponse> {
@@ -400,6 +407,7 @@ export interface AstrologyChartNarrativeResponse {
   status: "pending_ai" | "completed";
   result_id?: number;
   title?: string;
+  short_description?: string;
   core_traits?: string[];
   sun_description?: string;
   moon_description?: string;
@@ -499,6 +507,7 @@ export interface TestResultResponse {
   insights: string[] | null;
   recommendations: string[] | null;
   narrative: string | null;
+  extracted_json?: any | null;
   llm_result_json?: {
     title?: string;
     summary?: string;

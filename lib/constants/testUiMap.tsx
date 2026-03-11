@@ -42,122 +42,125 @@ const TEST_UI_BY_ID: Record<number, TestUi> = {
   1: {
     icon: <AstrologyChartIcon />,
     description:
-      "Decode the blueprint of your soul from your birth date, time, and place—sun, moon, and rising signs.",
+      "Decode the blueprint of your soul. By analyzing your date, time, and place of birth, this quiz reveals your sun, moon, and rising signs—shedding light on your core personality, emotional rhythms, and life path.",
   },
   2: {
     icon: <NumerologyIcon />,
     description:
-      "Life Path and Soul Urge numbers computed from your date of birth and name.",
+      "Discover the numbers that guide your destiny. By calculating your Life Path and Soul Urge numbers from your birth date and name, you’ll learn what drives your purpose and what your heart truly desires.",
   },
   3: {
     icon: <StarseedIcon />,
     description:
-      "Starseed-type questions to uncover your cosmic ancestry and how it shapes your intuition and mission.",
+      "Are you a soul seeded from the stars? This test uncovers your cosmic ancestry—whether you resonate with the Pleiadians, Arcturians, or other galactic lineages—and how that heritage shapes your intuition, mission, and energy.",
   },
   4: {
     icon: <HumanDesignIcon />,
     description:
-      "Your energy blueprint from birth date, time, and place—Type, Strategy, and Authority.",
+      "Step into your unique energy blueprint. Combining astrology, the I Ching, and chakras, Human Design maps how you’re meant to engage with life, revealing your Type, Strategy, and Authority for aligned decision‑making.",
   },
   5: {
     icon: <TransitsIcon />,
     description:
-      "Current astrological transits and how they influence your chart.",
+      "The sky is always moving, and those movements can activate different themes in your life. By comparing current planetary positions with your birth chart, this test reveals which energies may be influencing your experiences right now: growth, change, relationships, or transformation.",
   },
   6: {
     icon: <ZodiacElementIcon />,
     description:
-      "Your zodiac element and modality—fire, earth, air, water and cardinal, fixed, mutable.",
+      "Each zodiac sign belongs to one of four elements: Fire, Earth, Air, or Water. These elements describe how you naturally move through the world: through passion, practicality, intellect, or emotion. This test reveals your dominant element and how it shapes your energy and personality.",
   },
   // Psychological Profile (7–12)
   7: {
     icon: <MBTITypeIcon />,
     description:
-      "Four preference questions to pinpoint your Myers-Briggs type and how you process information and make decisions.",
+      "Uncover your cognitive preferences. Answer four simple questions to pinpoint your Myers‑Briggs type (e.g., INFJ, ENTP), and learn how you naturally process information, make decisions, and interact with the world.",
   },
   8: {
     icon: <ShadowWorkIcon />,
     description:
-      "Shadow-work questionnaire to bring hidden patterns into the light.",
+      "Bring your hidden patterns into the light. This quiz explores your inner shadows—vulnerability, self‑critique, and avoidance—helping you recognize and transform the aspects of yourself you’ve been running from.",
   },
   9: {
     icon: <BigFiveIcon />,
     description:
-      "Measure the five dimensions of personality: Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism.",
+      "Measure the five fundamental dimensions of personality: Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism. See where you land on each spectrum and understand how it influences your behavior.",
   },
   10: {
     icon: <CoreValuesIcon />,
-    description: "Rank your values to reveal your top guiding principles.",
+    description:
+      "Clarify what matters most. Prioritize a curated list of values—like Freedom, Authenticity, or Service—to reveal your top guiding principles and understand where conflicts might arise in your life choices.",
   },
   11: {
     icon: <CognitiveStyleIcon />,
     description:
-      "Scenario-based choices to show whether you lean toward analytical logic or empathetic intuition.",
+      "Find your thinking‑feeling balance. Through scenario‑based choices, this test shows whether you lean toward analytical logic or empathetic intuition—and how to harmonize both for clearer insight.",
   },
   12: {
     icon: <MindMirrorIcon />,
     description:
-      "Morning, midday, and evening mood entries to see which inner compass dominates.",
+      "Reflect on your daily emotional landscape. Log your morning, midday, and evening moods to see which inner compass (Mind, Heart, Body, Soul, or Spirit) dominates—and learn how to cultivate balance.",
   },
   // Energy and Wellbeing (13–18)
   13: {
     icon: <ChakraAlignmentIcon />,
     description:
-      "Check in with your energetic centers. Targeted questions identify which chakras are open, blocked, or overactive.",
+      "Check in with your energetic centers. Through a series of targeted questions, this scan identifies which of your seven chakras are open, blocked, or overactive—and gives you tailored practices to restore balance.",
   },
   14: {
     icon: <EnergyArchetypeIcon />,
-    description: "Recharge-style selections to find your energetic signature.",
+    description:
+      "Find your energetic signature. By choosing how you recharge, lead, and connect, you’ll discover if you’re a Grounder, Firestarter, Harmonizer, or Visionary—so you can lean into your innate power style.",
   },
   15: {
     icon: <EmotionalRegulationIcon />,
     description:
-      "How you experience and regulate emotions—containment, expression, and coping.",
+      "Emotions are signals that tell you what is happening inside. This assessment explores how you experience, express, and recover from emotional intensity. You’ll discover your natural emotional regulation style and how you can build greater balance and resilience.",
   },
   16: {
     icon: <StressBalanceIcon />,
     description:
-      "Stress sliders and coping-style selection to gauge your stress response.",
+      "Gauge your stress response. Rate your perceived stress level and coping style to discover whether you’re Calm, Adaptive, or Overwhelmed—and get simple strategies to restore equilibrium.",
   },
   17: {
     icon: <SomaticConnectionIcon />,
-    description: "Body-sensation selections to tune into body-mind signals.",
+    description:
+      "Tune into body‑mind signals. Identify physical sensations linked to emotions—like tension or lightness—and uncover how your body holds stress, joy, or release, so you can practice targeted somatic healing.",
   },
   18: {
     icon: <EnergySynthesisIcon />,
     description:
-      "Fuses your Mind Mirror and Chakra Scan results—no extra quiz.",
+      "See how your mental clarity and emotional openness merge. By combining your Mind Mirror and Chakra data, this quiz reveals your current mental‑emotional fusion state—guiding you toward integrated vitality.",
   },
   // Soul Path and Karma (19–24)
   19: {
     icon: <LifePathIcon />,
     description:
-      "Your Life Path number from birth date—core purpose and life theme.",
+      "Your Life Path number reflects the central theme of your life journey. Calculated from your birth date, it reveals the talents, challenges, and opportunities that shape your purpose. This test helps you understand the deeper direction guiding your path.",
   },
   20: {
     icon: <SoulUrgeIcon />,
     description:
-      "Soul Urge number from your name—what your heart truly desires.",
+      "Your Soul Urge reveals what your heart truly desires beneath your outer personality. Derived from the vowels in your birth name, this number reflects your inner motivations, emotional needs, and what brings you a sense of fulfillment.",
   },
   21: {
     icon: <PastLifeIcon />,
     description:
-      "Past-life affinity questions to sense echoes of other lifetimes.",
+      "Sense echoes of other lifetimes. Explore questions about cultural affinities, dream recall, and cosmic nostalgia to pinpoint which ancient star systems or civilizations your soul may have called home.",
   },
   22: {
     icon: <KarmicLessonsIcon />,
     description:
-      "Select recurring life-theme lessons to reveal your karmic lessons.",
+      "Uncover your soul’s schoolroom. Select recurring life themes—like Power, Patience, or Voice—to reveal your Karmic Lessons, conflicts you’re meant to resolve, and the growth waiting on your path.",
   },
   23: {
     icon: <InnerChildIcon />,
     description:
-      "Free-text and tone questions to connect with your younger self.",
+      "Connect with your younger self. Through reflective prompts about early emotional experiences, you’ll discover whether your Inner Child is Gentle, Wounded, or Playful—and learn how to offer it healthy support.",
   },
   24: {
     icon: <SoulCompassIcon />,
     description:
-      "Navigate purpose and alignment with the Mind, Heart, Body, and Soul axes.",
+      "Your inner world can be guided by four forces: Mind, Heart, Body, and Soul. This assessment explores how these parts of you work together, helping you see where you feel aligned and where you may need more balance and direction in your life.",
   },
 };
 

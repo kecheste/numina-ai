@@ -34,6 +34,7 @@ export interface ChakraAlignmentContent {
   coreTraits?: string[] | null;
   tryThis?: string[] | null;
   avoidThis?: string[] | null;
+  summary?: string | null;
 }
 
 interface ChakraAlignmentResultProps {
@@ -203,7 +204,7 @@ const sectionHeadingStyle = {
 
 const bodyTextStyle = {
   fontFamily: "var(--font-gotham)",
-  lineHeight: "100%",
+  lineHeight: "18px",
 };
 
 export function ChakraAlignmentResult({
@@ -213,6 +214,7 @@ export function ChakraAlignmentResult({
 }: ChakraAlignmentResultProps) {
   const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
+  console.log(content)
 
   const statusSummary =
     content?.statusSummary?.trim() || DEFAULT_STATUS_SUMMARY;
@@ -241,8 +243,8 @@ export function ChakraAlignmentResult({
           shellRef={shellRef}
         />
 
-        <div className="px-[24px] py-6 pb-12">
-          <div className="text-center mb-6">
+        <div className="px-[24px] pt-4 pb-12">
+          <div className="text-center mb-4">
             <h1
               style={{
                 fontFamily: "var(--font-gotham)",
@@ -274,7 +276,7 @@ export function ChakraAlignmentResult({
             return (
               <div key={chakra.id} className="mb-6 text-left">
                 <span
-                  className="inline-block border rounded-[7px] px-2.5 mb-2 h-[18px]"
+                  className="inline-block border rounded-[7px] px-2.5 mb-2 h-[20px]"
                   style={{
                     fontFamily: "var(--font-gotham)",
                     fontSize: "13px",
@@ -323,6 +325,34 @@ export function ChakraAlignmentResult({
               </div>
             );
           })}
+
+          {content?.summary && (
+            <>
+              <h3
+                className="text-[18px] text-center font-[400] text-[#F2D08C] mb-2"
+                style={{ 
+                    lineHeight: "33px", 
+                    fontFamily: "var(--font-gotham)",
+                    fontSize: "13px",
+                    fontWeight: 600
+                  }}
+              >
+                Your Blueprint
+              </h3>
+              <div
+                className="flex flex-col text-left gap-6 text-[13px] font-[300] text-white/90 mb-6"
+                style={{ lineHeight: "20px", fontFamily: "var(--font-gotham)", }}
+              >
+                {content?.summary
+                  .replace(/\\n/g, "\n")
+                  .split("\n")
+                  .filter((line) => line.trim().length > 0)
+                  .map((paragraph, idx) => (
+                    <p key={idx}>{paragraph.trim()}</p>
+                  ))}
+              </div>
+            </>
+          )}
 
           <div className="mb-6 text-left">
             <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>

@@ -213,16 +213,22 @@ export function AstrologyChartResultView({
               {narrative?.narrative && (
                 <>
                   <h3
-                    className="text-[18px] font-[400] text-[#F2D08C] mb-2"
+                    className="text-[18px] text-center font-[400] text-[#F2D08C] mb-2"
                     style={{ lineHeight: "33px" }}
                   >
-                    Your blueprint
+                    Your Blueprint
                   </h3>
                   <div
-                    className="text-[12px] font-[300] text-white/90 mb-6 whitespace-pre-line"
+                    className="flex flex-col text-left gap-6 text-[13px] font-[300] text-white/90 mb-6"
                     style={{ lineHeight: "20px" }}
                   >
-                    {narrative.narrative}
+                    {narrative.narrative
+                      .replace(/\\n/g, "\n")
+                      .split("\n")
+                      .filter((line) => line.trim().length > 0)
+                      .map((paragraph, idx) => (
+                        <p key={idx}>{paragraph.trim()}</p>
+                      ))}
                   </div>
                 </>
               )}

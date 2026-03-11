@@ -25,6 +25,7 @@ export interface TestResultsResultData {
   narrative?: string | null;
   strongestChakra?: string | null;
   needsBalance?: string | null;
+  extracted_json?: any | null;
 }
 
 interface TestResultsProps {
