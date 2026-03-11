@@ -55,9 +55,6 @@ export function TestIntro({
             <p className="font-[600]">Discover Your {testTitle}</p>
             {testDescription && (
               <>
-                <p className="font-[300] text-[12px]">
-                  Short Description (what this test is about):
-                </p>
                 <p className="font-[300] text-[12px]">{testDescription}</p>
               </>
             )}
