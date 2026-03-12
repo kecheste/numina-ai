@@ -135,7 +135,7 @@ export function ShadowWorkResult({
                   fontFamily: "var(--font-gotham)",
                   lineHeight: "33px",
                 }}
-                className="text-[18px] font-[300] text-[#FFFFFF] mb-1"
+                className="text-[17px] font-[300] text-[#FFFFFF] mb-1"
               >
                 {content?.title}
               </h1>
@@ -146,7 +146,7 @@ export function ShadowWorkResult({
                     fontFamily: "var(--font-gotham)",
                     lineHeight: "21px",
                   }}
-                  className="text-[14px] font-[300] text-white/80 mt-2 px-4"
+                  className="text-[13px] w-full font-[300] text-white/80 mt-2 px-4"
                 >
                   {content.shortDescription}
                 </p>

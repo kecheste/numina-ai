@@ -47,6 +47,15 @@ export function NumerologyResultView({
   const scores = React.useMemo(() => {
     if (data) return data as any;
     if (!content) return null;
+
+    if (
+      "life_path" in content ||
+      "life_path_number" in content ||
+      "lifePath" in content
+    ) {
+      return content as any;
+    }
+
     let s: any = content.extracted_json;
     if (typeof s === "string") {
       try {
@@ -54,28 +63,100 @@ export function NumerologyResultView({
       } catch (e) {}
     }
     if (s && typeof s === "object") {
-      if ("life_path" in s || "life_path_number" in s) {
+      if ("life_path" in s || "life_path_number" in s || "lifePath" in s) {
         return s;
       }
       const nested = Object.values(s).find(
         (v: any) =>
           v &&
           typeof v === "object" &&
-          ("life_path" in v || "life_path_number" in v),
+          ("life_path" in v || "life_path_number" in v || "lifePath" in v),
       );
       if (nested) return nested;
     }
 
-    if ("life_path" in content || "life_path_number" in content) {
-      return content as any;
-    }
     return null;
   }, [data, content]);
 
-  const lpValue = scores?.life_path || scores?.life_path_number;
-  const suValue = scores?.soul_urge || scores?.soul_urge_number;
-  const exValue = scores?.expression || scores?.expression_number;
-  const bdValue = "birthday" in (scores || {}) ? scores?.birthday : scores?.birthday_number;
+  const lpValue =
+    scores?.life_path || scores?.life_path_number || scores?.lifePath;
+  const suValue =
+    scores?.soul_urge || scores?.soul_urge_number || scores?.soulUrge;
+  const exValue =
+    scores?.expression || scores?.expression_number || scores?.expressionNumber;
+  const bdValue =
+    "birth_day" in (scores || {})
+      ? scores?.birth_day
+      : scores?.birthday || scores?.birthday_number || scores?.birthdayNumber;
+
+  const items = React.useMemo(() => {
+    if (data?.items) return data.items;
+
+    const fallback = [];
+    if (lpValue != null) {
+      fallback.push({
+        number: String(lpValue),
+        title: "Life Path",
+        description:
+          data?.life_path_description ||
+          content?.lifePath ||
+          "Your core purpose and lessons.",
+      });
+    }
+    if (suValue != null) {
+      fallback.push({
+        number: String(suValue),
+        title: "Soul Urge",
+        description:
+          data?.soul_urge_description ||
+          content?.soulUrge ||
+          "What your heart truly desires.",
+      });
+    }
+    if (bdValue != null) {
+      fallback.push({
+        number: String(bdValue),
+        title: "Birthday Number",
+        description:
+          data?.birth_day_description ||
+          content?.birthday ||
+          "A personal layer to your cosmic profile.",
+      });
+    }
+    if (exValue != null) {
+      fallback.push({
+        number: String(exValue),
+        title: "Expression",
+        description:
+          data?.expression_description ||
+          content?.expression ||
+          "How you show up in the world.",
+      });
+    }
+    return fallback;
+  }, [data, content, lpValue, suValue, bdValue, exValue]);
+
+  const MAX_DESCRIPTION_LENGTH = 140;
+
+  function oneSentenceMaxChars(
+    text: string | null | undefined,
+    maxLen: number = MAX_DESCRIPTION_LENGTH,
+  ): string {
+    if (!text) return "";
+    const trimmed = text.trim();
+    const match = trimmed.match(/^[^.!?]*[.!?]/);
+    const one = match ? match[0].trim() : trimmed;
+    if (one.length <= maxLen) return one;
+    const cut = one.slice(0, maxLen + 1);
+    const lastSpace = cut.lastIndexOf(" ");
+    const out =
+      lastSpace > maxLen >> 1 ? cut.slice(0, lastSpace) : cut.slice(0, maxLen);
+    return (
+      out.endsWith(".") || out.endsWith("!") || out.endsWith("?")
+        ? out
+        : out + "."
+    ).trim();
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
@@ -91,11 +172,14 @@ export function NumerologyResultView({
         />
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-2 text-center">
+          <h1 className="text-[21px] font-[300] text-[#FFFFFF] mb-2 text-center">
+            {"Your Numerology"}
+          </h1>
+          <h1 className="text-[18px] font-[500] text-[#FFFFFF] mb-2 text-center">
             {content?.title || "Numerology"}
           </h1>
-          <h1 className="text-[18px] font-[300] text-[#F2D08C] mb-2 text-center">
-            The Blueprint of Your Soul
+          <h1 className="text-[13px] font-[300] text-[#F2D08C] mb-2 text-center">
+            Your Result
           </h1>
           <p className="text-[13px] font-[300] text-white/90 mb-6 text-center">
             Based on your name and birth date
@@ -114,40 +198,47 @@ export function NumerologyResultView({
             </div>
           )}
 
-          {/* Key Numbers Grid */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 mb-10">
-            {lpValue != null && (
-              <NumberRow
-                label="Life Path"
-                value={lpValue}
-                description={content?.lifePath}
-              />
-            )}
-            {suValue != null && (
-              <NumberRow
-                label="Soul Urge"
-                value={suValue}
-                description={content?.soulUrge}
-              />
-            )}
-            {exValue != null && (
-              <NumberRow
-                label="Expression"
-                value={exValue}
-                description={content?.expression}
-              />
-            )}
-            {bdValue != null && (
-              <NumberRow
-                label="Birthday"
-                value={bdValue}
-                description={content?.birthday}
-              />
-            )}
+          <div className="w-full space-y-6 mb-6 text-[13px] font-[300]">
+            {items?.map((item, idx) => (
+              <div
+                key={idx}
+                className="grid grid-cols-6 gap-2 w-full text-left"
+              >
+                <div className="col-span-1 flex items-center justify-center">
+                  <span
+                    style={{ fontFamily: "var(--font-gotham)" }}
+                    className="text-[58px] font-[400] text-white"
+                  >
+                    {item.number}
+                  </span>
+                </div>
+                <div className="col-span-1 flex items-center justify-center">
+                  <span className="text-[#FFFFFF] text-[48px] font-[300]">
+                    →
+                  </span>
+                </div>
+                <div className="col-span-4">
+                  <h3
+                    style={{ fontFamily: "var(--font-gotham)" }}
+                    className="text-[15px] font-[400] text-[#FFFFFF] mb-0.5"
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{ fontFamily: "var(--font-gotham)" }}
+                    className="text-[13px] font-[350] text-[#F2D08C]"
+                  >
+                    {oneSentenceMaxChars(item.description)}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Blueprint / Summary Section */}
-          {(content?.yourBlueprint || content?.summary || content?.narrative) && (
+          {(content?.yourBlueprint ||
+            content?.summary ||
+            content?.narrative) && (
             <>
               <h3
                 className="text-[18px] text-center font-[400] text-[#F2D08C] mb-4"
@@ -159,7 +250,9 @@ export function NumerologyResultView({
                 className="flex flex-col text-left gap-6 text-[13px] font-[300] text-white/90 mb-10"
                 style={{ lineHeight: "20px" }}
               >
-                {(content.yourBlueprint || content.summary || content.narrative)!
+                {(content.yourBlueprint ||
+                  content.summary ||
+                  content.narrative)!
                   .replace(/\\n/g, "\n")
                   .split("\n")
                   .filter((line) => line.trim().length > 0)
@@ -202,7 +295,7 @@ export function NumerologyResultView({
                     Challenges
                   </p>
                   <div className="flex flex-wrap gap-1">
-                    {content.challenges.map((c) => (
+                    {content?.challenges?.map((c) => (
                       <p
                         className="border border-white/30 text-[13px] font-[300] text-white rounded-md px-2 py-0.5"
                         key={c}

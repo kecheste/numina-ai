@@ -371,6 +371,7 @@ export function TestFlow({
             onClose={onBackResult}
             shellRef={shellRef}
             onLogout={() => router.push("/welcome")}
+            data={completedResult as any}
             content={(completedResult.llm_result_json as any) ?? undefined}
           />
         );
