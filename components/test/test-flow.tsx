@@ -3,12 +3,16 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@iconify/react";
 import { TestResults } from "./test-results";
 import { TestResultView } from "./test-result-view";
-import { AstrologyChartResultView } from "./result-view";
+import {
+  AstrologyChartResultView,
+  NumerologyResultView,
+  ShadowWorkResult,
+  StarseedOriginResult,
+  ChakraAlignmentResult,
+} from "./result-view";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
-import { AppDrawer } from "../navigation/app-drawer";
 import {
   apiFetchAstrologyChart,
   apiFetchTestQuestions,
@@ -359,12 +363,51 @@ export function TestFlow({
         );
       }
 
+      const onBackResult = onboardingNext ?? onClose;
+
+      if (testId === 2) {
+        return (
+          <NumerologyResultView
+            onClose={onBackResult}
+            shellRef={shellRef}
+            onLogout={() => router.push("/welcome")}
+            content={(completedResult.llm_result_json as any) ?? undefined}
+          />
+        );
+      }
+
+      if (testId === 8) {
+        return (
+          <ShadowWorkResult
+            onClose={onBackResult}
+            shellRef={shellRef}
+            content={(completedResult.llm_result_json as any) ?? undefined}
+          />
+        );
+      }
+
+      if (testId === 3) {
+        return (
+          <StarseedOriginResult testTitle={testTitle} onBack={onBackResult} />
+        );
+      }
+
+      if (testId === 13) {
+        return (
+          <ChakraAlignmentResult
+            testTitle={testTitle}
+            onBack={onBackResult}
+            content={completedResult.llm_result_json ?? undefined}
+          />
+        );
+      }
+
       return (
         <TestResultView
           testId={testId}
           testTitle={testTitle}
           category={category}
-          onBack={onboardingNext ?? onClose}
+          onBack={onBackResult}
           result={completedResult}
         />
       );

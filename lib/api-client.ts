@@ -541,6 +541,11 @@ export interface TestResultResponse {
     growthEdge?: string;
     shadowPattern?: string;
     secondaryPattern?: string;
+    lifePath?: string;
+    soulUrge?: string;
+    expression?: string;
+    birthday?: string;
+    numerology_blueprint?: any[];
     extracted_json?: any;
   } | null;
 }

@@ -9,6 +9,7 @@ import {
   StarseedOriginResult,
   ChakraAlignmentResult,
   ShadowWorkResult,
+  NumerologyResultView,
 } from "@/components/test/result-view";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
 import { TestIntro } from "../modals/test-intro";
@@ -196,6 +197,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
 
   if (viewingResult !== null) {
     const test = tests.find((t) => t.id === viewingResult);
+    console.log("Viewing result for test:", test);
     const onBackResult = () => {
       setViewingResult(null);
       setViewingResultData(undefined);
@@ -260,14 +262,16 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
           onLogout={() => router.push("/welcome")}
         />
       );
+    } else if (test.id === 2) {
+      return (
+        <NumerologyResultView
+          onClose={onBackResult}
+          shellRef={shellRef}
+          onLogout={() => router.push("/welcome")}
+          content={(viewingResultData?.llm_result_json as any) ?? undefined}
+        />
+      );
     } else if (test.id === 8) {
-      if (viewingResultData === undefined) {
-        return (
-          <div className="pb-24 flex items-center justify-center min-h-[200px]">
-            <p className="text-[#F2D08C] font-[325]">Loading your result…</p>
-          </div>
-        );
-      }
       return (
         <ShadowWorkResult
           onClose={onBackResult}

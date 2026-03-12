@@ -65,8 +65,9 @@ export function NumerologyBlueprintResult({
   content = undefined,
 }: NumerologyBlueprintResultProps) {
   const router = useRouter();
-  const items =
-    content && content.length > 0 ? content : DEFAULT_NUMEROLOGY_DATA;
+  const items = content && Array.isArray(content) && content.length > 0 
+    ? content 
+    : DEFAULT_NUMEROLOGY_DATA || [];
   const isLoading = content === null;
 
   if (isLoading) {
@@ -122,7 +123,7 @@ export function NumerologyBlueprintResult({
             </h1>
 
             <div className="w-full space-y-6 mb-6">
-              {items.map((item, idx) => (
+              {items?.map((item, idx) => (
                 <div
                   key={idx}
                   className="grid grid-cols-6 gap-2 w-full text-left"

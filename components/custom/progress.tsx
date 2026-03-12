@@ -1,17 +1,30 @@
 import React from "react";
 
+interface ProgressBarProps {
+  value?: number;
+  max?: number;
+  type?: "percent" | "text";
+  text?: string;
+  textPosition?: "inside" | "outside";
+  borderColor?: string;
+  fillColor?: string;
+  trackColor?: string;
+  precedingText?: string;
+  className?: string;
+}
+
 const ProgressBar = ({
-  value = 0, // number from 0–100
+  value = 0,
   max = 100,
-  type = "percent", // "percent" | "text"
+  type = "percent",
   text,
-  textPosition = "inside", // "inside" | "outside"
+  textPosition = "inside",
   borderColor = "#F2D08C80",
   fillColor = "#F2D08C",
   trackColor = "transparent",
   precedingText,
   className = "",
-}) => {
+}: ProgressBarProps) => {
   const percentage = Math.min((value / max) * 100, 100);
 
   const displayText = type === "percent" ? `${Math.round(percentage)}%` : text;
