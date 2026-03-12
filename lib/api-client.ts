@@ -511,6 +511,7 @@ export interface TestResultResponse {
   llm_result_json?: {
     title?: string;
     summary?: string;
+    shortDescription?: string;
     coreTraits?: string[];
     strengths?: string[];
     challenges?: string[];
@@ -535,11 +536,11 @@ export interface TestResultResponse {
       tryItems?: string | null;
       avoidItems?: string | null;
     }[];
-    primaryShadow?: string;
-    secondaryShadow?: string;
     howItShowsUp?: string;
     hiddenStrength?: string;
     growthEdge?: string;
+    shadowPattern?: string;
+    secondaryPattern?: string;
     extracted_json?: any;
   } | null;
 }

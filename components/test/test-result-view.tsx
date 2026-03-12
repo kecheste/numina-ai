@@ -62,6 +62,7 @@ const testResultsData: Record<
     subtitle: string;
     mainResult: string;
     description: string;
+    shortDescription?: string;
     coreTraits: string[];
     strengths: string[];
     challenges: string[];
@@ -362,6 +363,7 @@ export function TestResultView({
     subtitle: string;
     mainResult: string;
     description: string;
+    shortDescription?: string;
     coreTraits: string[];
     strengths: string[];
     challenges: string[];
@@ -385,6 +387,7 @@ export function TestResultView({
           (llm?.summary && llm.summary.trim()) ||
           (apiResult.narrative && apiResult.narrative.trim()) ||
           mockResult.description,
+        shortDescription: llm?.shortDescription || mockResult.shortDescription,
         coreTraits:
           ensureStringArray(llm?.coreTraits ?? apiResult.insights).length > 0
             ? ensureStringArray(llm?.coreTraits ?? apiResult.insights)
@@ -470,6 +473,15 @@ export function TestResultView({
               >
                 {result.mainResult}
               </h2>
+            </div>
+
+            <div className="text-center mb-4">
+              <p
+                style={{ fontFamily: "var(--font-gotham)", lineHeight: "21px" }}
+                className="text-[14px] font-[300] text-white mb-3"
+              >
+                {result?.shortDescription}
+              </p>
             </div>
 
             {result?.extracted_json?.confidence &&

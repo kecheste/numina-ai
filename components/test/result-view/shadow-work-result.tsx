@@ -14,8 +14,10 @@ interface ShadowWorkScores {
 
 interface ShadowWorkContent {
   title: string;
-  primaryShadow: string;
-  secondaryShadow: string;
+  summary: string;
+  shortDescription: string;
+  shadowPattern: string;
+  secondaryPattern: string;
   howItShowsUp: string;
   hiddenStrength: string;
   growthEdge: string;
@@ -86,6 +88,15 @@ export function ShadowWorkResult({
             >
               {content?.title || "Shadow Work Lens"}
             </h1>
+            
+            {content?.shortDescription && (
+              <p
+                style={{ fontFamily: "var(--font-gotham)", lineHeight: "21px" }}
+                className="text-[14px] font-[300] text-white/80 mt-2 px-4"
+              >
+                {content.shortDescription}
+              </p>
+            )}
           </div>
 
           {/* Scores Visualization */}
@@ -108,23 +119,35 @@ export function ShadowWorkResult({
             </div>
           )}
 
+          {/* Summary Section */}
+          {content?.summary && (
+            <div className="mb-8 text-left">
+               <div
+                  style={bodyTextStyle}
+                  className="text-[13px] font-[300] text-white/90 whitespace-pre-line leading-relaxed"
+                >
+                  {content.summary}
+                </div>
+            </div>
+          )}
+
           {/* Interpretation Sections */}
           <div className="space-y-8 text-left">
-            {content?.primaryShadow && (
+            {content?.shadowPattern && (
               <section>
                 <h2 style={sectionHeadingStyle} className="text-[#F2D08C] mb-2 uppercase tracking-wide decoration-solid">
-                  Primary Shadow Pattern
+                  Shadow Pattern
                 </h2>
                 <div
                   style={bodyTextStyle}
                   className="text-[13px] font-[300] text-white/90 whitespace-pre-line leading-relaxed"
                 >
-                  {content.primaryShadow}
+                  {content.shadowPattern}
                 </div>
               </section>
             )}
 
-            {content?.secondaryShadow && (
+            {content?.secondaryPattern && (
               <section>
                 <h2 style={sectionHeadingStyle} className="text-[#F2D08C] mb-2 uppercase tracking-wide">
                   Secondary Pattern
@@ -133,7 +156,7 @@ export function ShadowWorkResult({
                   style={bodyTextStyle}
                   className="text-[13px] font-[300] text-white/90 leading-relaxed"
                 >
-                  {content.secondaryShadow}
+                  {content.secondaryPattern}
                 </p>
               </section>
             )}
