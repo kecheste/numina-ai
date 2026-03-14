@@ -1,8 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
-import { AppDrawer } from "@/components/navigation/app-drawer";
 import { InfjIcon } from "@/components/icons/mysoul/infj";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
@@ -35,7 +33,7 @@ interface MbtiTypeResultProps {
   resultData?: MbtiResultData | null;
 }
 
-export function MbtiTypeResult({
+export function MbtiBlueprintResult({
   onClose,
   shellRef,
   resultData,
@@ -85,9 +83,9 @@ export function MbtiTypeResult({
           className="text-[13px] font-[300] text-[#FFFFFF] mb-8 px-2"
           style={{ fontFamily: "var(--font-gotham)", lineHeight: "21px" }}
         >
-          {resultData?.extracted_json?.shortDescription || 
-           resultData?.narrative?.split('\n').filter(Boolean)[0] || 
-           description}
+          {resultData?.extracted_json?.shortDescription ||
+            resultData?.narrative?.split("\n").filter(Boolean)[0] ||
+            description}
         </p>
 
         <h2
@@ -104,7 +102,7 @@ export function MbtiTypeResult({
           {displayTraits.slice(0, 4).map((trait, idx) => (
             <div
               key={idx}
-              className="border border-[#F2D08C]/50 rounded-[8px] px-3 h-[27px]"
+              className="border border-[#F2D08C]/50 rounded-[8px] px-3"
               style={{ fontFamily: "var(--font-gotham)" }}
             >
               <span className="text-[12px] font-[300] text-[#F2D08C]">

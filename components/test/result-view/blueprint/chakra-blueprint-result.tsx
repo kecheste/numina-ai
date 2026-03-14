@@ -1,18 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
-import { AppDrawer } from "@/components/navigation/app-drawer";
 import { ChakraFullIcon } from "@/components/icons/chakra-full";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
 
 const GOLD = "#F2D08C";
-
-const DEFAULT_STRONGEST =
-  "Your energy flows most freely through your Crown Chakra, indicating heightened intuition or spiritual awareness.";
-const DEFAULT_NEEDS_BALANCE =
-  "You may want to bring attention to your Root Chakra, which governs your sense of stability and grounding.";
 
 interface ChakraPreviewResultProps {
   onClose: () => void;
@@ -21,18 +14,18 @@ interface ChakraPreviewResultProps {
   needsBalance?: string | null;
 }
 
-export function ChakraPreviewResult({
+export function ChakraBlueprintResult({
   onClose,
   shellRef,
   strongestChakra,
   needsBalance,
 }: ChakraPreviewResultProps) {
   const router = useRouter();
-  const strongest = strongestChakra?.trim() || DEFAULT_STRONGEST;
-  const needs = needsBalance?.trim() || DEFAULT_NEEDS_BALANCE;
+  const strongest = strongestChakra?.trim();
+  const needs = needsBalance?.trim();
 
   return (
-    <div className="flex flex-col h-full bg-black">
+    <div className="flex flex-col h-full bg-black pt-2">
       <AppBar
         hideBackButton
         handleLogout={() => router.push("/welcome")}

@@ -1,9 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import { Icon } from "@iconify/react";
-import { NuminaLogoIcon } from "../icons/logo/numina-normal";
-import { AppDrawer } from "../navigation/app-drawer";
 import PageLoader from "../custom/loader";
 import type { TestResultResponse } from "@/lib/api-client";
 import AppBar from "../navigation/appBar";
@@ -56,298 +53,6 @@ function ensureSynchronicities(
     .filter((s) => s.test || s.connection);
 }
 
-const testResultsData: Record<
-  number,
-  {
-    subtitle: string;
-    mainResult: string;
-    description: string;
-    shortDescription?: string;
-    coreTraits: string[];
-    strengths: string[];
-    challenges: string[];
-    spiritualInsight: string;
-    tryThis?: string[];
-    avoidThis?: string[];
-    chartData: {
-      number: string;
-      title: string;
-      line2: string;
-      line3: string;
-    }[];
-    synchronicities: { test: string; connection: string }[];
-    extracted_json?: any | null;
-  }
-> = {
-  1: {
-    subtitle: "Your Astrological Profile",
-    mainResult: "Scorpio Sun",
-    description:
-      "You're driven by depth, truth, and emotional mastery. You rarely settle for surface-level anything.",
-    coreTraits: [
-      "Intense",
-      "Intuitive",
-      "Transformative",
-      "Private",
-      "Magnetic",
-    ],
-    strengths: [
-      "Deeply perceptive",
-      "Natural investigator",
-      "Emotionally resilient",
-    ],
-    challenges: [
-      "Can become secretive",
-      "May struggle with trust",
-      "Tendency to hold grudges",
-    ],
-    spiritualInsight:
-      "Your path isn't about material success — it's about discovering inner truth and living in alignment with your soul. You're here to understand the mystery behind the visible world.",
-    chartData: [
-      {
-        number: "♏",
-        title: "Sun Sign",
-        line2: "Core identity",
-        line3: "intense and transformative",
-      },
-      {
-        number: "♍",
-        title: "Moon Sign",
-        line2: "Emotional self",
-        line3: "analytical and nurturing",
-      },
-      {
-        number: "♒",
-        title: "Rising Sign",
-        line2: "How others see you",
-        line3: "mysterious and magnetic",
-      },
-    ],
-    synchronicities: [
-      { test: "MBTI (INFJ)", connection: "both seek truth & meaning" },
-      {
-        test: "Chakra Profile",
-        connection: "intuition linked to Third Eye activation",
-      },
-      {
-        test: "Numerology",
-        connection: "Life Path 7 echoes the seeker energy",
-      },
-    ],
-  },
-  2: {
-    subtitle: "Your Life Path Number",
-    mainResult: "7 - The Seeker",
-    description:
-      "You're a deep thinker, always seeking wisdom beneath the surface of life.",
-    coreTraits: [
-      "Introspective",
-      "Analytical",
-      "Spiritual",
-      "Private",
-      "Intuitive",
-    ],
-    strengths: [
-      "Deeply reflective and wise",
-      "Natural philosopher or mystic",
-      "High intuition",
-      "Independent mindset",
-    ],
-    challenges: [
-      "Can become isolated or emotionally distant",
-      "May struggle to trust others or express vulnerability",
-      "Tendency to overanalyze",
-    ],
-    spiritualInsight:
-      "Your path isn't about material success — it's about discovering inner truth and living in alignment with your soul. You're here to understand the mystery behind the visible world and guide others through your insight.",
-    chartData: [
-      {
-        number: "5",
-        title: "Soul Urge",
-        line2: "What your heart craves",
-        line3: "freedom, movement, adventure.",
-      },
-      {
-        number: "5",
-        title: "Personality",
-        line2: "What people see in you",
-        line3: "dynamic, quick, playful",
-      },
-      {
-        number: "6",
-        title: "Birthday",
-        line2: "Extra energy from the day you were born",
-        line3: "nurturer, beauty lover.",
-      },
-    ],
-    synchronicities: [
-      { test: "MBTI (INFJ)", connection: "both seek truth & meaning" },
-      {
-        test: "Chakra Profile",
-        connection: "intuition linked to Third Eye activation",
-      },
-      {
-        test: "Astrological Profile",
-        connection: "your Scorpio sun echoes the 7's intensity",
-      },
-    ],
-  },
-  // MBTI Type (ID: 7)
-  7: {
-    subtitle: "Your MBTI Type",
-    mainResult: "INFJ - The Advocate",
-    description:
-      "Thoughtful, visionary, and driven by deeper meaning — INFJs are introspective idealists who combine empathy with structure.",
-    coreTraits: [
-      "Intuitive",
-      "Empathetic",
-      "Private",
-      "Visionary",
-      "Determined",
-    ],
-    strengths: [
-      "Deep emotional intelligence",
-      "Strong moral compass",
-      "Creative problem solver",
-      "Inspiring leader",
-    ],
-    challenges: [
-      "Prone to burnout",
-      "Can be overly idealistic",
-      "Difficulty with criticism",
-    ],
-    spiritualInsight:
-      "You're here to guide and heal others through your unique combination of insight and compassion. Your purpose lies in making the invisible visible.",
-    chartData: [
-      {
-        number: "Ni",
-        title: "Dominant Function",
-        line2: "Introverted Intuition",
-        line3: "seeing patterns and possibilities",
-      },
-      {
-        number: "Fe",
-        title: "Auxiliary Function",
-        line2: "Extraverted Feeling",
-        line3: "harmonizing with others",
-      },
-      {
-        number: "Ti",
-        title: "Tertiary Function",
-        line2: "Introverted Thinking",
-        line3: "logical analysis",
-      },
-    ],
-    synchronicities: [
-      {
-        test: "Numerology",
-        connection: "Life Path 7 mirrors your seeking nature",
-      },
-      {
-        test: "Chakra Profile",
-        connection: "Crown Chakra activation aligns with intuition",
-      },
-      {
-        test: "Astrological Profile",
-        connection: "Water signs resonate with emotional depth",
-      },
-    ],
-  },
-  // Chakra Assessment Scan (ID: 13)
-  13: {
-    subtitle: "Your Chakra Alignment",
-    mainResult: "Third Eye Dominant",
-    description:
-      "Your energy flows most freely through your Third Eye Chakra, indicating heightened intuition and inner vision.",
-    coreTraits: [
-      "Spiritually attuned",
-      "Intuitive",
-      "Reflective",
-      "Connected",
-      "Wise",
-    ],
-    strengths: [
-      "Strong spiritual connection",
-      "Access to higher guidance",
-      "Natural healer",
-      "Transcendent perspective",
-    ],
-    challenges: [
-      "May feel disconnected from physical world",
-      "Root Chakra needs grounding",
-      "Can become overly ethereal",
-    ],
-    spiritualInsight:
-      "Your Third Eye activation suggests you're in a phase of spiritual awakening. Balance this with grounding practices to integrate insights into daily life.",
-    chartData: [
-      {
-        number: "7",
-        title: "Crown",
-        line2: "Active",
-        line3: "spiritual connection and universal consciousness",
-      },
-      {
-        number: "6",
-        title: "Third Eye",
-        line2: "Most active",
-        line3: "intuition, insight, and inner vision",
-      },
-      {
-        number: "4",
-        title: "Heart",
-        line2: "Balanced",
-        line3: "love, compassion, and emotional connection",
-      },
-      {
-        number: "3",
-        title: "Root",
-        line2: "Needs attention",
-        line3: "grounding and stability",
-      },
-    ],
-    synchronicities: [
-      {
-        test: "MBTI (INFJ)",
-        connection: "intuitive nature supports Third Eye activation",
-      },
-      {
-        test: "Numerology",
-        connection: "Life Path 7 aligns with spiritual seeking",
-      },
-      {
-        test: "Astrological Profile",
-        connection: "Neptune influence amplifies intuition",
-      },
-    ],
-  },
-};
-
-// Default fallback data
-const defaultResult = {
-  subtitle: "Your Result",
-  mainResult: "The Seeker",
-  description:
-    "You have a unique profile that combines multiple aspects of self-discovery.",
-  coreTraits: ["Intuitive", "Reflective", "Growth-oriented"],
-  strengths: ["Self-aware", "Open to learning", "Emotionally intelligent"],
-  challenges: ["May overthink", "Can be too self-critical"],
-  spiritualInsight:
-    "Your journey is about continuous growth and self-discovery. Trust the process.",
-  tryThis: [
-    "Revisit your answers as you grow.",
-    "Explore more tests for a fuller picture.",
-  ],
-  avoidThis: ["Rushing to conclusions.", "Comparing yourself to others."],
-  chartData: [] as {
-    number: string;
-    title: string;
-    line2: string;
-    line3: string;
-  }[],
-  synchronicities: [] as { test: string; connection: string }[],
-  extracted_json: null as any | null,
-};
-
 export function TestResultView({
   testId,
   testTitle,
@@ -357,69 +62,55 @@ export function TestResultView({
 }: TestResultViewProps) {
   const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
-  const mockResult = testResultsData[testId] || defaultResult;
   const llm = apiResult?.llm_result_json;
   const result: {
-    subtitle: string;
-    mainResult: string;
-    description: string;
-    shortDescription?: string;
-    coreTraits: string[];
-    strengths: string[];
-    challenges: string[];
-    spiritualInsight: string;
-    tryThis: string[];
-    avoidThis: string[];
-    chartData: {
+    subtitle?: string | null;
+    mainResult?: string | null;
+    description?: string | null;
+    shortDescription?: string | null;
+    coreTraits?: string[] | null;
+    strengths?: string[] | null;
+    challenges?: string[] | null;
+    spiritualInsight?: string | null;
+    tryThis?: string[] | null;
+    avoidThis?: string[] | null;
+    chartData?: {
       number: string;
       title: string;
       line2: string;
       line3: string;
-    }[];
-    synchronicities: { test: string; connection: string }[];
+    }[] | null;
+    synchronicities?: { test: string; connection: string }[] | null;
     extracted_json?: any | null;
-  } = apiResult
-    ? {
-        subtitle: "Your Result",
-        mainResult:
-          llm?.title ?? apiResult.personality_type ?? mockResult.mainResult,
-        description:
-          (llm?.summary && llm.summary.trim()) ||
-          (apiResult.narrative && apiResult.narrative.trim()) ||
-          mockResult.description,
-        shortDescription: llm?.shortDescription || mockResult.shortDescription,
-        coreTraits:
-          ensureStringArray(llm?.coreTraits ?? apiResult.insights).length > 0
-            ? ensureStringArray(llm?.coreTraits ?? apiResult.insights)
-            : mockResult.coreTraits,
-        strengths:
-          ensureStringArray(llm?.strengths ?? apiResult.insights).length > 0
-            ? ensureStringArray(llm?.strengths ?? apiResult.insights)
-            : mockResult.strengths,
-        challenges:
-          ensureStringArray(llm?.challenges ?? apiResult.recommendations)
-            .length > 0
-            ? ensureStringArray(llm?.challenges ?? apiResult.recommendations)
-            : mockResult.challenges,
-        spiritualInsight:
-          (llm?.spiritualInsight && llm.spiritualInsight.trim()) ||
-          mockResult.spiritualInsight,
-        tryThis: ensureStringArray(llm?.tryThis),
-        avoidThis: ensureStringArray(llm?.avoidThis),
-        chartData: (Array.isArray(llm?.chartData)
-          ? llm.chartData
-          : mockResult.chartData) as typeof mockResult.chartData,
-        synchronicities:
-          ensureSynchronicities(llm?.synchronicities).length > 0
-            ? ensureSynchronicities(llm?.synchronicities)
-            : mockResult.synchronicities,
-        extracted_json: apiResult.extracted_json ?? mockResult.extracted_json,
-      }
-    : {
-        ...mockResult,
-        tryThis: mockResult.tryThis ?? defaultResult.tryThis,
-        avoidThis: mockResult.avoidThis ?? defaultResult.avoidThis,
-      };
+  } | null | undefined = apiResult ? {
+    subtitle: "Your Result",
+    mainResult: llm?.title ?? apiResult.personality_type,
+    description:
+      (llm?.summary && llm.summary.trim()) ||
+      (apiResult.narrative && apiResult.narrative.trim()),
+    shortDescription: llm?.shortDescription,
+    coreTraits:
+      ensureStringArray(llm?.coreTraits ?? apiResult.insights).length > 0
+        ? ensureStringArray(llm?.coreTraits ?? apiResult.insights)
+        : undefined,
+    strengths:
+      ensureStringArray(llm?.strengths ?? apiResult.insights).length > 0
+        ? ensureStringArray(llm?.strengths ?? apiResult.insights)
+        : undefined,
+    challenges:
+      ensureStringArray(llm?.challenges ?? apiResult.recommendations).length > 0
+        ? ensureStringArray(llm?.challenges ?? apiResult.recommendations)
+        : undefined,
+    spiritualInsight: llm?.spiritualInsight && llm.spiritualInsight.trim(),
+    tryThis: ensureStringArray(llm?.tryThis),
+    avoidThis: ensureStringArray(llm?.avoidThis),
+    chartData: Array.isArray(llm?.chartData) ? (llm.chartData as any) : undefined,
+    synchronicities:
+      ensureSynchronicities(llm?.synchronicities).length > 0
+        ? ensureSynchronicities(llm?.synchronicities)
+        : undefined,
+    extracted_json: apiResult.extracted_json,
+  } : undefined;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
@@ -462,7 +153,7 @@ export function TestResultView({
                 style={{ fontFamily: "var(--font-gotham)" }}
                 className="text-[13px] mt-4 font-[300] text-[#F2D08C]"
               >
-                {result.subtitle}
+                {result?.subtitle}
               </p>
             </div>
 
@@ -471,7 +162,7 @@ export function TestResultView({
                 style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
                 className="text-[21px] font-[400] text-white mb-6"
               >
-                {result.mainResult}
+                {result?.mainResult}
               </h2>
             </div>
 
@@ -526,7 +217,7 @@ export function TestResultView({
                 Core Traits
               </h3>
               <div className="flex flex-wrap gap-1">
-                {result.coreTraits.map((trait: string, idx: number) => (
+                {result?.coreTraits?.map((trait: string, idx: number) => (
                   <span
                     key={idx}
                     className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
@@ -551,7 +242,7 @@ export function TestResultView({
                 Strengths
               </h3>
               <div className="flex flex-wrap gap-2">
-                {result.strengths.map((strength: string, idx: number) => (
+                {result?.strengths?.map((strength: string, idx: number) => (
                   <span
                     key={idx}
                     className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
@@ -604,7 +295,7 @@ export function TestResultView({
                 style={{ fontFamily: "var(--font-gotham)" }}
                 className="text-[13px] font-[300] text-white"
               >
-                {result.spiritualInsight}
+                {result?.spiritualInsight}
               </p>
             </div>
 
@@ -619,8 +310,8 @@ export function TestResultView({
                 style={{ fontFamily: "var(--font-gotham)" }}
                 className="flex flex-col gap-6 text-[13px] font-[300] text-[#FFFFFF] text-left"
               >
-                {result.description
-                  .replace(/\\n/g, "\n")
+                {result?.description
+                  ?.replace(/\\n/g, "\n")
                   .split("\n")
                   .filter((line) => line.trim().length > 0)
                   .map((paragraph, idx) => (
@@ -629,7 +320,7 @@ export function TestResultView({
               </div>
             </div>
 
-            {result.tryThis && result.tryThis.length > 0 && (
+            {result?.tryThis && result.tryThis.length > 0 && (
               <div className="text-left mb-4">
                 <h3
                   style={{
@@ -654,7 +345,7 @@ export function TestResultView({
               </div>
             )}
 
-            {result.avoidThis && result.avoidThis.length > 0 && (
+            {result?.avoidThis && result.avoidThis.length > 0 && (
               <div className="text-left mb-4">
                 <h3
                   style={{
@@ -679,7 +370,7 @@ export function TestResultView({
               </div>
             )}
 
-            {result.chartData.length > 0 && (
+            {result?.chartData && result.chartData.length > 0 && (
               <div className="text-center mb-4">
                 <h3
                   style={{
@@ -717,7 +408,7 @@ export function TestResultView({
               </div>
             )}
 
-            {result.synchronicities.length > 0 && (
+            {result?.synchronicities && result.synchronicities.length > 0 && (
               <div className="text-left mb-4">
                 <h3
                   style={{

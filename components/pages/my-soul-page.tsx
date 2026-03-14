@@ -28,6 +28,7 @@ import {
   ZODIAC_SUMMARY,
 } from "@/lib/constants/keys";
 import { getFirstName, getZodiacSign } from "@/lib/utils";
+import { AriesIcon } from "../icons/zodiac/aries";
 
 const ONBOARDING_TEST_IDS = [13, 7, 19] as const;
 
@@ -248,6 +249,8 @@ export function SoulRevealScreen() {
                 <GeminiIcon />
               ) : zodiacSign === "Cancer" ? (
                 <CancerIcon />
+              ) : zodiacSign === "Aries" ? (
+                <AriesIcon />
               ) : null}
             </div>
             <div

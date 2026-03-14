@@ -1,13 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import { Icon } from "@iconify/react";
-import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
-import { AppDrawer } from "@/components/navigation/app-drawer";
-import { Button } from "@/components/ui/button";
 import { CHAKRA_COLORS } from "@/lib/constants/keys";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
+import { TestResultResponse } from "@/lib/api-client";
 
 export interface ChakraAlignmentChakra {
   id: string;
@@ -40,85 +37,11 @@ export interface ChakraAlignmentContent {
 interface ChakraAlignmentResultProps {
   testTitle: string;
   onBack: () => void;
-  content?: ChakraAlignmentContent | null;
+  content?: TestResultResponse | null;
 }
 
-const DEFAULT_CHAKRAS: ChakraAlignmentChakra[] = [
-  {
-    id: "root",
-    name: "Root Chakra",
-    status: "Balanced",
-    description: "This energy center is in balance.",
-    tryItems: null,
-    avoidItems: null,
-  },
-  {
-    id: "sacral",
-    name: "Sacral Chakra",
-    status: "Balanced",
-    description: "This energy center is in balance.",
-    tryItems: null,
-    avoidItems: null,
-  },
-  {
-    id: "solarPlexus",
-    name: "Solar Plexus Chakra",
-    status: "Balanced",
-    description: "This energy center is in balance.",
-    tryItems: null,
-    avoidItems: null,
-  },
-  {
-    id: "heart",
-    name: "Heart Chakra",
-    status: "Balanced",
-    description: "This energy center is in balance.",
-    tryItems: null,
-    avoidItems: null,
-  },
-  {
-    id: "throat",
-    name: "Throat Chakra",
-    status: "Balanced",
-    description: "This energy center is in balance.",
-    tryItems: null,
-    avoidItems: null,
-  },
-  {
-    id: "thirdEye",
-    name: "Third Eye Chakra",
-    status: "Balanced",
-    description: "This energy center is in balance.",
-    tryItems: null,
-    avoidItems: null,
-  },
-  {
-    id: "crown",
-    name: "Crown Chakra",
-    status: "Balanced",
-    description: "This energy center is in balance.",
-    tryItems: null,
-    avoidItems: null,
-  },
-];
-
-const DEFAULT_STRENGTHS = ["Self-awareness", "Willingness to explore"];
-const DEFAULT_CHALLENGES = ["Patience", "Integration"];
-const DEFAULT_SYNCHRONICITIES: { label: string; description: string }[] = [];
-const DEFAULT_CORE_TRAITS = ["Reflective", "Growing"];
-const DEFAULT_TRY_THIS = [
-  "Revisit your answers as you grow.",
-  "Explore more tests for a fuller picture.",
-];
-const DEFAULT_AVOID_THIS = [
-  "Rushing to conclusions.",
-  "Comparing yourself to others.",
-];
-const DEFAULT_STATUS_SUMMARY =
-  "Your chakra balance reflects your current energy flow.";
-
 function normalizeChakras(raw: unknown): ChakraAlignmentChakra[] {
-  if (!Array.isArray(raw) || raw.length === 0) return DEFAULT_CHAKRAS;
+  if (!Array.isArray(raw) || raw.length === 0) return [];
   const out: ChakraAlignmentChakra[] = [];
   const ids = [
     "root",
@@ -160,16 +83,7 @@ function normalizeChakras(raw: unknown): ChakraAlignmentChakra[] {
             : null,
       });
     } else {
-      out.push(
-        DEFAULT_CHAKRAS[i] ?? {
-          id: ids[i],
-          name: names[i],
-          status: "Balanced",
-          description: "This energy center is in balance.",
-          tryItems: null,
-          avoidItems: null,
-        },
-      );
+      out.push();
     }
   }
   return out;
@@ -183,7 +97,7 @@ function normalizeStrings(raw: unknown, fallback: string[]): string[] {
 function normalizeSynchronicities(
   raw: unknown,
 ): { label: string; description: string }[] {
-  if (!Array.isArray(raw)) return DEFAULT_SYNCHRONICITIES;
+  if (!Array.isArray(raw)) return [];
   return raw
     .filter(
       (s): s is Record<string, unknown> => s != null && typeof s === "object",
@@ -214,36 +128,35 @@ export function ChakraAlignmentResult({
 }: ChakraAlignmentResultProps) {
   const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
-  console.log(content)
 
-  const statusSummary =
-    content?.statusSummary?.trim() || DEFAULT_STATUS_SUMMARY;
+  const statusSummary = content?.llm_result_json?.statusSummary?.trim();
   const chakras =
-    content?.chakras?.length === 7
-      ? content.chakras
-      : normalizeChakras(content?.chakras);
-  const strengths = normalizeStrings(content?.strengths, DEFAULT_STRENGTHS);
-  const challenges = normalizeStrings(content?.challenges, DEFAULT_CHALLENGES);
-  const synchronicities = content?.synchronicities?.length
-    ? content.synchronicities
-    : normalizeSynchronicities(content?.synchronicities);
-  const coreTraits = normalizeStrings(content?.coreTraits, DEFAULT_CORE_TRAITS);
-  const tryThis = normalizeStrings(content?.tryThis, DEFAULT_TRY_THIS);
-  const avoidThis = normalizeStrings(content?.avoidThis, DEFAULT_AVOID_THIS);
+    content?.llm_result_json?.chakras?.length === 7
+      ? content?.llm_result_json?.chakras
+      : normalizeChakras(content?.llm_result_json?.chakras);
+  const strengths = normalizeStrings(content?.llm_result_json?.strengths, []);
+  const challenges = normalizeStrings(content?.llm_result_json?.challenges, []);
+  const synchronicities = content?.llm_result_json?.synchronicities?.length
+    ? content?.llm_result_json?.synchronicities
+    : normalizeSynchronicities(content?.llm_result_json?.synchronicities);
+  const coreTraits = normalizeStrings(content?.llm_result_json?.coreTraits, []);
+  const tryThis = normalizeStrings(content?.llm_result_json?.tryThis, []);
+  const avoidThis = normalizeStrings(content?.llm_result_json?.avoidThis, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
       <div
         ref={shellRef}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto"
+        style={{ fontFamily: "var(--font-gotham)" }}
+        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
       >
         <AppBar
           handleBack={onBack}
-          handleLogout={() => router.push("/welcom")}
+          handleLogout={() => router.push("/welcome")}
           shellRef={shellRef}
         />
 
-        <div className="px-[24px] pt-4 pb-12">
+        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
           <div className="text-center mb-4">
             <h1
               style={{
@@ -252,9 +165,16 @@ export function ChakraAlignmentResult({
               }}
               className="text-[21px] font-[400] text-white"
             >
-              Chakras
+              Checkra Alignment Scan
             </h1>
           </div>
+
+          <p
+            style={bodyTextStyle}
+            className="text-[13px] font-[300] text-[#F2D08C] mb-2"
+          >
+            Your Result
+          </p>
 
           <div className="mb-4 text-left">
             <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
@@ -326,24 +246,24 @@ export function ChakraAlignmentResult({
             );
           })}
 
-          {content?.summary && (
+          {content?.llm_result_json?.summary && (
             <>
               <h3
                 className="text-[18px] text-center font-[400] text-[#F2D08C] mb-2"
-                style={{ 
-                    lineHeight: "33px", 
-                    fontFamily: "var(--font-gotham)",
-                    fontSize: "13px",
-                    fontWeight: 600
-                  }}
+                style={{
+                  lineHeight: "33px",
+                  fontFamily: "var(--font-gotham)",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                }}
               >
-                Your Blueprint
+                Your Energy Balance
               </h3>
               <div
                 className="flex flex-col text-left gap-6 text-[13px] font-[300] text-white/90 mb-6"
-                style={{ lineHeight: "20px", fontFamily: "var(--font-gotham)", }}
+                style={{ lineHeight: "20px", fontFamily: "var(--font-gotham)" }}
               >
-                {content?.summary
+                {content?.llm_result_json?.summary
                   .replace(/\\n/g, "\n")
                   .split("\n")
                   .filter((line) => line.trim().length > 0)
@@ -445,40 +365,26 @@ export function ChakraAlignmentResult({
             <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
               Try This
             </h2>
-            <p
+            <ul
               style={bodyTextStyle}
-              className="text-[13px] font-[300] text-[#FFFFFF]"
+              className="text-[13px] list-disc font-[300] text-[#FFFFFF] pl-5"
             >
-              {tryThis.length >= 2 ? (
-                <>
-                  <span className="underline">{tryThis[0]}</span>
-                  <span className="mx-1">or</span>
-                  <span className="underline">{tryThis[1]}</span>
-                </>
-              ) : (
-                (tryThis[0] ?? "Revisit your answers as you grow.")
-              )}
-            </p>
+              {tryThis?.length > 0 &&
+                tryThis.map((item: string) => <li key={item}>{item}</li>)}
+            </ul>
           </div>
 
           <div className="mb-6 text-left">
             <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
               Avoid this
             </h2>
-            <p
+            <ul
               style={bodyTextStyle}
-              className="text-[13px] font-[300] text-[#FFFFFF]"
+              className="text-[13px] list-disc pl-5 font-[300] text-[#FFFFFF]"
             >
-              {avoidThis.length >= 2 ? (
-                <>
-                  <span className="underline">{avoidThis[0]}</span>
-                  <span className="mx-1">or</span>
-                  <span className="underline">{avoidThis[1]}</span>
-                </>
-              ) : (
-                (avoidThis[0] ?? "Rushing to conclusions.")
-              )}
-            </p>
+              {avoidThis.length >= 2 &&
+                avoidThis?.map((avoid: string) => <li key={avoid}>{avoid}</li>)}
+            </ul>
           </div>
         </div>
       </div>

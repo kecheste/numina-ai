@@ -12,7 +12,7 @@ export default function OnboardingPage() {
   return (
     <OnboardingInfoScreen
       userName={userName}
-      onStartTest={() => router.push("/onboarding/test/chakra")}
+      onStartTest={() => router.push("/onboarding/flow")}
     />
   );
 }

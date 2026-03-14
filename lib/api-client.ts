@@ -157,7 +157,6 @@ export interface UserProfile {
   mbti_type: string | null;
   mbti_descriptor: string | null;
   strongest_chakra: string | null;
-  // Astrology Blueprint
   sun_sign: string | null;
   sun_description: string | null;
   moon_sign: string | null;
@@ -166,8 +165,8 @@ export interface UserProfile {
   rising_description: string | null;
   cosmic_traits_summary: string | null;
   astrology_blueprint: any | null;
-  // Numerology Blueprint
   numerology_blueprint: any[] | null;
+  onboarding_complete: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -471,12 +470,13 @@ export async function apiFinishOnboarding(): Promise<{ message: string }> {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error((err as { detail?: string }).detail ?? "Failed to finish onboarding");
+    throw new Error(
+      (err as { detail?: string }).detail ?? "Failed to finish onboarding",
+    );
   }
   return res.json();
 }
 
-/** One question with its answer (for submit and synthesis). */
 export interface QuestionAnswerItem {
   question_id: number;
   prompt: string;
@@ -497,7 +497,6 @@ export interface SubmitTestResponse {
   message?: string;
 }
 
-/** Single test result from GET /tests/results/:id (includes LLM narrative when completed). */
 export interface TestResultResponse {
   id: number;
   user_id: number;
@@ -529,6 +528,7 @@ export interface TestResultResponse {
       label?: string;
       description?: string;
     }[];
+    confidence?: Record<string, number>;
     chartData?: unknown[];
     strongestChakra?: string;
     needsRebalancing?: string;
@@ -552,10 +552,18 @@ export interface TestResultResponse {
     birthday?: string;
     numerology_blueprint?: any[];
     extracted_json?: any;
+    mentalPattern?: string;
+    emotionalTone?: string;
+    currentImbalance?: string;
+    hiddenInsight?: string;
+    growthDirection?: string;
+    primary_archetype?: string;
+    secondary_archetype?: string;
+    balance_score?: number;
+    scores?: Record<string, number>;
   } | null;
 }
 
-/** Synthesis response: preview (3 tests) or full (6+). Result shape from LLM. */
 export interface SynthesisResponse {
   type: "preview" | "full";
   completed_count: number;
@@ -571,7 +579,6 @@ export interface SynthesisResponse {
   };
 }
 
-/** Daily message for My Soul screen. Keyed by date; no LLM (static list). No auth required. */
 export interface DailyMessageResponse {
   message: string;
   quote: string;
@@ -588,7 +595,6 @@ export async function apiGetDailyMessage(): Promise<DailyMessageResponse> {
   return res.json();
 }
 
-/** Fetch current user's synthesis. Returns null when 404 (fewer than 3 tests completed). Auth required. */
 export async function apiGetSynthesis(): Promise<SynthesisResponse | null> {
   const res = await fetchWithAuth("/api/v1/synthesis");
   if (res.status === 401) throw new Error("Unauthorized");
@@ -602,7 +608,6 @@ export async function apiGetSynthesis(): Promise<SynthesisResponse | null> {
   return res.json();
 }
 
-/** Submit test answers. Auth required. */
 export async function apiSubmitTest(
   body: SubmitTestRequest,
 ): Promise<SubmitTestResponse> {
@@ -620,7 +625,6 @@ export async function apiSubmitTest(
   return res.json();
 }
 
-/** List current user's test results, optionally filtered by test_id. Most recent first. Auth required. */
 export async function apiListTestResults(
   testId?: number,
 ): Promise<TestResultResponse[]> {
@@ -636,7 +640,6 @@ export async function apiListTestResults(
   return res.json();
 }
 
-/** Get a single test result by id (for polling after submit). Auth required. */
 export async function apiGetTestResult(
   resultId: number,
 ): Promise<TestResultResponse> {
@@ -648,4 +651,3 @@ export async function apiGetTestResult(
   }
   return res.json();
 }
-

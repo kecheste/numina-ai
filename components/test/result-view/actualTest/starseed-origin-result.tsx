@@ -43,7 +43,7 @@ const SYNCHRONICITIES = [
   },
 ];
 
-export function StarseedOriginResult({
+export function StarseedOriginResultView({
   testTitle,
   onBack,
 }: StarseedOriginResultProps) {

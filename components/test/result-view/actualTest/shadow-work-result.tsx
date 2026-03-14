@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
+import { TestResultResponse } from "@/lib/api-client";
 
 interface ShadowWorkScores {
   vulnerability_avoidance: number;
@@ -12,24 +12,10 @@ interface ShadowWorkScores {
   withdrawal_avoidance: number;
 }
 
-interface ShadowWorkContent {
-  title: string;
-  summary: string;
-  shortDescription: string;
-  shadowPattern: string;
-  secondaryPattern: string;
-  howItShowsUp: string;
-  hiddenStrength: string;
-  growthEdge: string;
-  tryThis: string[];
-  avoidThis: string[];
-  extracted_json?: ShadowWorkScores;
-}
-
 interface ShadowWorkResultProps {
   onClose: () => void;
   shellRef: React.RefObject<HTMLDivElement | null>;
-  content?: ShadowWorkContent | null;
+  content?: TestResultResponse | null;
 }
 
 const sectionHeadingStyle = {
@@ -41,7 +27,7 @@ const sectionHeadingStyle = {
 
 const bodyTextStyle = {
   fontFamily: "var(--font-gotham)",
-  lineHeight: "18px",
+  lineHeight: "21px",
 };
 
 const SHADOW_LABELS: Record<keyof ShadowWorkScores, string> = {
@@ -100,7 +86,7 @@ export function ShadowWorkResult({
       <div
         ref={shellRef}
         style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col"
+        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
       >
         <AppBar
           handleBack={onClose}
@@ -137,10 +123,11 @@ export function ShadowWorkResult({
                 }}
                 className="text-[17px] font-[300] text-[#FFFFFF] mb-1"
               >
-                {content?.title}
+                {content?.llm_result_json?.title}
               </h1>
 
-              {typeof content?.shortDescription === "string" && (
+              {typeof content?.llm_result_json?.shortDescription ===
+                "string" && (
                 <p
                   style={{
                     fontFamily: "var(--font-gotham)",
@@ -148,12 +135,11 @@ export function ShadowWorkResult({
                   }}
                   className="text-[13px] w-full font-[300] text-white/80 mt-2 px-4"
                 >
-                  {content.shortDescription}
+                  {content?.llm_result_json?.shortDescription}
                 </p>
               )}
             </div>
 
-            {/* Scores Visualization */}
             {scores && (
               <div className="mb-8 space-y-4">
                 {Object.entries(scores)
@@ -184,21 +170,29 @@ export function ShadowWorkResult({
               </div>
             )}
 
-            {/* Summary Section */}
-            {typeof content?.summary === "string" && (
+            <h1
+              style={{
+                fontFamily: "var(--font-gotham)",
+                lineHeight: "33px",
+              }}
+              className="text-[20px] font-[300] text-[#FFFFFF] mb-2"
+            >
+              Your Shadow Pattern
+            </h1>
+
+            {typeof content?.llm_result_json?.summary === "string" && (
               <div className="mb-8 text-left">
                 <div
                   style={bodyTextStyle}
                   className="text-[13px] font-[300] text-white/90 whitespace-pre-line leading-relaxed"
                 >
-                  {content.summary}
+                  {content?.llm_result_json?.summary}
                 </div>
               </div>
             )}
 
-            {/* Interpretation Sections */}
             <div className="space-y-8 text-left">
-              {typeof content?.shadowPattern === "string" && (
+              {typeof content?.llm_result_json?.shadowPattern === "string" && (
                 <section>
                   <h2
                     style={sectionHeadingStyle}
@@ -210,12 +204,13 @@ export function ShadowWorkResult({
                     style={bodyTextStyle}
                     className="text-[13px] font-[300] text-white/90 whitespace-pre-line leading-relaxed"
                   >
-                    {content.shadowPattern}
+                    {content?.llm_result_json?.shadowPattern}
                   </div>
                 </section>
               )}
 
-              {typeof content?.secondaryPattern === "string" && (
+              {typeof content?.llm_result_json?.secondaryPattern ===
+                "string" && (
                 <section>
                   <h2
                     style={sectionHeadingStyle}
@@ -227,12 +222,12 @@ export function ShadowWorkResult({
                     style={bodyTextStyle}
                     className="text-[13px] font-[300] text-white/90 leading-relaxed"
                   >
-                    {content.secondaryPattern}
+                    {content?.llm_result_json?.secondaryPattern}
                   </p>
                 </section>
               )}
 
-              {typeof content?.howItShowsUp === "string" && (
+              {typeof content?.llm_result_json?.howItShowsUp === "string" && (
                 <section>
                   <h2
                     style={sectionHeadingStyle}
@@ -244,13 +239,14 @@ export function ShadowWorkResult({
                     style={bodyTextStyle}
                     className="text-[13px] font-[300] text-white/90 leading-relaxed"
                   >
-                    {content.howItShowsUp}
+                    {content?.llm_result_json?.howItShowsUp}
                   </p>
                 </section>
               )}
 
               <div className="grid grid-cols-1 gap-6">
-                {typeof content?.hiddenStrength === "string" && (
+                {typeof content?.llm_result_json?.hiddenStrength ===
+                  "string" && (
                   <section className="p-4 rounded-xl bg-white/5 border border-white/10">
                     <h2
                       style={sectionHeadingStyle}
@@ -262,12 +258,12 @@ export function ShadowWorkResult({
                       style={bodyTextStyle}
                       className="text-[13px] font-[300] text-white/90 leading-relaxed"
                     >
-                      {content.hiddenStrength}
+                      {content?.llm_result_json?.hiddenStrength}
                     </p>
                   </section>
                 )}
 
-                {typeof content?.growthEdge === "string" && (
+                {typeof content?.llm_result_json?.growthEdge === "string" && (
                   <section className="p-4 rounded-xl bg-[#F2D08C]/5 border border-[#F2D08C]/10">
                     <h2
                       style={sectionHeadingStyle}
@@ -279,14 +275,14 @@ export function ShadowWorkResult({
                       style={bodyTextStyle}
                       className="text-[13px] font-[300] text-white/90 leading-relaxed"
                     >
-                      {content.growthEdge}
+                      {content?.llm_result_json?.growthEdge}
                     </p>
                   </section>
                 )}
               </div>
 
-              {Array.isArray(content?.tryThis) &&
-                content.tryThis.length > 0 && (
+              {Array.isArray(content?.llm_result_json?.tryThis) &&
+                content?.llm_result_json?.tryThis.length > 0 && (
                   <section>
                     <h2
                       style={sectionHeadingStyle}
@@ -295,7 +291,7 @@ export function ShadowWorkResult({
                       Try This
                     </h2>
                     <div className="space-y-3">
-                      {content.tryThis.map((item, idx) => (
+                      {content?.llm_result_json?.tryThis.map((item, idx) => (
                         <div key={idx} className="flex gap-3 items-start">
                           <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#F2D08C] shrink-0" />
                           <p
@@ -312,8 +308,8 @@ export function ShadowWorkResult({
                   </section>
                 )}
 
-              {Array.isArray(content?.avoidThis) &&
-                content.avoidThis.length > 0 && (
+              {Array.isArray(content?.llm_result_json?.avoidThis) &&
+                content?.llm_result_json?.avoidThis.length > 0 && (
                   <section>
                     <h2
                       style={sectionHeadingStyle}
@@ -322,7 +318,7 @@ export function ShadowWorkResult({
                       Avoid This
                     </h2>
                     <div className="space-y-3">
-                      {content.avoidThis.map((item, idx) => (
+                      {content?.llm_result_json?.avoidThis.map((item, idx) => (
                         <div key={idx} className="flex gap-3 items-start">
                           <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-red-400/50 shrink-0" />
                           <p

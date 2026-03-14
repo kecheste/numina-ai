@@ -1,0 +1,17 @@
+export const TEST_IDS = {
+  ASTROLOGY_CHART: 1,
+  NUMEROLOGY: 2,
+  STARSEED_ORIGINS: 3,
+  HUMAN_DESIGN: 4,
+  TRANSITS: 5,
+  ZODIAC_ELEMENT: 6,
+  MBTI_TYPE: 7,
+  SHADOW_WORK_LENS: 8,
+  BIG_FIVE: 9,
+  COGNITIVE_STYLE: 11,
+  CHAKRA_ASSESSMENT: 13,
+  LIFE_PATH_NUMBER: 19,
+  SOUL_URGE: 20,
+} as const;
+
+export type TestId = (typeof TEST_IDS)[keyof typeof TEST_IDS];

@@ -7,7 +7,7 @@ interface CognitiveStyleResultProps {
   onClose: () => void;
 }
 
-export function CognitiveStyleResult({ onClose }: CognitiveStyleResultProps) {
+export function MBTITypeOnboardingTestIntro({ onClose }: CognitiveStyleResultProps) {
   return (
     <div className="flex flex-col items-center text-center h-full px-[32px] pb-12">
       <div className="flex justify-center mb-12 mt-4">
