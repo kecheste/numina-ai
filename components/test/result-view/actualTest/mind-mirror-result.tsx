@@ -188,7 +188,7 @@ export function MindMirrorResult({
           {data.summary && (
             <div>
               <h2 className="text-[#F2D08C] font-semibold mb-2 mt-6">
-                Your Mental Blueprint
+                Your Inner Reflection
               </h2>
               {data.summary && (
                 <div

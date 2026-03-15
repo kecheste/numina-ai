@@ -199,7 +199,7 @@ export function NumerologyResultView({
                 className="text-[16px] font-[400] text-[#F2D08C] mb-3"
                 style={{ lineHeight: "24px" }}
               >
-                Your Numerology Pattern
+                Your Numerology Profile
               </h3>
               <Paragraphs
                 text={blueprint}

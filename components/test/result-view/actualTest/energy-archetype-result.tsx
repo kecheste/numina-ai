@@ -162,7 +162,7 @@ export function EnergyArchetypeResult({
           {data.summary && (
             <div className="mb-8">
               <h2 className="text-[#F2D08C] font-[300] text-[13px] mb-4 uppercase tracking-wider">
-                Your Blueprint
+                Your Energy Archetype
               </h2>
 
               <div className="space-y-4 text-left">

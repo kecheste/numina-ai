@@ -190,7 +190,7 @@ export function LifePathResultView({
               style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
               className="text-[21px] font-[400] text-[#F2D08C] mb-4"
             >
-              Your Life Blueprint
+              Your Life Path Pattern
             </h2>
             <div
               style={{ fontFamily: "var(--font-gotham)" }}

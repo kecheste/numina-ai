@@ -10,6 +10,7 @@ import {
   ShadowWorkResult,
   StarseedOriginResultView,
   EnergyArchetypeResult,
+  HumanDesignResult,
 } from "@/components/test/result-view/actualTest";
 
 export type ResultComponentProps = {
@@ -85,6 +86,13 @@ export const resultRegistry: Record<
   ),
   14: (props) => (
     <EnergyArchetypeResult
+      {...props}
+      onClose={props.onBack}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  4: (props) => (
+    <HumanDesignResult
       {...props}
       onClose={props.onBack}
       onLogout={props.onLogout || (() => {})}

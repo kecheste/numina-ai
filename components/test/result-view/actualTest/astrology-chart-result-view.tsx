@@ -180,7 +180,7 @@ export function AstrologyChartResultView({
                 className="text-[18px] font-[400] text-[#F2D08C] mb-2 text-center"
                 style={{ lineHeight: "33px" }}
               >
-                Your Astrological Profile
+                Your Astrological Pattern
               </h3>
               <div
                 className="flex flex-col text-left gap-6 text-[13px] font-[300] text-white/90 mb-6"

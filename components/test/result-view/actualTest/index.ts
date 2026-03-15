@@ -7,3 +7,4 @@ export { ShadowWorkResult } from "./shadow-work-result";
 export { StarseedOriginResultView } from "./starseed-origin-result";
 export { MindMirrorResult } from "./mind-mirror-result";
 export { EnergyArchetypeResult } from "./energy-archetype-result";
+export { HumanDesignResult } from "./human-design-result";
