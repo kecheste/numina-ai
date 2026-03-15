@@ -50,10 +50,10 @@ export function BigFiveResult({
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
           <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
-            Big Five Personality
+            Your Big Five Personality
           </h1>
           <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-4">
-            {data.title || "The Big Five Explorer"}
+            Your Result
           </h2>
 
           <p className="text-white/80 text-[13px] mb-8 font-[250] leading-relaxed">
@@ -108,7 +108,7 @@ export function BigFiveResult({
           {strengths.length > 0 && (
             <div className="mb-6">
               <h2 className="text-[#F2D08C] font-[500] text-[14px] mb-2">
-                Key Strengths
+                Strengths
               </h2>
               <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
                 {strengths.map((s: string, i: number) => (
@@ -121,7 +121,7 @@ export function BigFiveResult({
           {challenges.length > 0 && (
             <div className="mb-6">
               <h2 className="text-[#F28C8C] font-[500] text-[14px] mb-2">
-                Discovery Areas
+                Challenges
               </h2>
               <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
                 {challenges.map((c: string, i: number) => (
@@ -131,7 +131,7 @@ export function BigFiveResult({
             </div>
           )}
 
-          {data.yourBlueprint && (
+          {data.summary && (
             <div className="mb-8">
               <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
                 Your Psychological Blueprint
