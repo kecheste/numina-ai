@@ -52,7 +52,7 @@ export function MindMirrorResult({
           )}
 
           {data.mentalPattern && (
-            <div className="mb-4">
+            <div className="mb-6">
               <h2
                 style={{ fontFamily: "var(--font-gotham)" }}
                 className="text-[#F2D08C] font-[350] text-[15px] mb-2"
@@ -122,23 +122,31 @@ export function MindMirrorResult({
           )}
 
           {traits.length > 0 && (
-            <div style={{ fontFamily: "var(--font-gotham)" }}>
+            <div style={{ fontFamily: "var(--font-gotham)" }} className="mb-2">
               <h2
                 style={{ fontFamily: "var(--font-gotham)" }}
                 className="text-[#F2D08C] font-[300] text-[13px] my-2"
               >
                 Core Traits
               </h2>
-              <ul className="list-disc ml-5 space-y-1 text-[13px] text-left text-white/80">
+              <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-1">
                 {traits.map((t, i) => (
-                  <li key={i}>{t}</li>
+                  <li
+                    style={{
+                      lineHeight: "16px",
+                    }}
+                    className="text-[#F2D08C] border border-[#ffffff]/50 rounded-md px-2"
+                    key={i}
+                  >
+                    {t}
+                  </li>
                 ))}
               </ul>
             </div>
           )}
 
           {strengths.length > 0 && (
-            <div>
+            <div className="mb-2">
               <h2
                 style={{ fontFamily: "var(--font-gotham)" }}
                 className="text-[#F2D08C] font-[300] text-[13px] my-2"

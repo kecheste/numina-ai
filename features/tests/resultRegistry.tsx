@@ -11,6 +11,8 @@ import {
   StarseedOriginResultView,
   EnergyArchetypeResult,
   HumanDesignResult,
+  BigFiveResult,
+  CoreValuesResult,
 } from "@/components/test/result-view/actualTest";
 
 export type ResultComponentProps = {
@@ -50,8 +52,10 @@ export const resultRegistry: Record<
   ),
   3: (props) => (
     <StarseedOriginResultView
-      testTitle={props.testTitle}
-      onBack={props.onBack}
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
     />
   ),
   13: (props) => (
@@ -95,6 +99,22 @@ export const resultRegistry: Record<
     <HumanDesignResult
       {...props}
       onClose={props.onBack}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  9: (props) => (
+    <BigFiveResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  10: (props) => (
+    <CoreValuesResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),

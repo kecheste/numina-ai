@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import {
   clearStoredToken,
   setStoredToken,
@@ -38,6 +39,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [token, setTokenState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const refreshUser = useCallback(async () => {
     const t = getStoredToken();
@@ -146,6 +149,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setTokenState(null);
     setUser(null);
   }, []);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const publicPathnames = [
+      "/login",
+      "/welcome",
+      "/register",
+      "/forgot-password",
+      "/reset-password",
+      "/about",
+    ];
+
+    const isPublicPage = publicPathnames.some((path) => pathname === path);
+    const isAuthenticated = !!token && !!user;
+
+    if (!isAuthenticated && !isPublicPage) {
+      router.push("/login");
+    }
+  }, [isLoading, token, user, pathname, router]);
 
   const value: AuthContextValue = {
     user,

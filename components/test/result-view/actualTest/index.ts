@@ -8,3 +8,5 @@ export { StarseedOriginResultView } from "./starseed-origin-result";
 export { MindMirrorResult } from "./mind-mirror-result";
 export { EnergyArchetypeResult } from "./energy-archetype-result";
 export { HumanDesignResult } from "./human-design-result";
+export { BigFiveResult } from "./big-five-result";
+export { CoreValuesResult } from "./core-values-result";

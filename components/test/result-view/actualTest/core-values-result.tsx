@@ -5,19 +5,19 @@ import AppBar from "@/components/navigation/appBar";
 import { type TestResultResponse } from "@/lib/api-client";
 import { Progress } from "@/components/ui/progress";
 
-interface StarseedOriginResultProps {
+interface CoreValuesResultProps {
   result: TestResultResponse;
   onClose: () => void;
   onLogout?: () => void;
   shellRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export function StarseedOriginResultView({
+export function CoreValuesResult({
   result,
   onClose,
   onLogout,
   shellRef,
-}: StarseedOriginResultProps) {
+}: CoreValuesResultProps) {
   const data = (result.llm_result_json as any) || {};
   const extracted = (result.extracted_json as any) || {};
   const scores = extracted.scores || {};
@@ -43,7 +43,7 @@ export function StarseedOriginResultView({
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
           <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
-            Your Starseed Origin
+            Your Core Value Sort
           </h1>
           <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-6">
             Your Result
@@ -55,12 +55,12 @@ export function StarseedOriginResultView({
 
           <div className="mb-8 space-y-4">
             <h3 className="text-[#FFFFFF] text-[11px] uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
-              Cosmic Resonance Scores
+              Value Resonance Scores
             </h3>
             {Object.entries(scores).map(([name, score]: [string, any]) => (
               <div key={name} className="space-y-1.5">
                 <div className="flex justify-between text-[11px] uppercase tracking-tighter">
-                  <span className="text-white/70">{name}</span>
+                  <span className="text-white/70 capitalize">{name}</span>
                   <span className="text-[#F2D08C] font-semibold">{score}%</span>
                 </div>
                 <Progress value={score} className="h-1.5 bg-white/10" />
@@ -97,9 +97,7 @@ export function StarseedOriginResultView({
                   {strengths.map((s: string, i: number) => (
                     <li
                       key={i}
-                      style={{
-                        lineHeight: "16px",
-                      }}
+                      style={{ lineHeight: "18px" }}
                       className="text-white/80 text-[11px] leading-tight text-left border rounded-md px-3 border-[#F2D08C]/50"
                     >
                       {s}
@@ -117,9 +115,7 @@ export function StarseedOriginResultView({
                   {challenges.map((c: string, i: number) => (
                     <li
                       key={i}
-                      style={{
-                        lineHeight: "16px",
-                      }}
+                      style={{ lineHeight: "18px" }}
                       className="text-white/80 text-[11px] leading-tight text-left border rounded-md px-3 border-[#F2D08C]/50"
                     >
                       {c}
@@ -130,21 +126,10 @@ export function StarseedOriginResultView({
             )}
           </div>
 
-          {data.spiritualInsight && (
-            <div className="mb-8 bg-[#F28C8C1A] p-5 rounded-2xl border border-[#F28C8C33]">
-              <h2 className="text-[#F28C8C] font-[500] text-[14px] mb-2 uppercase tracking-wide">
-                Spiritual Insight
-              </h2>
-              <p className="text-white/90 text-[13px] leading-relaxed italic">
-                "{data.spiritualInsight}"
-              </p>
-            </div>
-          )}
-
           {data.summary && (
             <div className="mb-8">
               <h2 className="text-[#F2D08C] font-[500] text-[15px] mb-3">
-                Your Starseed Origins
+                Your Core Values Map
               </h2>
               <div className="space-y-4 text-left font-[250]">
                 {data.summary.split("\n\n").map((para: string, i: number) => (

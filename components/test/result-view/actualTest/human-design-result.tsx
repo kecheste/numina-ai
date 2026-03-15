@@ -90,12 +90,20 @@ export function HumanDesignResult({
 
           {traits.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[300] text-[13px] mb-2 uppercase tracking-wider">
+              <h2 className="text-[#FFFFFF] font-[300] text-[13px] mb-2 uppercase tracking-wider">
                 Core Traits
               </h2>
-              <ul className="list-disc ml-5 space-y-1 text-[13px] text-left text-white/80">
+              <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-1">
                 {traits.map((t, i) => (
-                  <li key={i}>{t}</li>
+                  <li
+                    className="border border-[#FFFFFF]/50 text-[#F2D08C] rounded-md px-2"
+                    style={{
+                      lineHeight: "18px",
+                    }}
+                    key={i}
+                  >
+                    {t}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -159,7 +167,7 @@ export function HumanDesignResult({
 
           {tryThis.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-[#F28C8C] font-[500] text-[14px] mb-2">
+              <h2 className="text-[#008049] font-[500] text-[14px] mb-2">
                 Try This
               </h2>
               <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
@@ -172,7 +180,7 @@ export function HumanDesignResult({
 
           {avoidThis.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-white/60 font-[500] text-[14px] mb-2">
+              <h2 className="text-[#F28C8C] font-[500] text-[14px] mb-2">
                 Avoid This
               </h2>
               <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
