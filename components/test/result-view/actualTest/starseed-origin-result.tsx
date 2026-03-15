@@ -93,7 +93,7 @@ export function StarseedOriginResultView({
                 <h3 className="text-[#008049] text-[11px] uppercase tracking-wider mb-2">
                   Strengths
                 </h3>
-                <ul className="space-y-2">
+                <div className="space-y-2 flex flex-wrap">
                   {strengths.map((s: string, i: number) => (
                     <li
                       key={i}
@@ -105,7 +105,7 @@ export function StarseedOriginResultView({
                       {s}
                     </li>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
             {challenges.length > 0 && (
@@ -113,7 +113,7 @@ export function StarseedOriginResultView({
                 <h3 className="text-[#F28C8C] text-[11px] uppercase tracking-wider mb-2">
                   Challenges
                 </h3>
-                <ul className="space-y-2">
+                <div className="space-y-2 flex flex-wrap">
                   {challenges.map((c: string, i: number) => (
                     <li
                       key={i}
@@ -125,7 +125,7 @@ export function StarseedOriginResultView({
                       {c}
                     </li>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
           </div>
