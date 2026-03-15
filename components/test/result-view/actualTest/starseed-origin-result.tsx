@@ -93,9 +93,9 @@ export function StarseedOriginResultView({
                 <h3 className="text-[#008049] text-[11px] uppercase tracking-wider mb-2">
                   Strengths
                 </h3>
-                <div className="space-y-2 flex flex-wrap">
+                <div className="space-y-2 flex flex-wrap gap-1">
                   {strengths.map((s: string, i: number) => (
-                    <li
+                    <p
                       key={i}
                       style={{
                         lineHeight: "16px",
@@ -103,7 +103,7 @@ export function StarseedOriginResultView({
                       className="text-white/80 text-[11px] leading-tight text-left border rounded-md px-3 border-[#F2D08C]/50"
                     >
                       {s}
-                    </li>
+                    </p>
                   ))}
                 </div>
               </div>
@@ -113,9 +113,9 @@ export function StarseedOriginResultView({
                 <h3 className="text-[#F28C8C] text-[11px] uppercase tracking-wider mb-2">
                   Challenges
                 </h3>
-                <div className="space-y-2 flex flex-wrap">
+                <div className="space-y-2 flex flex-wrap gap-1">
                   {challenges.map((c: string, i: number) => (
-                    <li
+                    <p
                       key={i}
                       style={{
                         lineHeight: "16px",
@@ -123,7 +123,7 @@ export function StarseedOriginResultView({
                       className="text-white/80 text-[11px] leading-tight text-left border rounded-md px-3 border-[#F2D08C]/50"
                     >
                       {c}
-                    </li>
+                    </p>
                   ))}
                 </div>
               </div>
