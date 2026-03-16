@@ -5,7 +5,7 @@ export interface BirthData {
   birthDay: string;
   birthTime: string;
   birthPlace: string;
-  /** From Mapbox + geo-tz when user selects a place. */
+  
   birthPlaceLat?: number | null;
   birthPlaceLng?: number | null;
   birthPlaceTimezone?: string | null;

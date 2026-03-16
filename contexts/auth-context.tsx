@@ -159,8 +159,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       "/register",
       "/forgot-password",
       "/reset-password",
-      "/dob",
       "/about",
+      "/dob",
     ];
 
     const isPublicPage = publicPathnames.some((path) => pathname === path);

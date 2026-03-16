@@ -119,7 +119,7 @@ export function HumanDesignResult({
                   <li
                     key={i}
                     style={{ lineHeight: "16px" }}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[18px]"
+                    className="border border-[#F2D08C]/50 rounded-[7px] px-2"
                   >
                     {s}
                   </li>
@@ -138,7 +138,7 @@ export function HumanDesignResult({
                   <li
                     key={i}
                     style={{ lineHeight: "16px" }}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[18px]"
+                    className="border border-[#F2D08C]/50 rounded-[7px] px-2"
                   >
                     {c}
                   </li>
@@ -147,20 +147,42 @@ export function HumanDesignResult({
             </div>
           )}
 
-          {data.summary && (
+          {data.energyBlueprint && (
             <div className="mb-8">
               <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
-                Your Energy Architecture
+                Energy Blueprint
               </h2>
               <div className="space-y-4 text-left">
-                {data.summary.split("\n\n").map((para: string, i: number) => (
-                  <p
-                    key={i}
-                    className="text-white/80 text-[14px] leading-relaxed"
-                  >
-                    {para}
-                  </p>
-                ))}
+                {data.energyBlueprint
+                  .split("\n\n")
+                  .map((para: string, i: number) => (
+                    <p
+                      key={i}
+                      className="text-white/80 text-[14px] leading-relaxed font-[250]"
+                    >
+                      {para}
+                    </p>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {data.decisionGuidance && (
+            <div className="mb-8">
+              <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
+                Decision Guidance
+              </h2>
+              <div className="space-y-4 text-left">
+                {data.decisionGuidance
+                  .split("\n\n")
+                  .map((para: string, i: number) => (
+                    <p
+                      key={i}
+                      className="text-white/80 text-[14px] leading-relaxed font-[250]"
+                    >
+                      {para}
+                    </p>
+                  ))}
               </div>
             </div>
           )}

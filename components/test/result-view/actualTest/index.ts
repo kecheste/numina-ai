@@ -10,3 +10,4 @@ export { EnergyArchetypeResult } from "./energy-archetype-result";
 export { HumanDesignResult } from "./human-design-result";
 export { BigFiveResult } from "./big-five-result";
 export { CoreValuesResult } from "./core-values-result";
+export { EmotionalRegulationResult } from "./emotional-regulation-result";

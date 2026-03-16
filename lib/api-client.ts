@@ -516,6 +516,9 @@ export interface TestResultResponse {
     title?: string;
     summary?: string;
     shortDescription?: string;
+    overview?: string;
+    energyBlueprint?: string;
+    decisionGuidance?: string;
     coreTraits?: string[];
     strengths?: string[];
     challenges?: string[];

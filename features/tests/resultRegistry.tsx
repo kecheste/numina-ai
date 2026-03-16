@@ -13,6 +13,7 @@ import {
   HumanDesignResult,
   BigFiveResult,
   CoreValuesResult,
+  EmotionalRegulationResult,
 } from "@/components/test/result-view/actualTest";
 
 export type ResultComponentProps = {
@@ -112,6 +113,14 @@ export const resultRegistry: Record<
   ),
   10: (props) => (
     <CoreValuesResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  15: (props) => (
+    <EmotionalRegulationResult
       {...props}
       onClose={props.onBack}
       shellRef={props.shellRef}
