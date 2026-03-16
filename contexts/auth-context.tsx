@@ -159,6 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       "/register",
       "/forgot-password",
       "/reset-password",
+      "/dob",
       "/about",
     ];
 
