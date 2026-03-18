@@ -45,26 +45,49 @@ export function HumanDesignResult({
           <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
             Your Human Design
           </h1>
-          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-4">
-            Your Result
+          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-6">
+            Your Energetic Blueprint
           </h2>
 
-          {data.shortDescription && (
-            <p className="text-white/80 text-[13px] mb-6 font-[250]">
-              {data.shortDescription}
-            </p>
+          <div className="mb-8 grid grid-cols-2 gap-3">
+            <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col items-center text-center">
+              <span className="text-[10px] text-white/40 uppercase mb-1">Type</span>
+              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">{extracted.type}</span>
+            </div>
+            <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col items-center text-center">
+              <span className="text-[10px] text-white/40 uppercase mb-1">Strategy</span>
+              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">{extracted.strategy}</span>
+            </div>
+            <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col items-center text-center">
+              <span className="text-[10px] text-white/40 uppercase mb-1">Authority</span>
+              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">{extracted.authority}</span>
+            </div>
+            <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col items-center text-center">
+              <span className="text-[10px] text-white/40 uppercase mb-1">Profile</span>
+              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">{extracted.profile}</span>
+            </div>
+          </div>
+
+          {data.summary && (
+            <div className="mb-8 space-y-4">
+              {data.summary.split("\n\n").map((para: string, i: number) => (
+                <p key={i} className="text-white/80 text-[14px] leading-relaxed font-[250]">
+                  {para}
+                </p>
+              ))}
+            </div>
           )}
 
           <div className="mb-8 grid grid-cols-2 gap-4">
             <div className="bg-white/5 p-4 rounded-xl border border-white/10">
               <h3 className="text-[#F2D08C] text-[11px] uppercase tracking-wider mb-2">
-                Personality
+                Personality (Conscious)
               </h3>
               <div className="grid grid-cols-4 gap-2">
                 {Object.entries(personalityGates).map(([planet, gate]) => (
                   <div
                     key={planet}
-                    className="text-[10px] text-white/60 bg-white/10 py-1 text-center"
+                    className="text-[10px] text-white/70 bg-white/10 py-1 text-center rounded-sm"
                   >
                     {gate as any}
                   </div>
@@ -73,13 +96,13 @@ export function HumanDesignResult({
             </div>
             <div className="bg-white/5 p-4 rounded-xl border border-white/10">
               <h3 className="text-[#F28C8C] text-[11px] uppercase tracking-wider mb-2">
-                Design
+                Design (Unconscious)
               </h3>
               <div className="grid grid-cols-4 gap-2">
                 {Object.entries(designGates).map(([planet, gate]) => (
                   <span
                     key={planet}
-                    className="text-[10px] text-white/60 bg-white/10 py-1 text-center"
+                    className="text-[10px] text-white/70 bg-white/10 py-1 text-center rounded-sm"
                   >
                     {gate as any}
                   </span>
@@ -87,6 +110,17 @@ export function HumanDesignResult({
               </div>
             </div>
           </div>
+
+          {data.consciousVsUnconscious && (
+            <div className="mb-8 bg-white/5 p-5 rounded-xl border border-white/10 border-l-2 border-l-[#F2D08C]">
+              <h3 className="text-[#F2D08C] text-[13px] font-semibold mb-2 uppercase tracking-wide">
+                Conscious vs Unconscious
+              </h3>
+              <p className="text-white/80 text-[14px] leading-relaxed italic font-[300]">
+                {data.consciousVsUnconscious}
+              </p>
+            </div>
+          )}
 
           {traits.length > 0 && (
             <div className="mb-6">
@@ -96,7 +130,7 @@ export function HumanDesignResult({
               <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-1">
                 {traits.map((t, i) => (
                   <li
-                    className="border border-[#FFFFFF]/50 text-[#F2D08C] rounded-md px-2"
+                    className="border border-[#FFFFFF]/30 text-white/90 rounded-md px-2 py-0.5 bg-white/5"
                     style={{
                       lineHeight: "18px",
                     }}
@@ -119,7 +153,7 @@ export function HumanDesignResult({
                   <li
                     key={i}
                     style={{ lineHeight: "16px" }}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2"
+                    className="border border-[#F2D08C]/40 rounded-[7px] px-2 py-1 bg-[#F2D08C]/5 text-[#F2D08C]"
                   >
                     {s}
                   </li>
@@ -130,7 +164,7 @@ export function HumanDesignResult({
 
           {challenges.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[300] text-[13px] mb-2 uppercase tracking-wider">
+              <h2 className="text-[#F28C8C] font-[300] text-[13px] mb-2 uppercase tracking-wider">
                 Challenges
               </h2>
               <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-2">
@@ -138,7 +172,7 @@ export function HumanDesignResult({
                   <li
                     key={i}
                     style={{ lineHeight: "16px" }}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2"
+                    className="border border-[#F28C8C]/40 rounded-[7px] px-2 py-1 bg-[#F28C8C]/5 text-[#F28C8C]"
                   >
                     {c}
                   </li>
@@ -168,8 +202,8 @@ export function HumanDesignResult({
           )}
 
           {data.decisionGuidance && (
-            <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
+            <div className="mb-8 bg-[#F2D08C]/5 p-5 rounded-xl border border-[#F2D08C]/20">
+              <h2 className="text-[#F2D08C] font-semibold mb-3 text-[15px]">
                 Decision Guidance
               </h2>
               <div className="space-y-4 text-left">
@@ -178,7 +212,7 @@ export function HumanDesignResult({
                   .map((para: string, i: number) => (
                     <p
                       key={i}
-                      className="text-white/80 text-[14px] leading-relaxed font-[250]"
+                      className="text-[#F2D08C]/90 text-[14px] leading-relaxed font-[300]"
                     >
                       {para}
                     </p>

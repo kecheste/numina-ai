@@ -564,6 +564,7 @@ export interface TestResultResponse {
     secondary_archetype?: string;
     balance_score?: number;
     scores?: Record<string, number>;
+    consciousVsUnconscious?: string;
   } | null;
 }
 
