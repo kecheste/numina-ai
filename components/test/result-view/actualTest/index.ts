@@ -11,3 +11,8 @@ export { HumanDesignResult } from "./human-design-result";
 export { BigFiveResult } from "./big-five-result";
 export { CoreValuesResult } from "./core-values-result";
 export { EmotionalRegulationResult } from "./emotional-regulation-result";
+export { InnerChildResult } from "./inner-child-result";
+export { KarmicLessonsResult } from "./karmic-lessons-result";
+export { PastLifeVibesResult } from "./past-life-vibes-result";
+export { SomaticConnectionResult } from "./somatic-connection-result";
+export { StressBalanceResult } from "./stress-balance-result";

@@ -14,6 +14,11 @@ import {
   BigFiveResult,
   CoreValuesResult,
   EmotionalRegulationResult,
+  InnerChildResult,
+  KarmicLessonsResult,
+  PastLifeVibesResult,
+  SomaticConnectionResult,
+  StressBalanceResult,
 } from "@/components/test/result-view/actualTest";
 
 export type ResultComponentProps = {
@@ -121,6 +126,46 @@ export const resultRegistry: Record<
   ),
   15: (props) => (
     <EmotionalRegulationResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  16: (props) => (
+    <StressBalanceResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  17: (props) => (
+    <SomaticConnectionResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  21: (props) => (
+    <PastLifeVibesResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  22: (props) => (
+    <KarmicLessonsResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  23: (props) => (
+    <InnerChildResult
       {...props}
       onClose={props.onBack}
       shellRef={props.shellRef}
