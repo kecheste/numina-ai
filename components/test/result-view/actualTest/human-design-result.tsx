@@ -19,8 +19,14 @@ export function HumanDesignResult({
 }: HumanDesignResultProps) {
   const data = result.llm_result_json || {};
   const extracted = (result.extracted_json as any) || {};
-  const personalityGates = extracted.personality_gates || {};
-  const designGates = extracted.design_gates || {};
+  const personalityTraits: string[] = Array.isArray(
+    extracted.personality_traits,
+  )
+    ? extracted.personality_traits
+    : [];
+  const designTraits: string[] = Array.isArray(extracted.design_traits)
+    ? extracted.design_traits
+    : [];
 
   const traits = Array.isArray(data.coreTraits) ? data.coreTraits : [];
   const strengths = Array.isArray(data.strengths) ? data.strengths : [];
@@ -46,73 +52,98 @@ export function HumanDesignResult({
             Your Human Design
           </h1>
           <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-6">
-            Your Energetic Blueprint
+            Your Result
           </h2>
 
           <div className="mb-8 grid grid-cols-2 gap-3">
             <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col items-center text-center">
-              <span className="text-[10px] text-white/40 uppercase mb-1">Type</span>
-              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">{extracted.type}</span>
+              <span className="text-[10px] text-white/40 uppercase mb-1">
+                Type
+              </span>
+              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">
+                {extracted.type}
+              </span>
             </div>
             <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col items-center text-center">
-              <span className="text-[10px] text-white/40 uppercase mb-1">Strategy</span>
-              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">{extracted.strategy}</span>
+              <span className="text-[10px] text-white/40 uppercase mb-1">
+                Strategy
+              </span>
+              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">
+                {extracted.strategy}
+              </span>
             </div>
             <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col items-center text-center">
-              <span className="text-[10px] text-white/40 uppercase mb-1">Authority</span>
-              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">{extracted.authority}</span>
+              <span className="text-[10px] text-white/40 uppercase mb-1">
+                Authority
+              </span>
+              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">
+                {extracted.authority}
+              </span>
             </div>
             <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col items-center text-center">
-              <span className="text-[10px] text-white/40 uppercase mb-1">Profile</span>
-              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">{extracted.profile}</span>
+              <span className="text-[10px] text-white/40 uppercase mb-1">
+                Profile
+              </span>
+              <span className="text-[13px] text-[#F2D08C] font-medium leading-tight">
+                {extracted.profile}
+              </span>
             </div>
           </div>
 
           {data.summary && (
             <div className="mb-8 space-y-4">
               {data.summary.split("\n\n").map((para: string, i: number) => (
-                <p key={i} className="text-white/80 text-[14px] leading-relaxed font-[250]">
+                <p
+                  key={i}
+                  className="text-white/80 text-[14px] leading-relaxed font-[250]"
+                >
                   {para}
                 </p>
               ))}
             </div>
           )}
 
-          <div className="mb-8 grid grid-cols-2 gap-4">
-            <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-              <h3 className="text-[#F2D08C] text-[11px] uppercase tracking-wider mb-2">
-                Personality (Conscious)
-              </h3>
-              <div className="grid grid-cols-4 gap-2">
-                {Object.entries(personalityGates).map(([planet, gate]) => (
-                  <div
-                    key={planet}
-                    className="text-[10px] text-white/70 bg-white/10 py-1 text-center rounded-sm"
-                  >
-                    {gate as any}
+          {(personalityTraits.length > 0 || designTraits.length > 0) && (
+            <div className="mb-8 grid grid-cols-1 gap-4">
+              {personalityTraits.length > 0 && (
+                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+                  <h3 className="text-[#F2D08C] text-[11px] uppercase tracking-wider mb-3">
+                    Personality (Conscious)
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {personalityTraits.map((trait, i) => (
+                      <span
+                        key={i}
+                        className="text-[11px] text-[#F2D08C]/90 bg-[#F2D08C]/10 border border-[#F2D08C]/20 px-2 py-1 rounded-md leading-snug"
+                      >
+                        {trait}
+                      </span>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
+              {designTraits.length > 0 && (
+                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+                  <h3 className="text-[#F28C8C] text-[11px] uppercase tracking-wider mb-3">
+                    Design (Unconscious)
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {designTraits.map((trait, i) => (
+                      <span
+                        key={i}
+                        className="text-[11px] text-[#F28C8C]/90 bg-[#F28C8C]/10 border border-[#F28C8C]/20 px-2 py-1 rounded-md leading-snug"
+                      >
+                        {trait}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-              <h3 className="text-[#F28C8C] text-[11px] uppercase tracking-wider mb-2">
-                Design (Unconscious)
-              </h3>
-              <div className="grid grid-cols-4 gap-2">
-                {Object.entries(designGates).map(([planet, gate]) => (
-                  <span
-                    key={planet}
-                    className="text-[10px] text-white/70 bg-white/10 py-1 text-center rounded-sm"
-                  >
-                    {gate as any}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
+          )}
 
           {data.consciousVsUnconscious && (
-            <div className="mb-8 bg-white/5 p-5 rounded-xl border border-white/10 border-l-2 border-l-[#F2D08C]">
+            <div className="mb-8 bg-white/5 p-5 rounded-r-xl border border-white/10 border-l-2 border-l-[#F2D08C]">
               <h3 className="text-[#F2D08C] text-[13px] font-semibold mb-2 uppercase tracking-wide">
                 Conscious vs Unconscious
               </h3>
