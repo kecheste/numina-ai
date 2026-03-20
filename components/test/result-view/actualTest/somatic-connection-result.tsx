@@ -160,7 +160,7 @@ export function SomaticConnectionResult({
           {data.energyBlueprint && (
             <div className="mb-8">
               <h2 className="text-[#8CF2BC] font-semibold mb-3 mt-4 text-[15px]">
-                Body Wisdom Blueprint
+                Your Body Awareness
               </h2>
               <div className="space-y-4 text-left border-l border-white/10 pl-4">
                 {data.energyBlueprint

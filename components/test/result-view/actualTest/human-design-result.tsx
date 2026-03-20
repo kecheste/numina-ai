@@ -30,8 +30,10 @@ export function HumanDesignResult({
 
   const designTraits: string[] = Array.from(
     new Set(
-      (Array.isArray(extracted.design_traits) ? extracted.design_traits : [])
-        .map((t: string) => t.charAt(0).toUpperCase() + t.slice(1)),
+      (Array.isArray(extracted.design_traits)
+        ? extracted.design_traits
+        : []
+      ).map((t: string) => t.charAt(0).toUpperCase() + t.slice(1)),
     ),
   );
 
@@ -222,7 +224,7 @@ export function HumanDesignResult({
           {data.energyBlueprint && (
             <div className="mb-8">
               <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
-                Energy Blueprint
+                Your Energy Architecture
               </h2>
               <div className="space-y-4 text-left">
                 {data.energyBlueprint

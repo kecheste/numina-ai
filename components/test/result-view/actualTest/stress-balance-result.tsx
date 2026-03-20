@@ -30,7 +30,11 @@ export function StressBalanceResult({
   const dimensions = [
     { key: "early_regulator", label: "Early Regulator", color: "#8CF2BC" },
     { key: "pressure_builder", label: "Pressure Builder", color: "#F2BC8C" },
-    { key: "emotional_releaser", label: "Emotional Releaser", color: "#BA8CF2" },
+    {
+      key: "emotional_releaser",
+      label: "Emotional Releaser",
+      color: "#BA8CF2",
+    },
     { key: "shutdown", label: "Shutdown Responder", color: "#F28C8C" },
   ];
 
@@ -104,7 +108,7 @@ export function StressBalanceResult({
           {data.overview && (
             <div className="mb-8">
               <h2 className="text-[#8CCBF2] font-semibold mb-3 mt-4 text-[15px]">
-                Stress Blueprint
+                Your Stress Balance
               </h2>
               <div className="space-y-4 text-left">
                 {data.overview.split("\n\n").map((para: string, i: number) => (

@@ -181,7 +181,7 @@ export function PastLifeVibesResult({
           {data.energyBlueprint && (
             <div className="mb-8">
               <h2 className="text-[#8CCBF2] font-semibold mb-3 mt-4 text-[15px]">
-                Soul Blueprint
+                Your Past Life Echoes
               </h2>
               <div className="space-y-4 text-left border-l border-white/10 pl-4">
                 {data.energyBlueprint
