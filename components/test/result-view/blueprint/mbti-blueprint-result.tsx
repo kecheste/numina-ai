@@ -48,81 +48,87 @@ export function MbtiBlueprintResult({
     : DEFAULT_TRAITS;
 
   return (
-    <div className="flex flex-col h-full">
-      <AppBar
-        hideBackButton
-        handleLogout={() => router.push("/welcome")}
-        shellRef={shellRef}
-      />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
+      <div
+        ref={shellRef}
+        style={{ fontFamily: "var(--font-gotham)" }}
+        className="relative pt-2 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center"
+      >
+        <AppBar
+          hideBackButton
+          handleLogout={() => router.push("/welcome")}
+          shellRef={shellRef}
+        />
 
-      <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-6 pb-12">
-        <h1
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "33px",
-          }}
-          className="text-[21px] font-[400] text-white mb-3"
-        >
-          Your Personality Type
-        </h1>
+        <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-6 pb-4 overflow-y-auto">
+          <h1
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "33px",
+            }}
+            className="text-[21px] font-[400] text-white mb-3"
+          >
+            Your Personality Type
+          </h1>
 
-        <div
-          className="border border-[#F2D08C] rounded-[16px] px-4 mb-5 h-[32px]"
-          style={{ fontFamily: "var(--font-gotham)" }}
-        >
-          <span className="text-[#F2D08C] text-[21px] font-[300]">
-            {typeLabel}
-          </span>
+          <div
+            className="border border-[#F2D08C] rounded-[16px] px-4 mb-5 h-[32px]"
+            style={{ fontFamily: "var(--font-gotham)" }}
+          >
+            <span className="text-[#F2D08C] text-[21px] font-[300]">
+              {typeLabel}
+            </span>
+          </div>
+
+          <div className="mb-5">
+            <InfjIcon />
+          </div>
+
+          <p
+            className="text-[13px] font-[300] text-[#FFFFFF] mb-8 px-2"
+            style={{ fontFamily: "var(--font-gotham)", lineHeight: "21px" }}
+          >
+            {resultData?.extracted_json?.shortDescription ||
+              resultData?.narrative?.split("\n").filter(Boolean)[0] ||
+              description}
+          </p>
+
+          <h2
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "33px",
+            }}
+            className="text-[21px] font-[400] text-[#F2D08C] mb-4"
+          >
+            What this says about you
+          </h2>
+
+          <div className="flex flex-wrap gap-2 justify-center mb-6">
+            {displayTraits.slice(0, 4).map((trait, idx) => (
+              <div
+                key={idx}
+                className="border border-[#F2D08C]/50 rounded-[8px] px-3"
+                style={{ fontFamily: "var(--font-gotham)" }}
+              >
+                <span className="text-[12px] font-[300] text-[#F2D08C]">
+                  {trait}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <Button
+            onClick={onClose}
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            className="cursor-pointer mt-[70px] hover:bg-[#F2D08CC0] w-full h-[60px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[18px] transition-colors"
+          >
+            Continue
+          </Button>
         </div>
-
-        <div className="mb-5">
-          <InfjIcon />
-        </div>
-
-        <p
-          className="text-[13px] font-[300] text-[#FFFFFF] mb-8 px-2"
-          style={{ fontFamily: "var(--font-gotham)", lineHeight: "21px" }}
-        >
-          {resultData?.extracted_json?.shortDescription ||
-            resultData?.narrative?.split("\n").filter(Boolean)[0] ||
-            description}
-        </p>
-
-        <h2
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "33px",
-          }}
-          className="text-[21px] font-[400] text-[#F2D08C] mb-4"
-        >
-          What this says about you
-        </h2>
-
-        <div className="flex flex-wrap gap-2 justify-center mb-6">
-          {displayTraits.slice(0, 4).map((trait, idx) => (
-            <div
-              key={idx}
-              className="border border-[#F2D08C]/50 rounded-[8px] px-3"
-              style={{ fontFamily: "var(--font-gotham)" }}
-            >
-              <span className="text-[12px] font-[300] text-[#F2D08C]">
-                {trait}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <Button
-          onClick={onClose}
-          style={{
-            fontFamily: "var(--font-gotham)",
-            fontWeight: 400,
-            lineHeight: "33px",
-          }}
-          className="cursor-pointer mb-auto mt-[70px] hover:bg-[#F2D08CC0] w-full h-[60px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[18px] transition-colors"
-        >
-          Continue
-        </Button>
       </div>
     </div>
   );

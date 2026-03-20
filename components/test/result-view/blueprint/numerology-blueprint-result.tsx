@@ -65,9 +65,10 @@ export function NumerologyBlueprintResult({
   content = undefined,
 }: NumerologyBlueprintResultProps) {
   const router = useRouter();
-  const items = content && Array.isArray(content) && content.length > 0 
-    ? content 
-    : DEFAULT_NUMEROLOGY_DATA || [];
+  const items =
+    content && Array.isArray(content) && content.length > 0
+      ? content
+      : DEFAULT_NUMEROLOGY_DATA || [];
   const isLoading = content === null;
 
   if (isLoading) {
@@ -110,67 +111,65 @@ export function NumerologyBlueprintResult({
           shellRef={shellRef}
         />
 
-        <div className="flex flex-col flex-1 overflow-y-auto pb-4">
-          <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-8">
-            <h1
-              style={{
-                fontFamily: "var(--font-gotham)",
-                lineHeight: "33px",
-              }}
-              className="text-[21px] font-[300] text-[#FFFFFF] mb-8"
-            >
-              Your Numerology Blueprint
-            </h1>
+        <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-8 overflow-y-auto pb-4">
+          <h1
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "33px",
+            }}
+            className="text-[21px] font-[300] text-[#FFFFFF] mb-8"
+          >
+            Your Numerology Blueprint
+          </h1>
 
-            <div className="w-full space-y-6 mb-6">
-              {items?.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="grid grid-cols-6 gap-2 w-full text-left"
-                >
-                  <div className="col-span-1 flex items-center justify-center">
-                    <span
-                      style={{ fontFamily: "var(--font-gotham)" }}
-                      className="text-[58px] font-[400] text-white"
-                    >
-                      {item.number}
-                    </span>
-                  </div>
-                  <div className="col-span-1 flex items-center justify-center">
-                    <span className="text-[#FFFFFF] text-[48px] font-[300]">
-                      →
-                    </span>
-                  </div>
-                  <div className="col-span-4">
-                    <h3
-                      style={{ fontFamily: "var(--font-gotham)" }}
-                      className="text-[15px] font-[400] text-[#FFFFFF] mb-0.5"
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      style={{ fontFamily: "var(--font-gotham)" }}
-                      className="text-[13px] font-[350] text-[#F2D08C]"
-                    >
-                      {oneSentenceMaxChars(item.description)}
-                    </p>
-                  </div>
+          <div className="w-full space-y-6 mb-6">
+            {items?.map((item, idx) => (
+              <div
+                key={idx}
+                className="grid grid-cols-6 gap-2 w-full text-left"
+              >
+                <div className="col-span-1 flex items-center justify-center">
+                  <span
+                    style={{ fontFamily: "var(--font-gotham)" }}
+                    className="text-[58px] font-[400] text-white"
+                  >
+                    {item.number}
+                  </span>
                 </div>
-              ))}
-            </div>
-
-            <Button
-              onClick={onClose}
-              style={{
-                fontFamily: "var(--font-gotham)",
-                fontWeight: 400,
-                lineHeight: "33px",
-              }}
-              className="cursor-pointer mt-[100px] hover:bg-[#F2D08CC0] w-full h-[60px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[18px] transition-colors"
-            >
-              Next Step
-            </Button>
+                <div className="col-span-1 flex items-center justify-center">
+                  <span className="text-[#FFFFFF] text-[48px] font-[300]">
+                    →
+                  </span>
+                </div>
+                <div className="col-span-4">
+                  <h3
+                    style={{ fontFamily: "var(--font-gotham)" }}
+                    className="text-[15px] font-[400] text-[#FFFFFF] mb-0.5"
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{ fontFamily: "var(--font-gotham)" }}
+                    className="text-[13px] font-[350] text-[#F2D08C]"
+                  >
+                    {oneSentenceMaxChars(item.description)}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
+
+          <Button
+            onClick={onClose}
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            className="cursor-pointer mt-auto hover:bg-[#F2D08CC0] w-full h-[60px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[18px] transition-colors"
+          >
+            Next Step
+          </Button>
         </div>
       </div>
     </div>

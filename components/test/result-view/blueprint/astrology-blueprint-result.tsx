@@ -78,125 +78,123 @@ export function AstrologyBlueprintResult({
           handleLogout={() => router.push("/welcome")}
         />
 
-        <div className="flex flex-col flex-1 overflow-y-auto pb-4">
-          <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-6 pb-12 overflow-y-auto">
-            <h1
-              style={{
-                fontFamily: "var(--font-gotham)",
-                lineHeight: "33px",
-              }}
-              className="text-[21px] font-[300] text-[#FFFFFF] mb-2"
-            >
-              Your Astrological Blueprint
-            </h1>
+        <div className="flex flex-col items-center text-center flex-1 px-[32px] pt-6 pb-4 overflow-y-auto">
+          <h1
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "33px",
+            }}
+            className="text-[21px] font-[300] text-[#FFFFFF] mb-2"
+          >
+            Your Astrological Blueprint
+          </h1>
 
-            <p
-              style={{
-                fontFamily: "var(--font-gotham)",
-                lineHeight: "21px",
-              }}
-              className="text-[14px] font-[350] text-[#FFFFFF] mb-8"
-            >
-              The sky at the moment of your birth reveals powerful patterns that
-              shape your life
-            </p>
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "21px",
+            }}
+            className="text-[14px] font-[350] text-[#FFFFFF] mb-8"
+          >
+            The sky at the moment of your birth reveals powerful patterns that
+            shape your life
+          </p>
 
-            <div className="grid grid-cols-5 gap-2 w-full text-left mb-3">
-              <div className="col-span-1">
-                <SunIcon />
-              </div>
-              <div className="col-span-4">
-                <h3
-                  style={{ fontFamily: "var(--font-gotham)" }}
-                  className="text-[15px] font-[350] text-[#FFFFFF] mb-0.5"
-                >
-                  Sun Sign
-                </h3>
-                <p
-                  style={{ fontFamily: "var(--font-gotham)" }}
-                  className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
-                >
-                  {sunDesc}
-                </p>
-              </div>
+          <div className="grid grid-cols-5 gap-2 w-full text-left mb-3">
+            <div className="col-span-1">
+              <SunIcon />
             </div>
-
-            <div className="grid grid-cols-5 gap-2 w-full text-left mb-3">
-              <div className="col-span-1">
-                <MoonIcon />
-              </div>
-              <div className="col-span-4">
-                <h3
-                  style={{ fontFamily: "var(--font-gotham)" }}
-                  className="text-[14px] font-[400] text-white mb-0.5"
-                >
-                  Moon Sign
-                </h3>
-                <p
-                  style={{ fontFamily: "var(--font-gotham)" }}
-                  className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
-                >
-                  {moonDesc}
-                </p>
-              </div>
+            <div className="col-span-4">
+              <h3
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="text-[15px] font-[350] text-[#FFFFFF] mb-0.5"
+              >
+                Sun Sign
+              </h3>
+              <p
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
+              >
+                {sunDesc}
+              </p>
             </div>
-
-            <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
-              <div className="col-span-1">
-                <RisingIcon />
-              </div>
-              <div className="col-span-4">
-                <h3
-                  style={{ fontFamily: "var(--font-gotham)" }}
-                  className="text-[14px] font-[400] text-white mb-0.5"
-                >
-                  Rising Sign
-                </h3>
-                <p
-                  style={{ fontFamily: "var(--font-gotham)" }}
-                  className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
-                >
-                  {risingDesc}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-5 gap-2 w-full text-left mt-2 mb-4">
-              <div className="col-span-1" />
-              <div className="col-span-4">
-                <h3
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                    lineHeight: "33px",
-                  }}
-                  className="text-[21px] font-[400] text-[#F2D08C] mb-2"
-                >
-                  Cosmic Traits Summary:
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                    lineHeight: "21px",
-                  }}
-                  className="text-[13px] font-[350] text-white whitespace-pre-line"
-                >
-                  {cosmicSummary}
-                </p>
-              </div>
-            </div>
-
-            <Button
-              onClick={onClose}
-              style={{
-                fontFamily: "var(--font-gotham)",
-                fontWeight: 400,
-                lineHeight: "33px",
-              }}
-              className="cursor-pointer mt-[10px] hover:bg-[#F2D08CC0] w-full h-[60px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[18px] transition-colors flex-shrink-0"
-            >
-              Next Step
-            </Button>
           </div>
+
+          <div className="grid grid-cols-5 gap-2 w-full text-left mb-3">
+            <div className="col-span-1">
+              <MoonIcon />
+            </div>
+            <div className="col-span-4">
+              <h3
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="text-[14px] font-[400] text-white mb-0.5"
+              >
+                Moon Sign
+              </h3>
+              <p
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
+              >
+                {moonDesc}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
+            <div className="col-span-1">
+              <RisingIcon />
+            </div>
+            <div className="col-span-4">
+              <h3
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="text-[14px] font-[400] text-white mb-0.5"
+              >
+                Rising Sign
+              </h3>
+              <p
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="text-[13px] font-[400] text-[#F2D08C] mb-0.5"
+              >
+                {risingDesc}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-5 gap-2 w-full text-left mt-2 mb-4">
+            <div className="col-span-1" />
+            <div className="col-span-4">
+              <h3
+                style={{
+                  fontFamily: "var(--font-gotham)",
+                  lineHeight: "33px",
+                }}
+                className="text-[21px] font-[400] text-[#F2D08C] mb-2"
+              >
+                Cosmic Traits Summary:
+              </h3>
+              <p
+                style={{
+                  fontFamily: "var(--font-gotham)",
+                  lineHeight: "21px",
+                }}
+                className="text-[13px] font-[350] text-white whitespace-pre-line"
+              >
+                {cosmicSummary}
+              </p>
+            </div>
+          </div>
+
+          <Button
+            onClick={onClose}
+            style={{
+              fontFamily: "var(--font-gotham)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            className="cursor-pointer mt-auto hover:bg-[#F2D08CC0] w-full h-[60px] bg-[#F2D08CE0] text-[#000000] rounded-[10px] font-[400] text-[18px] transition-colors flex-shrink-0"
+          >
+            Next Step
+          </Button>
         </div>
       </div>
     </div>

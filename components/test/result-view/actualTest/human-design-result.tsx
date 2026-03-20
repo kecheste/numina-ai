@@ -56,7 +56,7 @@ export function HumanDesignResult({
           handleLogout={onLogout}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
+        <div className="flex flex-col px-[32px] pt-6 pb-6 flex-1 overflow-y-auto">
           <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
             Your Human Design
           </h1>
