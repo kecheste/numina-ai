@@ -50,15 +50,16 @@ export function ExploreTestOrchestrator({
   const [orchestratorState, setOrchestratorState] =
     useState<FlowState>(initialState);
   const [submittedResultId, setSubmittedResultId] = useState<number | null>(
-    null
+    null,
   );
-  const [fetchedResult, setFetchedResult] =
-    useState<TestResultResponse | null>(null);
+  const [fetchedResult, setFetchedResult] = useState<TestResultResponse | null>(
+    null,
+  );
 
   const { result: polledResult } = useTestResultPolling(
     submittedResultId,
     orchestratorState === "processing",
-    setOrchestratorState
+    setOrchestratorState,
   );
 
   const completedResult = fetchedResult ?? polledResult;
