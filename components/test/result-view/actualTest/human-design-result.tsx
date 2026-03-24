@@ -19,23 +19,27 @@ export function HumanDesignResult({
 }: HumanDesignResultProps) {
   const data = result.llm_result_json || {};
   const extracted = (result.extracted_json as any) || {};
-  const personalityTraits: string[] = Array.from(
-    new Set(
-      (Array.isArray(extracted.personality_traits)
-        ? extracted.personality_traits
-        : []
-      ).map((t: string) => t.charAt(0).toUpperCase() + t.slice(1)),
-    ),
-  );
+  const personalityTraits: string[] = Array.isArray(data.personalityConscious)
+    ? data.personalityConscious
+    : Array.from(
+        new Set(
+          (Array.isArray(extracted.personality_traits)
+            ? extracted.personality_traits
+            : []
+          ).map((t: string) => t.charAt(0).toUpperCase() + t.slice(1)),
+        ),
+      );
 
-  const designTraits: string[] = Array.from(
-    new Set(
-      (Array.isArray(extracted.design_traits)
-        ? extracted.design_traits
-        : []
-      ).map((t: string) => t.charAt(0).toUpperCase() + t.slice(1)),
-    ),
-  );
+  const designTraits: string[] = Array.isArray(data.designUnconscious)
+    ? data.designUnconscious
+    : Array.from(
+        new Set(
+          (Array.isArray(extracted.design_traits)
+            ? extracted.design_traits
+            : []
+          ).map((t: string) => t.charAt(0).toUpperCase() + t.slice(1)),
+        ),
+      );
 
   const traits = Array.isArray(data.coreTraits) ? data.coreTraits : [];
   const strengths = Array.isArray(data.strengths) ? data.strengths : [];

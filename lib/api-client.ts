@@ -525,6 +525,8 @@ export interface TestResultResponse {
     spiritualInsight?: string;
     tryThis?: string[];
     avoidThis?: string[];
+    personalityConscious?: string[];
+    designUnconscious?: string[];
     synchronicities?: {
       test?: string;
       connection?: string;
