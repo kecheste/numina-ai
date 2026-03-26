@@ -20,6 +20,7 @@ import {
   SomaticConnectionResult,
   StressBalanceResult,
   SoulCompassResult,
+  TransitsResult,
 } from "@/components/test/result-view/actualTest";
 
 export type ResultComponentProps = {
@@ -176,6 +177,14 @@ export const resultRegistry: Record<
   24: (props) => (
     <SoulCompassResult
       {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  5: (props) => (
+    <TransitsResult
+      result={props.result}
       onClose={props.onBack}
       shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}

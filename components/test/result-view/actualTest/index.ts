@@ -17,3 +17,4 @@ export { PastLifeVibesResult } from "./past-life-vibes-result";
 export { SomaticConnectionResult } from "./somatic-connection-result";
 export { StressBalanceResult } from "./stress-balance-result";
 export { SoulCompassResult } from "./soul-compass-result";
+export { TransitsResult } from "./transits-result";
