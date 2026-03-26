@@ -516,6 +516,7 @@ export interface TestResultResponse {
     title?: string;
     summary?: string;
     shortDescription?: string;
+    narrative?: string;
     overview?: string;
     energyBlueprint?: string;
     decisionGuidance?: string;
@@ -567,6 +568,11 @@ export interface TestResultResponse {
     balance_score?: number;
     scores?: Record<string, number>;
     consciousVsUnconscious?: string;
+    cognitiveStyle?: string;
+    sunSign?: string;
+    moonSign?: string;
+    risingSign?: string;
+    astrologicalPattern?: string;
   } | null;
 }
 
