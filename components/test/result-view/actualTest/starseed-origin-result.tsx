@@ -49,9 +49,14 @@ export function StarseedOriginResultView({
             Your Result
           </h2>
 
-          <p className="text-white/80 text-[13px] mb-8 font-[250] leading-relaxed">
-            {data.shortDescription}
-          </p>
+          <div className="mb-8">
+            <h3 className="text-[#F2D08C] text-[11px] uppercase tracking-wider mb-2 border-b border-white/10 pb-2">
+              Origin Summary
+            </h3>
+            <p className="text-white/80 text-[13px] font-[250] leading-relaxed italic">
+              {data.originSummary || data.shortDescription}
+            </p>
+          </div>
 
           <div className="mb-8 space-y-4">
             <h3 className="text-[#FFFFFF] text-[11px] uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
@@ -141,13 +146,13 @@ export function StarseedOriginResultView({
             </div>
           )}
 
-          {data.summary && (
+          {(data.cosmicProfile || data.summary) && (
             <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-[500] text-[15px] mb-3">
-                Your Starseed Origins
+              <h2 className="text-[#F2D08C] font-[500] text-[15px] mb-3 uppercase tracking-wide">
+                Cosmic Profile
               </h2>
               <div className="space-y-4 text-left font-[250]">
-                {data.summary.split("\n\n").map((para: string, i: number) => (
+                {(data.cosmicProfile || data.summary).split("\n\n").map((para: string, i: number) => (
                   <p
                     key={i}
                     className="text-white/80 text-[13px] leading-relaxed"

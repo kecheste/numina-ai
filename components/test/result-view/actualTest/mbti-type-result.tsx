@@ -48,7 +48,7 @@ function ChipList({ items, gold }: { items: string[]; gold?: boolean }) {
       {items.map((item, idx) => (
         <span
           key={idx}
-          className="border border-[#F2D08C]/50 rounded-[7px] px-3 py-1"
+          className="border border-[#F2D08C]/50 rounded-[7px] px-3 text-left"
           style={{ fontFamily: "var(--font-gotham)", lineHeight: "18px" }}
         >
           <span
@@ -90,7 +90,7 @@ export function MbtiTypeResult({
   const typeLabel =
     result?.personality_type ?? llm?.title ?? "Personality Type";
 
-  const overview: string = llm?.shortDescription ?? "";
+  const overview: string = llm?.overview ?? "";
 
   const narration: string = llm?.narrative ?? "";
 
@@ -141,7 +141,7 @@ export function MbtiTypeResult({
           {/* Overview */}
           {overview && (
             <>
-              <ParagraphBlock text={narration} />
+              <ParagraphBlock text={overview} />
               <Divider />
             </>
           )}
@@ -213,24 +213,21 @@ export function MbtiTypeResult({
           {tryThis.length > 0 && (
             <>
               <SectionTitle>Try This</SectionTitle>
-              <div className="flex flex-col gap-3">
+              <ul className="flex flex-col gap-1 list-disc pl-4">
                 {tryThis.map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <span className="text-[#F2D08C] text-[13px] mt-[1px] shrink-0">
-                      {idx + 1}.
-                    </span>
+                  <li key={idx}>
                     <p
                       style={{
                         fontFamily: "var(--font-gotham)",
-                        lineHeight: "20px",
+                        lineHeight: "18px",
                       }}
-                      className="text-[13px] font-[300] text-white"
+                      className="text-[13px] font-[300] text-white text-left"
                     >
                       {item}
                     </p>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
               <Divider />
             </>
           )}
@@ -239,24 +236,21 @@ export function MbtiTypeResult({
           {avoidThis.length > 0 && (
             <>
               <SectionTitle>Avoid This</SectionTitle>
-              <div className="flex flex-col gap-3">
+              <ul className="flex flex-col gap-1 list-disc pl-4">
                 {avoidThis.map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <span className="text-white/40 text-[13px] mt-[1px] shrink-0">
-                      —
-                    </span>
+                  <li key={idx}>
                     <p
                       style={{
                         fontFamily: "var(--font-gotham)",
                         lineHeight: "20px",
                       }}
-                      className="text-[13px] font-[300] text-white/80"
+                      className="text-[13px] font-[300] text-white text-left"
                     >
                       {item}
                     </p>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </>
           )}
         </div>

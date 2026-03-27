@@ -573,6 +573,11 @@ export interface TestResultResponse {
     moonSign?: string;
     risingSign?: string;
     astrologicalPattern?: string;
+    corePattern?: string;
+    originSummary?: string;
+    cosmicProfile?: string;
+    phaseDescription?: string;
+    currentPatterns?: string[];
   } | null;
 }
 

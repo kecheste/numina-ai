@@ -57,14 +57,6 @@ function NumberSection({
 }) {
   if (!text) return null;
 
-  const newlineIdx = text.indexOf("\n");
-  const restRaw = newlineIdx > -1 ? text.slice(newlineIdx + 1).trim() : "";
-
-  const rest = restRaw
-    .split(/(?<=[.!?])\s+/)
-    .slice(0, 1)
-    .join(" ");
-
   return (
     <div className="grid grid-cols-6 gap-2 w-full text-left">
       <div className="col-span-1 flex items-center justify-center">
@@ -92,7 +84,7 @@ function NumberSection({
           style={{ fontFamily: "var(--font-gotham)" }}
           className="text-[13px] font-[300] text-[#F2D08C]"
         >
-          {rest}
+          {text}
         </p>
       </div>
     </div>
@@ -125,7 +117,10 @@ export function NumerologyResultView({
     ? content?.llm_result_json?.challenges
     : null;
   const spiritualInsight = content?.llm_result_json?.spiritualInsight;
-  const blueprint = content?.llm_result_json?.summary || content?.narrative;
+  const blueprint =
+    content?.llm_result_json?.corePattern ||
+    content?.llm_result_json?.summary ||
+    content?.narrative;
   const tryThis = content?.llm_result_json?.tryThis;
   const avoidThis = content?.llm_result_json?.avoidThis;
 
@@ -148,28 +143,15 @@ export function NumerologyResultView({
         />
 
         <div className="flex flex-col px-[32px] pt-6 pb-16 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[300] text-[#FFFFFF] mb-1 text-center">
+          <h1 className="text-[21px] font-[300] text-[#FFFFFF] mb-1 text-center tracking-widest">
             Your Numerology
           </h1>
-          <p className="text-[12px] font-[300] text-[#F2D08C] mt-1 mb-4 text-center">
+          <p className="text-[12px] font-[300] text-[#F2D08C] mt-1 mb-8 text-center tracking-[0.2em]">
             Your Result
           </p>
 
-          {coreTraits && coreTraits.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-2 mb-10">
-              {coreTraits.map((trait) => (
-                <span
-                  key={trait}
-                  className="border border-[#F2D08C]/50 rounded-[20px] px-3 py-0.5 text-[11px] font-[350] text-[#F2D08C]"
-                >
-                  {trait}
-                </span>
-              ))}
-            </div>
-          )}
-
           {hasNumberSections && (
-            <div className="mb-6 gap-6 flex flex-col">
+            <div className="mb-10 gap-8 flex flex-col">
               <NumberSection
                 text={lifePath}
                 number={lpValue}
@@ -195,18 +177,33 @@ export function NumerologyResultView({
 
           {blueprint && (
             <div className="mb-10">
-              <h3
-                className="text-[16px] font-[400] text-[#F2D08C] mb-3"
-                style={{ lineHeight: "24px" }}
-              >
-                Your Numerology Profile
-              </h3>
               <Paragraphs
                 text={blueprint}
-                className="text-[13px] font-[300] text-white/85"
+                className="text-[13px] font-[300] text-white/85 leading-relaxed text-center"
               />
             </div>
           )}
+
+          <div>
+            <h3
+              className="text-[16px] font-[400] text-[#FFFFFF] mb-4"
+              style={{ lineHeight: "24px" }}
+            >
+              Core Traits
+            </h3>
+            {coreTraits && coreTraits.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-2 mb-10">
+                {coreTraits.map((trait) => (
+                  <span
+                    key={trait}
+                    className="border border-[#F2D08C]/50 rounded-[20px] px-3 py-1 text-[11px] font-[350] text-[#F2D08C]"
+                  >
+                    {trait}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
 
           {hasStrengthsChallenges && (
             <div className="mb-10">

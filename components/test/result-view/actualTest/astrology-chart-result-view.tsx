@@ -81,7 +81,7 @@ export function AstrologyChartResultView({
           {traits.length > 0 && (
             <>
               <h2 className="text-[16px] font-[400] text-[#FFFFFF] text-left mb-2">
-                Core Traits:
+                Cosmic Summary:
               </h2>
               <div className="flex flex-wrap gap-2 mb-8">
                 {traits.map((trait: string) => (
@@ -97,39 +97,39 @@ export function AstrologyChartResultView({
           )}
 
           <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
-            <div className="col-span-1">
-              <SunIcon />
-            </div>
+              <div className="col-span-1">
+                <SunIcon />
+              </div>
             <div className="col-span-4">
               <h3 className="text-[15px] font-[350] text-white mb-0.5">
-                Sun Sign {sunSign ? `— ${sunSign}` : ""}
-              </h3>
+                  Sun Sign {sunSign ? `— ${sunSign}` : ""}
+                </h3>
               <p className="text-[13px] font-[400] text-[#F2D08C]">{sunDesc}</p>
+              </div>
             </div>
-          </div>
 
           <div className="grid grid-cols-5 gap-2 w-full text-left mb-4">
-            <div className="col-span-1">
-              <MoonIcon />
-            </div>
+              <div className="col-span-1">
+                <MoonIcon />
+              </div>
             <div className="col-span-4">
               <h3 className="text-[15px] font-[350] text-white mb-0.5">
-                Moon Sign {moonSign ? `— ${moonSign}` : ""}
-              </h3>
+                  Moon Sign {moonSign ? `— ${moonSign}` : ""}
+                </h3>
               <p className="text-[13px] font-[400] text-[#F2D08C]">
                 {moonDesc}
               </p>
+              </div>
             </div>
-          </div>
 
           <div className="grid grid-cols-5 gap-2 w-full text-left mb-6">
-            <div className="col-span-1">
-              <RisingIcon />
-            </div>
+              <div className="col-span-1">
+                <RisingIcon />
+              </div>
             <div className="col-span-4">
               <h3 className="text-[15px] font-[350] text-white mb-0.5">
-                Rising Sign {risingSign ? `— ${risingSign}` : ""}
-              </h3>
+                  Rising Sign {risingSign ? `— ${risingSign}` : ""}
+                </h3>
               <p className="text-[13px] font-[400] text-[#F2D08C]">
                 {risingDesc}
               </p>
@@ -157,22 +157,6 @@ export function AstrologyChartResultView({
             </>
           )}
 
-          {cosmicSummary && (
-            <>
-              <h3
-                className="text-[18px] font-[400] text-[#F2D08C] mb-2"
-                style={{ lineHeight: "33px" }}
-              >
-                Cosmic Traits Summary
-              </h3>
-              <p
-                className="text-[13px] text-left font-[350] text-white/90 mb-6 whitespace-pre-line"
-                style={{ lineHeight: "20px" }}
-              >
-                {cosmicSummary}
-              </p>
-            </>
-          )}
 
           {narrative && (
             <>
