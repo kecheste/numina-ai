@@ -21,6 +21,7 @@ import {
   StressBalanceResult,
   SoulCompassResult,
   TransitsResult,
+  ZodiacElementModalityResultView,
 } from "@/components/test/result-view/actualTest";
 
 export type ResultComponentProps = {
@@ -184,6 +185,14 @@ export const resultRegistry: Record<
   ),
   5: (props) => (
     <TransitsResult
+      result={props.result}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  6: (props) => (
+    <ZodiacElementModalityResultView
       result={props.result}
       onClose={props.onBack}
       shellRef={props.shellRef}

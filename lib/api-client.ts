@@ -514,6 +514,7 @@ export interface TestResultResponse {
   extracted_json?: any | null;
   llm_result_json?: {
     title?: string;
+    energyProfile?: string;
     summary?: string;
     shortDescription?: string;
     narrative?: string;
