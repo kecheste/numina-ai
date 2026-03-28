@@ -48,7 +48,7 @@ export function BigFiveResult({
           shellRef={shellRef}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
+        <div className="flex flex-col px-[32px] pt-6 pb-4 flex-1 overflow-y-auto">
           <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
             Your Big Five Personality
           </h1>
@@ -56,12 +56,18 @@ export function BigFiveResult({
             Your Result
           </h2>
 
-          <p className="text-white/80 text-[13px] mb-8 font-[250] leading-relaxed">
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "22px",
+            }}
+            className="text-[14px] font-[300] text-white/60 max-w-[380px] mx-auto italic mb-8"
+          >
             {data.shortDescription}
           </p>
 
           <div className="mb-8 space-y-4">
-            <h3 className="text-[#FFFFFF] text-[11px] uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
+            <h3 className="text-[#FFFFFF] text-[11px] uppercase tracking-wider mb-2 border-b border-white/10 pb-2">
               Dimension Profile
             </h3>
             {dimensions.map((dim) => (
@@ -134,14 +140,11 @@ export function BigFiveResult({
           {data.summary && (
             <div className="mb-8">
               <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
-                Your Psychological Blueprint
+                Your Psychological Signature
               </h2>
               <div className="space-y-4 text-left">
                 {data.summary.split("\n\n").map((para: string, i: number) => (
-                  <p
-                    key={i}
-                    className="text-white/80 text-[13px] leading-relaxed"
-                  >
+                  <p key={i} className="text-white/80 text-[13px] text-justify">
                     {para}
                   </p>
                 ))}

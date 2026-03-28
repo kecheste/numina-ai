@@ -11,21 +11,53 @@ interface SoulCompassResultProps {
   onLogout: () => void;
 }
 
+const DIMENSION_CONFIG = {
+  mind: { label: "Mind", sublabel: "Clarity", color: "#A78BFA" },
+  heart: { label: "Heart", sublabel: "Emotion", color: "#F472B6" },
+  body: { label: "Body", sublabel: "Grounding", color: "#34D399" },
+  soul: { label: "Soul", sublabel: "Purpose", color: "#FBBF24" },
+} as const;
+
+const STATE_COLORS: Record<string, string> = {
+  Aligned: "#34D399",
+  "Partial Alignment": "#FBBF24",
+  Misaligned: "#F28C8C",
+};
+
+function parseParas(val: unknown): string[] {
+  if (typeof val === "string") return val.split("\n\n").filter(Boolean);
+  if (Array.isArray(val)) return val.map(String).filter(Boolean);
+  return [];
+}
+
 export function SoulCompassResult({
   result,
-  onLogout,
   onClose,
   shellRef,
+  onLogout,
 }: SoulCompassResultProps) {
-  const data = result.llm_result_json || {};
-  const extracted = result.extracted_json || {};
-  const analysis = data.alignmentAnalysis || {};
-  const reflection = Array.isArray(data.suggestedReflection) ? data.suggestedReflection : [];
+  const data = (result.llm_result_json as Record<string, any>) || {};
+  const extracted = (result.extracted_json as Record<string, any>) || {};
 
-  const mindVal = extracted.mind ?? 0;
-  const heartVal = extracted.heart ?? 0;
-  const bodyVal = extracted.body ?? 0;
-  const soulVal = extracted.soul ?? 0;
+  const analysis =
+    typeof data.alignmentAnalysis === "object" && !Array.isArray(data.alignmentAnalysis)
+      ? (data.alignmentAnalysis as Record<string, string>)
+      : {};
+  const reflection = Array.isArray(data.suggestedReflection)
+    ? data.suggestedReflection
+    : [];
+  const decisionParas = parseParas(data.decisionInsight);
+
+  const alignmentState: string = extracted.alignment_state ?? "";
+  const alignmentScore: number = extracted.alignment_score ?? 0;
+  const stateColor = STATE_COLORS[alignmentState] ?? "#A8C8F2";
+
+  const dims: Array<{ key: keyof typeof DIMENSION_CONFIG; value: number }> = [
+    { key: "mind", value: extracted.mind ?? 0 },
+    { key: "heart", value: extracted.heart ?? 0 },
+    { key: "body", value: extracted.body ?? 0 },
+    { key: "soul", value: extracted.soul ?? 0 },
+  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
@@ -34,102 +66,157 @@ export function SoulCompassResult({
         style={{ fontFamily: "var(--font-gotham)" }}
         className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
       >
-        <AppBar
-          handleBack={onClose}
-          shellRef={shellRef}
-          handleLogout={onLogout}
-        />
+        <AppBar handleBack={onClose} shellRef={shellRef} handleLogout={onLogout} />
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
-            {data.title || "Your Soul Compass"}
-          </h1>
-          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-2">
-            Alignment Check Result
+          {/* Header */}
+          <h1 className="text-[21px] font-[500] text-white mb-1">Soul Compass</h1>
+          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-4">
+            Alignment Check
           </h2>
-          {extracted.decision && (
-            <p className="text-white/60 text-[11px] font-[300] italic mb-6 border-l border-[#F2D08C]/30 pl-3">
-              "{extracted.decision}"
-            </p>
+
+          {/* Decision context */}
+          {extracted.decision && extracted.decision !== "Not specified" && (
+            <div className="mb-6 border-l-2 border-[#F2D08C]/40 pl-3">
+              <p className="text-white/50 text-[10px] uppercase tracking-widest mb-1">
+                Decision
+              </p>
+              <p className="text-white/80 text-[13px] italic">
+                {extracted.decision}
+              </p>
+            </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <ValueCard label="Mind" value={mindVal} color="#A78BFA" />
-            <ValueCard label="Heart" value={heartVal} color="#F472B6" />
-            <ValueCard label="Body" value={bodyVal} color="#34D399" />
-            <ValueCard label="Soul" value={soulVal} color="#FBBF24" />
+          {/* Alignment Score badge */}
+          <div
+            className="mb-8 p-4 rounded-2xl border flex items-center gap-4"
+            style={{ borderColor: stateColor + "44", background: stateColor + "11" }}
+          >
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0"
+              style={{ background: stateColor + "22", color: stateColor }}
+            >
+              {alignmentScore}
+            </div>
+            <div>
+              <p className="text-white/50 text-[10px] uppercase tracking-widest mb-0.5">
+                Alignment Score
+              </p>
+              <p className="font-[500] text-[15px]" style={{ color: stateColor }}>
+                {alignmentState || "Unknown"}
+              </p>
+              {extracted.imbalance !== undefined && (
+                <p className="text-white/40 text-[11px] mt-0.5">
+                  Imbalance gap: {extracted.imbalance} pts
+                </p>
+              )}
+            </div>
           </div>
 
-          {data.decisionInsight && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[350] text-[15px] mb-2">
+          {/* 4-slider value grid */}
+          <div className="grid grid-cols-2 gap-3 mb-8">
+            {dims.map(({ key, value }) => {
+              const cfg = DIMENSION_CONFIG[key];
+              return (
+                <div
+                  key={key}
+                  className="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <p className="text-[12px] font-[400] text-white/80">{cfg.label}</p>
+                      <p className="text-[10px] text-white/40">{cfg.sublabel}</p>
+                    </div>
+                    <span className="text-[20px] font-[500]" style={{ color: cfg.color }}>
+                      {value}
+                    </span>
+                  </div>
+                  <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${value}%`, backgroundColor: cfg.color }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Decision Insight */}
+          {decisionParas.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-[#F2D08C] font-[300] text-[13px] mb-3 uppercase tracking-wider">
                 Decision Insight
               </h2>
-              <div className="space-y-4 text-left font-[300] text-[13px] text-white/80">
-                {data.decisionInsight.split("\n\n").map((p: string, i: number) => (
-                  <p key={i}>{p}</p>
+              <div className="space-y-3">
+                {decisionParas.map((p, i) => (
+                  <p key={i} className="text-white/80 text-[14px] leading-relaxed font-[300]">
+                    {p}
+                  </p>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="mb-6 space-y-4">
-            <h2 className="text-[#F2D08C] font-[350] text-[15px] mb-2">
-              Alignment Analysis
-            </h2>
-            <AnalysisItem label="Mind" text={analysis.mind} />
-            <AnalysisItem label="Heart" text={analysis.heart} />
-            <AnalysisItem label="Body" text={analysis.body} />
-            <AnalysisItem label="Soul" text={analysis.soul} />
-          </div>
+          {/* Alignment Analysis */}
+          {Object.keys(analysis).length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-[#F2D08C] font-[300] text-[13px] mb-3 uppercase tracking-wider">
+                Alignment Analysis
+              </h2>
+              <div className="space-y-3">
+                {dims.map(({ key }) => {
+                  const text = analysis[key];
+                  if (!text) return null;
+                  const cfg = DIMENSION_CONFIG[key];
+                  return (
+                    <div key={key} className="bg-white/5 rounded-xl p-3 border border-white/10">
+                      <span
+                        className="text-[12px] font-[500] uppercase tracking-wider"
+                        style={{ color: cfg.color }}
+                      >
+                        {cfg.label}
+                      </span>
+                      <p className="text-white/70 text-[13px] font-[300] mt-1 leading-relaxed">
+                        {text}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
+          {/* What This Means */}
           {data.whatThisMeans && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[350] text-[15px] mb-2">
+            <div className="mb-8">
+              <h2 className="text-[#F2D08C] font-[300] text-[13px] mb-3 uppercase tracking-wider">
                 What This Means
               </h2>
-              <p className="text-white/80 text-left font-[300] text-[13px]">
+              <p className="text-white/80 text-[14px] leading-relaxed font-[300]">
                 {data.whatThisMeans}
               </p>
             </div>
           )}
 
+          {/* Suggested Reflection */}
           {reflection.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[350] text-[15px] mb-2">
+            <div className="bg-white/5 p-4 rounded-xl border border-[#F2D08C]/20">
+              <h2 className="text-[#F2D08C] font-[400] text-[13px] mb-3">
                 Suggested Reflection
               </h2>
-              <ul className="list-disc ml-5 space-y-2 text-white/80 text-[13px] text-left font-[300]">
+              <ul className="space-y-3">
                 {reflection.map((item: string, i: number) => (
-                  <li key={i}>{item}</li>
+                  <li key={i} className="flex items-start gap-2 text-[13px] text-white/70 font-[300]">
+                    <span className="text-[#F2D08C]/60 shrink-0 mt-0.5">›</span>
+                    <span>{item}</span>
+                  </li>
                 ))}
               </ul>
             </div>
           )}
         </div>
       </div>
-    </div>
-  );
-}
-
-function ValueCard({ label, value, color }: { label: string, value: number, color: string }) {
-  return (
-    <div className="bg-[#FFFFFF0D] border border-white/10 rounded-xl p-3 flex flex-col items-center">
-      <span className="text-[11px] font-[300] text-white/60 mb-1">{label}</span>
-      <span className="text-[24px] font-[500]" style={{ color }}>{value}</span>
-      <div className="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
-        <div className="h-full" style={{ width: `${value}%`, backgroundColor: color }} />
-      </div>
-    </div>
-  );
-}
-
-function AnalysisItem({ label, text }: { label: string, text?: string }) {
-  if (!text) return null;
-  return (
-    <div className="text-left">
-      <span className="text-[#F2D08C] text-[13px] font-[400] mr-2">{label}:</span>
-      <span className="text-white/70 text-[13px] font-[300]">{text}</span>
     </div>
   );
 }

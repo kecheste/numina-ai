@@ -22,6 +22,9 @@ import {
   SoulCompassResult,
   TransitsResult,
   ZodiacElementModalityResultView,
+  CognitiveStyleResult,
+  EnergySynthesisResult,
+  SoulUrgeResult,
 } from "@/components/test/result-view/actualTest";
 
 export type ResultComponentProps = {
@@ -194,6 +197,29 @@ export const resultRegistry: Record<
   6: (props) => (
     <ZodiacElementModalityResultView
       result={props.result}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  11: (props) => (
+    <CognitiveStyleResult
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      content={props.result ?? undefined}
+    />
+  ),
+  18: (props) => (
+    <EnergySynthesisResult
+      {...props}
+      onClose={props.onBack}
+      shellRef={props.shellRef}
+      onLogout={props.onLogout || (() => {})}
+    />
+  ),
+  20: (props) => (
+    <SoulUrgeResult
+      {...props}
       onClose={props.onBack}
       shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}

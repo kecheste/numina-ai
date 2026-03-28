@@ -19,3 +19,6 @@ export { StressBalanceResult } from "./stress-balance-result";
 export { SoulCompassResult } from "./soul-compass-result";
 export { TransitsResult } from "./transits-result";
 export { ZodiacElementModalityResultView } from "./zodiac-element-modality-result";
+export { CognitiveStyleResult } from "./cognitive-style-result";
+export { EnergySynthesisResult } from "./energy-synthesis-result";
+export { SoulUrgeResult } from "./soul-urge-result";
