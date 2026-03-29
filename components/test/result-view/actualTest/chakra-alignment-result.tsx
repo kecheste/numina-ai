@@ -15,34 +15,151 @@ export interface ChakraAlignmentChakra {
   avoidItems?: string | null;
 }
 
-export interface ChakraAlignmentContent {
-  statusSummary?: string | null;
-  chakras?: ChakraAlignmentChakra[] | null;
-  strengths?: string[] | null;
-  challenges?: string[] | null;
-  synchronicities?:
-    | {
-        label?: string;
-        description?: string;
-        test?: string;
-        connection?: string;
-      }[]
-    | null;
-  coreTraits?: string[] | null;
-  tryThis?: string[] | null;
-  avoidThis?: string[] | null;
-  summary?: string | null;
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <h3
+    style={{ fontFamily: "var(--font-gotham)" }}
+    className="text-[14px] font-[400] text-[#F2D08C] uppercase tracking-[0.1em] mb-4"
+  >
+    {children}
+  </h3>
+);
+
+const Divider = () => <div className="w-full h-px bg-white/10 my-8" />;
+
+const ChipList = ({ items, gold }: { items: string[]; gold?: boolean }) => {
+  if (!items.length) return null;
+  return (
+    <div className="flex flex-wrap gap-2">
+      {items.map((item, idx) => (
+        <span
+          key={idx}
+          className="border border-[#F2D08C]/40 rounded-[4px] px-3 py-1 flex items-center"
+          style={{ fontFamily: "var(--font-gotham)", lineHeight: "18px" }}
+        >
+          <span
+            className={`text-[12px] font-normal ${gold ? "text-[#F2D08C]" : "text-white/90"}`}
+          >
+            {item}
+          </span>
+        </span>
+      ))}
+    </div>
+  );
+};
+
+const ParagraphBlock = ({ text }: { text?: string | null }) => {
+  if (!text) return null;
+  const paragraphs = text
+    .replace(/\\n/g, "\n")
+    .split("\n")
+    .filter((p) => p.trim().length > 0);
+  return (
+    <div className="flex flex-col gap-5">
+      {paragraphs.map((p, i) => (
+        <p
+          key={i}
+          style={{ fontFamily: "var(--font-gotham)", lineHeight: "22px" }}
+          className="text-[13px] font-normal text-white/90"
+        >
+          {p.trim()}
+        </p>
+      ))}
+    </div>
+  );
+};
+
+interface InsightCardProps {
+  label: string;
+  value: string;
+  isGrowth?: boolean;
 }
 
-interface ChakraAlignmentResultProps {
-  testTitle: string;
-  onBack: () => void;
-  content?: TestResultResponse | null;
-}
+const InsightCard = ({ label, value, isGrowth }: InsightCardProps) => (
+  <div className="flex flex-col gap-2 p-4 rounded-[4px] bg-white/[0.03] border border-white/10 w-full mb-4">
+    <p
+      style={{ fontFamily: "var(--font-gotham)" }}
+      className={`text-[11px] font-normal tracking-wider ${isGrowth ? "text-[#F2D08C]" : "text-white/40"}`}
+    >
+      {label}
+    </p>
+    <p
+      style={{ fontFamily: "var(--font-gotham)" }}
+      className="text-[13px] font-normal italic text-white/90 leading-relaxed"
+    >
+      "{value}"
+    </p>
+  </div>
+);
+
+const EnergyCard = ({ chakra }: { chakra: ChakraAlignmentChakra }) => {
+  const color = CHAKRA_COLORS[chakra.id] ?? "#F2D08C";
+  const isImbalanced = chakra.status !== "Balanced" && chakra.status !== "Open";
+
+  return (
+    <div
+      className="flex gap-4 w-full mb-8 group"
+      style={{ fontFamily: "var(--font-gotham)" }}
+    >
+      <div
+        className="w-[2px] rounded-full"
+        style={{ backgroundColor: color }}
+      />
+
+      <div className="flex flex-col flex-1">
+        <div className="flex justify-between items-center mb-1">
+          <h4 className="text-[14px] font-normal text-white">{chakra.name}</h4>
+          <span
+            className="text-[11px] font-normal uppercase tracking-widest px-2 py-0.5"
+            style={{
+              color: isImbalanced ? "#F2D08C" : "#FFFFFF",
+              fontFamily: "var(--font-gotham)",
+            }}
+          >
+            {chakra.status}
+          </span>
+        </div>
+
+        <p className="text-[13px] font-normal text-white/60 leading-relaxed mb-3">
+          {chakra.description}
+        </p>
+
+        {isImbalanced && (chakra.tryItems || chakra.avoidItems) && (
+          <div className="border-t border-white/5 pt-3 space-y-3 mt-1">
+            {chakra.tryItems && (
+              <div className="flex flex-col gap-0.5">
+                <span
+                  style={{ fontFamily: "var(--font-gotham)" }}
+                  className="text-[10px] font-normal text-[#F2D08C] uppercase tracking-wider"
+                >
+                  Daily focus
+                </span>
+                <p
+                  style={{ fontFamily: "var(--font-gotham)" }}
+                  className="text-[12px] font-normal text-white/80 leading-relaxed italic"
+                >
+                  "{chakra.tryItems}"
+                </p>
+              </div>
+            )}
+            {chakra.avoidItems && (
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[10px] font-normal text-white/30 uppercase tracking-wider">
+                  Notice this habit
+                </span>
+                <p className="text-[12px] font-normal text-white/60 leading-relaxed italic">
+                  "{chakra.avoidItems}"
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 function normalizeChakras(raw: unknown): ChakraAlignmentChakra[] {
   if (!Array.isArray(raw) || raw.length === 0) return [];
-  const out: ChakraAlignmentChakra[] = [];
   const ids = [
     "root",
     "sacral",
@@ -53,102 +170,69 @@ function normalizeChakras(raw: unknown): ChakraAlignmentChakra[] {
     "crown",
   ];
   const names = [
-    "Root Chakra",
-    "Sacral Chakra",
-    "Solar Plexus Chakra",
-    "Heart Chakra",
-    "Throat Chakra",
-    "Third Eye Chakra",
-    "Crown Chakra",
+    "Root",
+    "Sacral",
+    "Solar Plexus",
+    "Heart",
+    "Throat",
+    "Third Eye",
+    "Crown",
   ];
-  for (let i = 0; i < 7; i++) {
-    const c = raw[i];
-    if (c && typeof c === "object" && "id" in c) {
-      const id = String((c as Record<string, unknown>).id ?? ids[i]);
-      out.push({
-        id: ids.includes(id) ? id : ids[i],
-        name: String((c as Record<string, unknown>).name ?? names[i]),
-        status: String((c as Record<string, unknown>).status ?? "Balanced"),
-        description: String(
-          (c as Record<string, unknown>).description ??
-            "This energy center is in balance.",
-        ),
-        tryItems:
-          (c as Record<string, unknown>).tryItems != null
-            ? String((c as Record<string, unknown>).tryItems)
-            : null,
-        avoidItems:
-          (c as Record<string, unknown>).avoidItems != null
-            ? String((c as Record<string, unknown>).avoidItems)
-            : null,
-      });
-    } else {
-      out.push();
-    }
-  }
-  return out;
+
+  return ids.map((id, i) => {
+    const c = raw.find((item: any) =>
+      item?.id?.toLowerCase().includes(id.toLowerCase()),
+    );
+    return {
+      id,
+      name: (c as any)?.name || `${names[i]} Chakra`,
+      status: (c as any)?.status || "Balanced",
+      description:
+        (c as any)?.description ||
+        "Your energy is flowing normally through this center.",
+      tryItems: (c as any)?.tryItems || null,
+      avoidItems: (c as any)?.avoidItems || null,
+    };
+  });
 }
 
-function normalizeStrings(raw: unknown, fallback: string[]): string[] {
-  if (!Array.isArray(raw)) return fallback;
-  return raw.map((x) => (x != null ? String(x) : "")).filter(Boolean);
-}
-
-function normalizeSynchronicities(
-  raw: unknown,
-): { label: string; description: string }[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .filter(
-      (s): s is Record<string, unknown> => s != null && typeof s === "object",
-    )
-    .map((s) => ({
-      label: String(s.label ?? s.test ?? ""),
-      description: String(s.description ?? s.connection ?? ""),
-    }))
-    .filter((s) => s.label || s.description)
-    .slice(0, 6);
-}
-
-const sectionHeadingClass = "text-[15px] font-[350] text-white mb-2";
-const sectionHeadingStyle = {
-  fontFamily: "var(--font-gotham)",
-  lineHeight: "33px",
-} as const;
-
-const bodyTextStyle = {
-  fontFamily: "var(--font-gotham)",
-  lineHeight: "18px",
-};
+const ensureArray = (val: any) =>
+  Array.isArray(val) ? val.filter(Boolean) : [];
 
 export function ChakraAlignmentResult({
-  testTitle: _testTitle,
   onBack,
   content,
-}: ChakraAlignmentResultProps) {
+}: {
+  onBack: () => void;
+  content?: TestResultResponse | null;
+}) {
   const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
 
-  const statusSummary = content?.llm_result_json?.statusSummary?.trim();
-  const chakras =
-    content?.llm_result_json?.chakras?.length === 7
-      ? content?.llm_result_json?.chakras
-      : normalizeChakras(content?.llm_result_json?.chakras);
-  const strengths = normalizeStrings(content?.llm_result_json?.strengths, []);
-  const challenges = normalizeStrings(content?.llm_result_json?.challenges, []);
-  const synchronicities = content?.llm_result_json?.synchronicities?.length
-    ? content?.llm_result_json?.synchronicities
-    : normalizeSynchronicities(content?.llm_result_json?.synchronicities);
-  const coreTraits = normalizeStrings(content?.llm_result_json?.coreTraits, []);
-  const tryThis = normalizeStrings(content?.llm_result_json?.tryThis, []);
-  const avoidThis = normalizeStrings(content?.llm_result_json?.avoidThis, []);
+  const llm = content?.llm_result_json ?? {};
+
+  const strongestChakra = llm.strongestChakra;
+  const needsRebalancing = llm.needsRebalancing;
+  const statusSummary = llm.statusSummary || "";
+  const chakras = normalizeChakras(llm.chakras);
+  const narrative = llm.summary || "";
+
+  const strengths = ensureArray(llm.strengths);
+  const challenges = ensureArray(llm.challenges);
+  const coreTraits = ensureArray(llm.coreTraits);
+  const tryThis = ensureArray(llm.tryThis);
+  const avoidThis = ensureArray(llm.avoidThis);
+  const synch = ensureArray(llm.synchronicities);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4"
+      style={{ fontFamily: "var(--font-gotham)" }}
+    >
       <div
         ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
         className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
+        style={{ scrollbarWidth: "none" }}
       >
         <AppBar
           handleBack={onBack}
@@ -156,236 +240,148 @@ export function ChakraAlignmentResult({
           shellRef={shellRef}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <div className="text-center mb-4">
+        <div className="px-[24px] pt-8 pb-16 flex-1 overflow-y-auto text-left">
+          {/* Header */}
+          <div className="text-center mb-10">
             <h1
-              style={{
-                fontFamily: "var(--font-gotham)",
-                lineHeight: "33px",
-              }}
-              className="text-[21px] font-[400] text-white"
+              style={{ fontFamily: "var(--font-gotham)" }}
+              className="text-[20px] mb-2 font-normal text-white leading-tight"
             >
-              Checkra Alignment Scan
+              Chakra Alignment Scan
             </h1>
-          </div>
-
-          <p
-            style={bodyTextStyle}
-            className="text-[13px] font-[300] text-[#F2D08C] mb-2"
-          >
-            Your Result
-          </p>
-
-          <div className="mb-4 text-left">
-            <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
-              Chakra status
-            </h2>
             <p
-              style={bodyTextStyle}
-              className="text-[13px] font-[300] text-[#FFFFFF]"
+              style={{ fontFamily: "var(--font-gotham)" }}
+              className="text-[11px] font-normal text-[#F2D08C] tracking-[0.2em] mb-2"
             >
-              {statusSummary}
+              Your Result
             </p>
           </div>
 
-          {chakras.map((chakra) => {
-            const color = CHAKRA_COLORS[chakra.id] ?? "#F2D08C";
-            const showTryAvoid =
-              chakra.status !== "Balanced" &&
-              (chakra.tryItems || chakra.avoidItems);
-            return (
-              <div key={chakra.id} className="mb-6 text-left">
-                <span
-                  className="inline-block border rounded-[7px] px-2.5 mb-2 h-[20px]"
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    color: "#fff",
-                    borderColor: color,
-                    paddingBottom: "2px",
-                  }}
-                >
-                  {chakra.name}
-                </span>
-                <p
-                  style={bodyTextStyle}
-                  className="text-[13px] font-[300] text-[#FFFFFF] mb-1"
-                >
-                  Status: {chakra.status}
-                </p>
-                <p
-                  style={bodyTextStyle}
-                  className="text-[13px] font-[300] text-[#FFFFFF] mb-2"
-                >
-                  {chakra.description}
-                </p>
-                {showTryAvoid && (
-                  <div className="space-y-1">
-                    {chakra.tryItems && (
-                      <p
-                        style={bodyTextStyle}
-                        className="text-[13px] font-[300] text-[#FFFFFF]"
-                      >
-                        <span className="font-[600]">Try:</span>{" "}
-                        {chakra.tryItems}
-                      </p>
-                    )}
-                    {chakra.avoidItems && (
-                      <p
-                        style={bodyTextStyle}
-                        className="text-[13px] font-[300] text-[#FFFFFF]"
-                      >
-                        <span className="font-[600]">Avoid:</span>{" "}
-                        {chakra.avoidItems}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {/* Top Insights */}
+          {(strongestChakra || needsRebalancing) && (
+            <div className="flex flex-col gap-2 mb-6">
+              {strongestChakra && (
+                <InsightCard label="Primary Strength" value={strongestChakra} />
+              )}
+              {needsRebalancing && (
+                <InsightCard
+                  label="Growth Priority"
+                  value={needsRebalancing}
+                  isGrowth
+                />
+              )}
+            </div>
+          )}
 
-          {content?.llm_result_json?.summary && (
+          {/* Status Summary */}
+          {statusSummary && (
+            <div className="mb-10">
+              <p
+                style={{ fontFamily: "var(--font-gotham)" }}
+                className="text-[13px] font-normal text-white/90 leading-relaxed italic border-l border-[#F2D08C]/40 pl-5 py-2"
+              >
+                {statusSummary}
+              </p>
+            </div>
+          )}
+
+          <Divider />
+
+          {/* Energy Stack Visualization */}
+          <SectionTitle>Individual Centers</SectionTitle>
+          <div className="flex flex-col gap-2">
+            {chakras.map((chakra) => (
+              <EnergyCard key={chakra.id} chakra={chakra} />
+            ))}
+          </div>
+
+          <Divider />
+
+          {/* Deeper Narrative */}
+          {narrative && (
             <>
-              <h3
-                className="text-[18px] text-center font-[400] text-[#F2D08C] mb-2"
-                style={{
-                  lineHeight: "33px",
-                  fontFamily: "var(--font-gotham)",
-                  fontSize: "13px",
-                  fontWeight: 600,
-                }}
-              >
-                Your Energy Balance
-              </h3>
-              <div
-                className="flex flex-col text-left gap-6 text-[13px] font-[300] text-white/90 mb-6"
-                style={{ lineHeight: "20px", fontFamily: "var(--font-gotham)" }}
-              >
-                {content?.llm_result_json?.summary
-                  .replace(/\\n/g, "\n")
-                  .split("\n")
-                  .filter((line) => line.trim().length > 0)
-                  .map((paragraph, idx) => (
-                    <p key={idx}>{paragraph.trim()}</p>
-                  ))}
-              </div>
+              <SectionTitle>Energy Patterns</SectionTitle>
+              <ParagraphBlock text={narrative} />
+              <Divider />
             </>
           )}
 
-          <div className="mb-6 text-left">
-            <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
-              Strengths
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {strengths.map((item, idx) => (
-                <span
-                  key={idx}
-                  className="border border-[#F2D08C]/50 rounded-[7px] px-2 py-1 flex items-center"
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                    lineHeight: "16px",
-                  }}
-                >
-                  <span className="text-[12px] font-[300] text-[#F2D08C]">
-                    {item}
-                  </span>
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="mb-6 text-left">
-            <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
-              Challenges
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {challenges.map((item, idx) => (
-                <span
-                  key={idx}
-                  className="border border-[#F2D08C]/50 rounded-[7px] px-2 py-1 flex items-center"
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                    lineHeight: "16px",
-                  }}
-                >
-                  <span className="text-[12px] font-[300] text-[#F2D08C]">
-                    {item}
-                  </span>
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {synchronicities.length > 0 && (
-            <div className="mb-6 text-left">
-              <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
-                Synchronicities
-              </h2>
-              <div className="space-y-2">
-                {synchronicities.map(({ label, description }, idx) => (
-                  <p
-                    key={label || idx}
-                    style={bodyTextStyle}
-                    className="text-[13px] font-[300] text-[#FFFFFF]"
-                  >
-                    <span className="font-[600] text-[#FFFFFF]">{label}</span>
-                    <span className="text-[#F2D08C] mx-1">→</span>
-                    {description}
-                  </p>
-                ))}
-              </div>
-            </div>
+          {/* Chips: Traits & Profile */}
+          {coreTraits.length > 0 && (
+            <>
+              <SectionTitle>Core Traits</SectionTitle>
+              <ChipList items={coreTraits} gold />
+              <Divider />
+            </>
           )}
 
-          <div className="mb-6 text-left">
-            <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
-              Core Traits
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {coreTraits.map((item, idx) => (
-                <span
-                  key={idx}
-                  className="border border-[#F2D08C]/50 rounded-[7px] px-2 py-1 flex items-center"
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                    lineHeight: "16px",
-                  }}
-                >
-                  <span className="text-[12px] font-[300] text-[#F2D08C]">
-                    {item}
-                  </span>
-                </span>
-              ))}
-            </div>
-          </div>
+          {strengths.length > 0 && (
+            <>
+              <SectionTitle>Top Strengths</SectionTitle>
+              <ChipList items={strengths} gold />
+              <Divider />
+            </>
+          )}
 
-          <div className="mb-6 text-left">
-            <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
-              Try This
-            </h2>
-            <ul
-              style={bodyTextStyle}
-              className="text-[13px] list-disc font-[300] text-[#FFFFFF] pl-5"
-            >
-              {tryThis?.length > 0 &&
-                tryThis.map((item: string) => <li key={item}>{item}</li>)}
-            </ul>
-          </div>
+          {challenges.length > 0 && (
+            <>
+              <SectionTitle>Current Frictions</SectionTitle>
+              <ChipList items={challenges} />
+              <Divider />
+            </>
+          )}
 
-          <div className="mb-6 text-left">
-            <h2 style={sectionHeadingStyle} className={sectionHeadingClass}>
-              Avoid this
-            </h2>
-            <ul
-              style={bodyTextStyle}
-              className="text-[13px] list-disc pl-5 font-[300] text-[#FFFFFF]"
-            >
-              {avoidThis.length >= 2 &&
-                avoidThis?.map((avoid: string) => <li key={avoid}>{avoid}</li>)}
-            </ul>
-          </div>
+          {/* Actions */}
+          {tryThis.length > 0 && (
+            <>
+              <SectionTitle>Try This:</SectionTitle>
+              <ul className="flex flex-col gap-5 list-disc pl-5">
+                {tryThis.map((item: any, idx) => (
+                  <li key={idx} className="text-white/80">
+                    <p className="text-[13px] font-normal leading-relaxed">
+                      {item}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              <Divider />
+            </>
+          )}
+
+          {avoidThis.length > 0 && (
+            <>
+              <SectionTitle>Avoid This:</SectionTitle>
+              <ul className="flex flex-col gap-5 list-disc pl-5">
+                {avoidThis.map((item: any, idx) => (
+                  <li key={idx} className="text-white/60">
+                    <p className="text-[13px] font-normal leading-relaxed">
+                      {item}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {/* Synchronicity */}
+          {synch.length > 0 && (
+            <>
+              <Divider />
+              <SectionTitle>Synchronicities</SectionTitle>
+              <div className="flex flex-col gap-5">
+                {synch.map((s: any, idx) => (
+                  <div key={idx} className="flex flex-col gap-1.5">
+                    <p className="text-[13px] font-normal text-[#F2D08C] uppercase tracking-wider">
+                      {s.label || s.test}
+                    </p>
+                    <p className="text-[13px] font-normal text-white/70 leading-relaxed italic">
+                      "{s.description || s.connection}"
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

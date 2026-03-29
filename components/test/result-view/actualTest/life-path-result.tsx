@@ -44,7 +44,8 @@ export function LifePathResultView({
   );
 
   const spiritualInsight = llm?.spiritualInsight;
-  const narrative = result?.narrative || llm?.summary;
+  const rawNarrative = result?.narrative || llm?.summary;
+  const narrative = typeof rawNarrative === "string" ? rawNarrative : "";
 
   const tryThis = ensureStringArray(llm?.tryThis);
   const avoidThis = ensureStringArray(llm?.avoidThis);
