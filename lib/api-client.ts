@@ -154,6 +154,9 @@ export interface UserProfile {
   is_active: boolean;
   role: string;
   life_path_number: number | null;
+  soul_urge_number: number | null;
+  expression_number: number | null;
+  birthday_number: number | null;
   mbti_type: string | null;
   mbti_descriptor: string | null;
   strongest_chakra: string | null;
@@ -349,6 +352,7 @@ export interface NumerologyResponse {
   life_path: number;
   soul_urge: number;
   birth_day: number;
+  birthday_number?: number | null;
   expression_number: number;
   life_path_description?: string | null;
   soul_urge_description?: string | null;
