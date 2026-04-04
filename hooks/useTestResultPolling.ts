@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { apiGetTestResult, TestResultResponse } from "@/lib/api-client";
 import { FlowState } from "@/components/test/types";
+import { useWebSocket } from "@/contexts/WebSocketContext";
 
 const POLL_INTERVAL_MS = 2500;
 const MAX_POLL_ATTEMPTS = 24;
@@ -12,50 +13,58 @@ export function useTestResultPolling(
 ) {
   const [result, setResult] = useState<TestResultResponse | null>(null);
   const [isTimeout, setIsTimeout] = useState(false);
-  const pollAttemptsRef = useRef(0);
-  const pollIntervalIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { subscribe } = useWebSocket();
+
 
   useEffect(() => {
-    if (!enabled || resultId == null) return;
+    if (!enabled || resultId == null || result) return;
 
-    setIsTimeout(false);
-    pollAttemptsRef.current = 0;
+    let cancelled = false;
 
-    const intervalId = setInterval(() => {
-      pollAttemptsRef.current += 1;
-      if (pollAttemptsRef.current > MAX_POLL_ATTEMPTS) {
-        if (pollIntervalIdRef.current) {
-          clearInterval(pollIntervalIdRef.current);
-          pollIntervalIdRef.current = null;
+    // 1. Initial check (in case it's already done)
+    apiGetTestResult(resultId)
+      .then((res) => {
+        if (!cancelled && res.status === "completed") {
+          setResult(res);
+          setFlowState("completed");
         }
+      })
+      .catch(() => {});
+
+    // 2. Subscribe to real-time updates
+    const unsubscribe = subscribe((msg) => {
+      if (msg.type === "TestResult" && msg.data.result_id === resultId) {
+        if (msg.data.status === "completed") {
+          apiGetTestResult(resultId)
+            .then((res) => {
+              if (!cancelled) {
+                setResult(res);
+                setFlowState("completed");
+              }
+            })
+            .catch(console.error);
+        } else if (msg.data.status === "failed") {
+          if (!cancelled) {
+            setFlowState("failed");
+          }
+        }
+      }
+    });
+
+    // 3. Simple safety timeout (e.g. 60 seconds)
+    const timeoutId = setTimeout(() => {
+      if (!cancelled && !result) {
         setIsTimeout(true);
         setFlowState("failed");
-        return;
       }
-
-      apiGetTestResult(resultId)
-        .then((res) => {
-          if (res.status === "completed") {
-            if (pollIntervalIdRef.current) {
-              clearInterval(pollIntervalIdRef.current);
-              pollIntervalIdRef.current = null;
-            }
-            setResult(res);
-            setFlowState("completed");
-          }
-        })
-        .catch(() => {});
-    }, POLL_INTERVAL_MS);
-
-    pollIntervalIdRef.current = intervalId;
+    }, 60000);
 
     return () => {
-      if (pollIntervalIdRef.current) {
-        clearInterval(pollIntervalIdRef.current);
-        pollIntervalIdRef.current = null;
-      }
+      cancelled = true;
+      unsubscribe();
+      clearTimeout(timeoutId);
     };
-  }, [enabled, resultId, setFlowState]);
+  }, [enabled, resultId, result, setFlowState, subscribe]);
 
   return {
     result,

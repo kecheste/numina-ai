@@ -8,6 +8,12 @@ export function getApiBaseUrl(): string {
   return url.replace(/\/$/, "");
 }
 
+export function getWsBaseUrl(): string {
+  const base = getApiBaseUrl();
+  return base.replace(/^http/, "ws");
+}
+
+
 export function getStoredToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(AUTH_TOKEN_KEY);

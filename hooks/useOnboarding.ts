@@ -11,6 +11,8 @@ import {
   apiListTestResults,
 } from "@/lib/api-client";
 import { useAuth } from "@/contexts/auth-context";
+import { useWebSocket } from "@/contexts/WebSocketContext";
+
 
 export type OnboardingStep =
   | "chakra_test"
@@ -40,6 +42,8 @@ export function useOnboarding() {
   const [numerologyContent, setNumerologyContent] = useState<
     NumerologyBlueprintItem[] | null | undefined
   >(undefined);
+
+  const { subscribe } = useWebSocket();
 
   useEffect(() => {
     let cancelled = false;
@@ -71,54 +75,34 @@ export function useOnboarding() {
   }, []);
 
   useEffect(() => {
-    if (step !== "chakra_blueprint" || chakraResultId == null || chakraResult != null) return;
-    let cancelled = false;
-    const interval = setInterval(async () => {
-      try {
-        const res = await apiGetTestResult(chakraResultId);
-        if (res.status === "completed" && !cancelled) {
-          setChakraResult(res);
-          clearInterval(interval);
+    return subscribe((msg) => {
+      if (msg.type === "TestResult") {
+        const { result_id, status } = msg.data;
+        if (status === "completed") {
+          if (result_id === chakraResultId) {
+            apiGetTestResult(result_id).then(setChakraResult).catch(console.error);
+          } else if (result_id === mbtiResultId) {
+            apiGetTestResult(result_id).then(setMbtiResult).catch(console.error);
+          }
         }
-      } catch {}
-    }, 2500);
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, [step, chakraResultId, chakraResult]);
+      } else if (msg.type === "AstrologyBlueprint") {
+        if (msg.data.status === "completed") {
+          apiFetchOnboardingAstrologyBlueprint().then(setAstrologyContent).catch(console.error);
+        }
+      } else if (msg.type === "NumerologyBlueprint") {
+        if (msg.data.status === "completed") {
+          apiFetchOnboardingNumerologyBlueprint().then(res => setNumerologyContent(res.items)).catch(console.error);
+        }
+      }
+    });
+  }, [subscribe, chakraResultId, mbtiResultId]);
 
   useEffect(() => {
-    if (step !== "mbti_blueprint" || mbtiResultId == null || mbtiResult != null) return;
-    let cancelled = false;
-    const interval = setInterval(async () => {
-      try {
-        const res = await apiGetTestResult(mbtiResultId);
-        if (res.status === "completed" && !cancelled) {
-          setMbtiResult(res);
-          clearInterval(interval);
-        }
-      } catch {}
-    }, 2500);
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, [step, mbtiResultId, mbtiResult]);
-
-  useEffect(() => {
-    if (step !== "astrology_blueprint") return;
-    let cancelled = false;
-    setAstrologyContent(null);
-    const poll = async () => {
-      try {
-        const res = await apiFetchOnboardingAstrologyBlueprint();
-        if (res.status === "completed" && !cancelled) {
-          setAstrologyContent(res);
-          clearInterval(interval);
-        }
-      } catch (err) {
-        console.error("Astrology blueprint failed", err);
+    if (step === "astrology_blueprint" && astrologyContent === undefined) {
+      setAstrologyContent(null);
+      apiFetchOnboardingAstrologyBlueprint().then(res => {
+        if (res.status === "completed") setAstrologyContent(res);
+      }).catch(() => {
         setAstrologyContent({
           status: "completed",
           sun_description: "Your sun sign shapes your core personality and life direction.",
@@ -126,44 +110,23 @@ export function useOnboarding() {
           rising_description: "Your rising sign reflects how others see you and your outward style.",
           cosmic_traits_summary: "🜂 Element: —\n☌ Modality: —\n♇ Ruling Planet: —\n🌠 Most active house: —",
         });
-        clearInterval(interval);
-      }
-    };
-    poll();
-    const interval = setInterval(poll, 3000);
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, [step]);
+      });
+    }
+  }, [step, astrologyContent]);
 
   useEffect(() => {
-    if (step !== "numerology_blueprint") return;
-    let cancelled = false;
-    setNumerologyContent(null);
-    const poll = async () => {
-      try {
-        const res = await apiFetchOnboardingNumerologyBlueprint();
-        if (res.status === "completed" && !cancelled) {
-          setNumerologyContent(res.items);
-          clearInterval(interval);
-        }
-      } catch (err) {
-        console.error("Numerology blueprint failed", err);
+    if (step === "numerology_blueprint" && numerologyContent === undefined) {
+      setNumerologyContent(null);
+      apiFetchOnboardingNumerologyBlueprint().then(res => {
+        if (res.status === "completed") setNumerologyContent(res.items);
+      }).catch(() => {
         setNumerologyContent([
           { number: "1", title: "Life Path", description: "Your life path number reflects your core purpose." },
           { number: "1", title: "Soul Urge", description: "Your soul urge reveals what your heart truly desires." },
         ]);
-        clearInterval(interval);
-      }
-    };
-    poll();
-    const interval = setInterval(poll, 3000);
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, [step]);
+      });
+    }
+  }, [step, numerologyContent]);
 
   const handleChakraComplete = (resultId: number) => {
     setChakraResultId(resultId);
@@ -177,7 +140,6 @@ export function useOnboarding() {
   };
   const handleMbtiBlueprintNext = () => setStep("astrology_blueprint");
   const handleAstrologyNext = () => {
-    setNumerologyContent(null);
     setStep("numerology_blueprint");
   };
   const handleNumerologyNext = async () => {

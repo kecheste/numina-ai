@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { gotham, arp80, fangsong, montserrat } from "@/app/fonts";
 import { AuthProvider } from "@/contexts/auth-context";
+import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
@@ -49,8 +50,10 @@ export default function RootLayout({
       >
         <Providers>
           <AuthProvider>
-            {children}
-            <Analytics />
+            <WebSocketProvider>
+              {children}
+              <Analytics />
+            </WebSocketProvider>
           </AuthProvider>
         </Providers>
       </body>
