@@ -596,14 +596,28 @@ export interface SynthesisResponse {
   type: "preview" | "full";
   completed_count: number;
   result: {
+    // Preview keys
     youAre?: string;
     sureThings?: string[];
     identitySummary?: string;
     growthAreas?: string[];
     nextFocus?: string;
-    themes?: string[];
-    strengths?: string[];
-    shadowPatterns?: string[];
+    // Full synthesis keys (14 sections + hero line)
+    identityLine?: string;
+    coreIdentity?: string;
+    dominantPatterns?: string[];
+    hiddenPatterns?: string[];
+    emergingPatterns?: string[];
+    innerConflictMap?: string;
+    coreStrengths?: string[];
+    coreChallenges?: string[];
+    psychologicalProfile?: string;
+    spiritualBlueprint?: string;
+    yourDirection?: string;
+    tryThis?: string[];
+    avoidThis?: string[];
+    finalInsight?: string;
+    currentEnergy?: string;
   };
 }
 
