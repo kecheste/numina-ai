@@ -3,6 +3,14 @@
 import React from "react";
 import { TestResultResponse } from "@/lib/api-client";
 import AppBar from "@/components/navigation/appBar";
+import { DimensionScores } from "../../components/DimensionScores";
+import { CoreTraits } from "../../components/CoreTraits";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { SpiritualInsight } from "../../components/SpiritualInsight";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
+import { BluePrint } from "../../components/Blueprint";
 
 interface EnergyArchetypeResultProps {
   result: TestResultResponse;
@@ -42,169 +50,57 @@ export function EnergyArchetypeResult({
       >
         <AppBar
           handleBack={onClose}
-          shellRef={shellRef}
           handleLogout={onLogout}
+          shellRef={shellRef}
         />
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[500] text-white mb-1">
-            Energy Archetype
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+          >
+            Your Energy Archetype
           </h1>
 
-          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-4 mt-2">
-            Your Result
-          </h2>
-
           {extracted.balance_score !== undefined && (
-            <div className="mb-8">
-              <p className="text-white/60 text-[12px] uppercase">
+            <div className="mb-[40px] flex flex-col items-center">
+              <p className="text-[#F2D08C] text-[13px] uppercase">
                 Balance Score
               </p>
-              <p className="text-[#F2D08C] font-bold text-[18px]">
+              <p className="text-[#F2D08C] px-4 pt-1 border border-[#F2D08C] rounded-[5px] font-bold text-[18px]">
                 {extracted.balance_score}%
               </p>
-              <p className="text-white/40 text-[11px] mt-2 italic">
+              <p className="text-[#D9D9D9] text-[11px] pt-[12px] px-[40px]">
                 Reflects the alignment between your Integrator and Overloaded
                 Circuit dimensions.
               </p>
             </div>
           )}
 
-          {scores && Object.keys(scores).length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-[300] text-[13px] mb-4 uppercase tracking-wider">
-                Dimension Profile
-              </h2>
+          <DimensionScores
+            title="Dimension Profile"
+            dimensions={[
+              { key: "visionary", label: "Visionary" },
+              { key: "analyst", label: "Analyst" },
+              { key: "integrator", label: "Integrator" },
+              { key: "overloaded", label: "Overloaded Circuit" },
+            ]}
+            scores={scores}
+          />
 
-              <div className="space-y-4">
-                {Object.entries(scores).map(([key, value]) => {
-                  const color = archetypeColors[key.toLowerCase()] || "#F2D08C";
+          <CoreTraits coreTraits={traits} />
 
-                  return (
-                    <div key={key} className="space-y-1">
-                      <div className="flex items-center justify-between text-[13px]">
-                        <span className="text-white/80 capitalize">{key}</span>
-                        <span style={{ color }} className="font-medium">
-                          {value as number}%
-                        </span>
-                      </div>
+          <Strength strengths={strengths} />
 
-                      <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div
-                          className="h-full transition-all duration-700"
-                          style={{
-                            width: `${value}%`,
-                            backgroundColor: color,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          <Challenge challenges={challenges} />
 
-          {traits.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[300] text-[13px] my-2 uppercase tracking-wider">
-                Core Traits
-              </h2>
+          <SpiritualInsight spiritualInsight={data.spiritualInsight} />
 
-              <ul className="list-disc ml-5 space-y-2 text-[13px] text-white/80 text-left">
-                {traits.map((t, i) => (
-                  <li key={i}>{t}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <BluePrint title="Energy Archetype" blueprint={data.summary} />
 
-          {strengths.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[300] text-[13px] my-2 uppercase tracking-wider">
-                Strengths
-              </h2>
+          <TryThis tryThis={tryThis} />
 
-              <ul className="list-disc ml-5 space-y-2 text-[13px] text-white/80 text-left">
-                {strengths.map((s, i) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {challenges.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[300] text-[13px] my-2 uppercase tracking-wider ">
-                Challenges
-              </h2>
-
-              <ul className="list-disc ml-5 space-y-2 text-[13px] text-white/80 text-left">
-                {challenges.map((c, i) => (
-                  <li key={i}>{c}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {data.spiritualInsight && (
-            <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-[500] text-[14px] mb-3 italic">
-                Spiritual Insight
-              </h2>
-
-              <p className="text-white/80 text-[14px] leading-relaxed italic">
-                "{data.spiritualInsight}"
-              </p>
-            </div>
-          )}
-
-          {data.summary && (
-            <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-[300] text-[13px] mb-4 uppercase tracking-wider">
-                Your Energy Archetype
-              </h2>
-
-              <div className="space-y-4 text-left">
-                {data.summary.split("\n\n").map((para: string, i: number) => (
-                  <p
-                    key={i}
-                    className="text-white/80 text-[14px] leading-relaxed"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {tryThis.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[500] text-[14px] mb-3">
-                Try This
-              </h2>
-
-              <ul className="list-disc ml-5 space-y-2 text-white/80 text-[13px]">
-                {tryThis.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {avoidThis.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[500] text-[14px] mb-3">
-                Avoid This
-              </h2>
-
-              <ul className="list-disc ml-5 space-y-2 text-white/80 text-[13px]">
-                {avoidThis.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>

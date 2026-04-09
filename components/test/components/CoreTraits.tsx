@@ -11,7 +11,7 @@ export function CoreTraits({ coreTraits }: ICoreTraitsProps) {
         <>
           <p
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}
-            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px]"
+            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
           >
             Core Traits
           </p>

@@ -1,5 +1,4 @@
 import React from "react";
-import { SparklingIcon } from "@/components/icons/sparkling";
 
 interface IAvoidThisProps {
   avoidThis: string[];
@@ -12,7 +11,7 @@ export function AvoidThis({ avoidThis }: IAvoidThisProps) {
         <>
           <p
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}
-            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px]"
+            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
           >
             Avoid This
           </p>
@@ -23,7 +22,7 @@ export function AvoidThis({ avoidThis }: IAvoidThisProps) {
                   lineHeight: "19px",
                   fontFamily: "var(--font-gotham)",
                 }}
-                className="text-[13px] border-l border-[#D9D9D9] pl-[8px] text-[#D9D9D9] font-[350]"
+                className="text-[13px] text-left border-l border-[#D9D9D9] pl-[8px] text-[#D9D9D9] font-[350]"
               >
                 {s}
               </p>

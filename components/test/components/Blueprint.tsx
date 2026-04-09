@@ -1,31 +1,32 @@
 import React from "react";
-import { SparklingIcon } from "@/components/icons/sparkling";
 
-interface ITryThisProps {
-  tryThis: string[];
+interface IBluePrintProps {
+  blueprint: string | null | undefined;
+  title: string;
 }
 
-export function TryThis({ tryThis }: ITryThisProps) {
+export function BluePrint({ blueprint, title }: IBluePrintProps) {
   return (
     <div>
-      {tryThis.length > 0 && (
+      {blueprint && (
         <>
           <p
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}
             className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
           >
-            Try This
+            {title}
           </p>
-          <div className="flex flex-col gap-[10px] mb-[40px]">
-            {tryThis.map((s: string) => (
+          <div className="flex flex-col gap-[10px] mb-[40px] text-left">
+            {blueprint.split("\n\n").map((para: string, i: number) => (
               <p
+                key={i}
                 style={{
                   lineHeight: "19px",
                   fontFamily: "var(--font-gotham)",
                 }}
-                className="text-[13px] text-left border-l border-[#D9D9D9] pl-[8px] text-[#D9D9D9] font-[350]"
+                className="text-[13px] border-l border-[#F2D08C] pl-[8px] text-[#FFFFFF] font-[350]"
               >
-                {s}
+                {para}
               </p>
             ))}
           </div>

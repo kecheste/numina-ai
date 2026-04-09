@@ -12,7 +12,7 @@ export function Strength({ strengths }: IStrengthProps) {
         <>
           <p
             style={{ fontFamily: "var(--font-gotham)" }}
-            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px]"
+            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
           >
             Core Strengths
           </p>

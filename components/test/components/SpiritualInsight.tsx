@@ -1,7 +1,7 @@
 import React from "react";
 
 interface ISpiritualInsightProps {
-  spiritualInsight: string | null;
+  spiritualInsight: string | null | undefined;
 }
 
 export function SpiritualInsight({ spiritualInsight }: ISpiritualInsightProps) {
@@ -11,11 +11,11 @@ export function SpiritualInsight({ spiritualInsight }: ISpiritualInsightProps) {
         <>
           <p
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}
-            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px]"
+            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
           >
             Spiritual Insight
           </p>
-          <div className="flex flex-col gap-[10px] mb-[40px]">
+          <div className="flex flex-col gap-[10px] mb-[40px] text-left">
             <p
               style={{
                 lineHeight: "19px",
