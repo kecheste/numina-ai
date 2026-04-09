@@ -2,6 +2,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import AppBar from "@/components/navigation/appBar";
 import { type TestResultResponse } from "@/lib/api-client";
+import { DimensionScores } from "../../components/DimensionScores";
 
 interface BigFiveResultProps {
   result: TestResultResponse;
@@ -66,31 +67,11 @@ export function BigFiveResult({
             {data.shortDescription}
           </p>
 
-          <div className="mb-8 space-y-4">
-            <h3 className="text-[#FFFFFF] text-[11px] uppercase tracking-wider mb-2 border-b border-white/10 pb-2">
-              Dimension Profile
-            </h3>
-            {dimensions.map((dim) => (
-              <div key={dim.key} className="space-y-1.5">
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-white/60">{dim.label}</span>
-                  <span style={{ color: dim.color }} className="font-medium">
-                    {scores[dim.key] ?? 0}%
-                  </span>
-                </div>
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <div
-                    className="h-full rounded-full transition-all duration-1000"
-                    style={{
-                      width: `${scores[dim.key] ?? 0}%`,
-                      backgroundColor: dim.color,
-                      boxShadow: `0 0 10px ${dim.color}40`,
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+          <DimensionScores
+            title="Dimension Profile"
+            dimensions={dimensions}
+            scores={scores}
+          />
 
           {traits.length > 0 && (
             <div className="mb-6">

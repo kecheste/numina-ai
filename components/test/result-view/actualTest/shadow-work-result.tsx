@@ -4,11 +4,13 @@ import React from "react";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
 import { TestResultResponse } from "@/lib/api-client";
+import { DimensionScores } from "../../components/DimensionScores";
 
 interface ShadowWorkScores {
   suppressed_expression: number;
   self_judgment: number;
   hidden_potential: number;
+  [key: string]: number;
 }
 
 interface ShadowWorkResultProps {
@@ -135,39 +137,14 @@ export function ShadowWorkResult({
             </div>
 
             {scores && (
-              <div className="mb-6 p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                <h3 className="text-[11px] font-[600] text-[#F2D08C] uppercase tracking-[1.5px] mb-6 text-center">
-                  Core Dimensions
-                </h3>
-                <div className="space-y-6">
-                  {Object.entries(scores)
-                    .filter(([key]) => key in SHADOW_LABELS)
-                    .map(([key, val]) => (
-                      <div key={key} className="space-y-2">
-                        <div className="flex justify-between text-[12px] font-[350] text-white/80 tracking-wide">
-                          <span>
-                            {SHADOW_LABELS[key as keyof ShadowWorkScores] ||
-                              key}
-                          </span>
-                          <span className="font-[500] text-[#F2D08C]">
-                            {typeof val === "number" || typeof val === "string"
-                              ? val
-                              : 0}
-                            %
-                          </span>
-                        </div>
-                        <div className="relative h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                          <div
-                            className="absolute inset-y-0 left-0 bg-[#F2D08C] rounded-full transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(242,208,140,0.4)]"
-                            style={{
-                              width: `${typeof val === "number" ? val : parseInt(String(val)) || 0}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
+              <DimensionScores
+                title="Core Dimensions"
+                dimensions={Object.entries(SHADOW_LABELS).map(([key, label]) => ({
+                  key,
+                  label,
+                }))}
+                scores={scores}
+              />
             )}
 
             {qualitative && (

@@ -2,6 +2,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import AppBar from "@/components/navigation/appBar";
 import { type TestResultResponse } from "@/lib/api-client";
+import { DimensionScores } from "../../components/DimensionScores";
 
 interface PastLifeVibesResultProps {
   result: TestResultResponse;
@@ -97,36 +98,12 @@ export function PastLifeVibesResult({
             </div>
           )}
 
-          {/* Archetype Score Bars */}
-          <div className="mb-8 space-y-3">
-            <h3 className="text-white/40 text-[11px] uppercase tracking-wider mb-3">
-              Ancient Archetypes
-            </h3>
-            {ARCHETYPE_DIMENSIONS.map((dim) => {
-              const val = scores[dim.key] ?? 0;
-              if (val === 0) return null;
-              return (
-                <div key={dim.key} className="space-y-1">
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-white/60">{dim.label}</span>
-                    <span style={{ color: dim.color }} className="font-medium">
-                      {val}%
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${val}%`,
-                        backgroundColor: dim.color,
-                        boxShadow: `0 0 8px ${dim.color}40`,
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {/* Dimension Scores */}
+          <DimensionScores
+            title="Ancient Archetypes"
+            dimensions={ARCHETYPE_DIMENSIONS}
+            scores={scores}
+          />
 
           {/* Soul Narrative */}
           {soulNarrativeParas.length > 0 && (

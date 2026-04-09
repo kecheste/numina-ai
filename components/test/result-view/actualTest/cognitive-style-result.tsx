@@ -4,6 +4,12 @@ import React from "react";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
 import { TestResultResponse } from "@/lib/api-client";
+import { DimensionScores } from "../../components/DimensionScores";
+import { CoreTraits } from "../../components/CoreTraits";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface CognitiveStyleScores {
   analytical: number;
@@ -11,6 +17,7 @@ interface CognitiveStyleScores {
   practical: number;
   observational: number;
   balanced: number;
+  [key: string]: number;
 }
 
 interface CognitiveStyleResultProps {
@@ -90,223 +97,94 @@ export function CognitiveStyleResult({
           handleLogout={() => router.push("/welcome")}
         />
 
-        <div className="flex flex-col pt-4 pb-2 flex-1 overflow-y-auto">
-          <div className="px-[24px] pb-12">
-            <div className="text-center mb-10">
-              <div className="inline-block px-3 py-1 rounded-full mb-2">
-                <span className="text-[13px] font-[400] text-[#F2D08C] tracking-[2px]">
-                  Cognitive Style
-                </span>
-              </div>
-              <h1
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                  lineHeight: "36px",
-                }}
-                className="text-[22px] font-[400] text-white mb-2"
-              >
-                {llm?.title || styles?.primary}
-              </h1>
-              {styles?.secondary && (
-                <p className="text-[12px] font-[300] text-[#F2D08C]/80 uppercase tracking-widest">
-                  Secondary Influence: {styles.secondary}
+        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto text-left">
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[8px] text-center"
+          >
+            Your Cognitive Style
+          </h1>
+
+          <div className="flex items-center justify-center">
+            <h1
+              style={{ fontFamily: "var(--font-gotham)" }}
+              className="text-[16px] font-[325] text-[#F2D08C] rounded-[5px] px-[8px] uppercase border border-[#F2D08C]/70 mb-[8px]"
+            >
+              {llm?.title || styles?.primary}
+            </h1>
+          </div>
+
+          <h1
+            style={{ lineHeight: "23px", fontFamily: "var(--font-gotham)" }}
+            className="text-[11px] font-[300] text-[#D9D9D9] px-[8px] mb-[40px] text-center"
+          >
+            Secondary Influence: {styles?.secondary}
+          </h1>
+
+          {scores && (
+            <DimensionScores
+              title="Thinking Dimensions"
+              dimensions={Object.keys(scores).map((key) => ({
+                key,
+                label: DIMENSION_LABELS[key] || key,
+              }))}
+              scores={scores}
+            />
+          )}
+
+          <div className="mb-[40px] space-y-[20px] text-left">
+            {llm?.overview &&
+              llm.overview.split("\n\n").map((p: string, i: number) => (
+                <p
+                  key={i}
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                    lineHeight: "19px",
+                  }}
+                  className="border-l border-[#F2D08C] pl-[8px] py-0 m-0 text-[13px] font-[350] text-[#FFFFFF]"
+                >
+                  {p}
                 </p>
-              )}
-            </div>
+              ))}
+          </div>
 
-            {scores && (
-              <div className="mb-8 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                <h3 className="text-[11px] font-[600] text-[#F2D08C] uppercase tracking-[1.5px] mb-8 text-center">
-                  Thinking Dimensions
-                </h3>
-                <div className="space-y-6">
-                  {Object.entries(scores).map(([key, val]) => {
-                    const label = DIMENSION_LABELS[key] || key;
-                    return (
-                      <div key={key} className="space-y-2">
-                        <div className="flex justify-between items-end text-[11px] font-[400] text-white/50 uppercase tracking-wider mb-1">
-                          <span>{label}</span>
-                          <span className="text-[#F2D08C] font-[500] text-[12px]">
-                            {val}%
-                          </span>
-                        </div>
-                        <div className="relative h-[4px] w-full bg-white/10 rounded-full overflow-hidden">
-                          <div
-                            className="absolute left-0 top-0 h-full bg-[#F2D08C] transition-all duration-1000 ease-out"
-                            style={{ width: `${val}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+          <CoreTraits
+            coreTraits={Array.isArray(llm?.coreTraits) ? llm.coreTraits : []}
+          />
 
-            <div className="mb-6 space-y-4">
-              {llm?.overview &&
-                llm.overview.split("\n\n").map((p: string, i: number) => (
-                  <p
-                    key={i}
-                    style={bodyTextStyle}
-                    className="text-[15px] font-[300] text-white/80 leading-[1.6]"
-                  >
-                    {p}
-                  </p>
-                ))}
-            </div>
+          <Strength
+            strengths={Array.isArray(llm?.strengths) ? llm.strengths : []}
+          />
 
-            {Array.isArray(llm?.coreTraits) && (
-              <div>
-                <h3
-                  style={sectionHeadingStyle}
-                  className="text-[#F2D08C] uppercase mb-3 tracking-[1.5px] text-[11px]"
-                >
-                  Core Traits
-                </h3>
-                <div className="flex flex-wrap gap-2 mb-10">
-                  {llm.coreTraits.map((trait: string, idx: number) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[12px] font-[300] text-[#F2D08C]"
+          <Challenge
+            challenges={Array.isArray(llm?.challenges) ? llm.challenges : []}
+          />
+
+          <div className="mb-[40px] space-y-[10px] text-left">
+            <h3 className="text-[#FFFFFF] text-[15px] font-[350]">
+              Cognitive Signature
+            </h3>
+            <div className="space-y-4">
+              {llm?.energyBlueprint &&
+                llm.energyBlueprint
+                  .split("\n\n")
+                  .map((p: string, i: number) => (
+                    <p
+                      key={i}
+                      style={bodyTextStyle}
+                      className="border-l border-[#F2D08C] pl-[8px] py-0 m-0 text-[13px] font-[350] text-[#F2D08C]"
                     >
-                      {trait}
-                    </span>
+                      {p}
+                    </p>
                   ))}
-                </div>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 gap-6 mb-12">
-              <section className="space-y-4">
-                <h3
-                  style={sectionHeadingStyle}
-                  className="text-green-300/60 uppercase tracking-[1.5px] text-[11px]"
-                >
-                  Strengths & Dualities
-                </h3>
-                <div className="space-y-4">
-                  {Array.isArray(llm?.strengths) &&
-                    llm.strengths.map((str: string, idx: number) => (
-                      <div
-                        key={idx}
-                        className="p-4 rounded-xl bg-white/[0.03] border border-white/10"
-                      >
-                        <p
-                          style={bodyTextStyle}
-                          className="text-[14px] font-[300] text-white/90"
-                        >
-                          {str}
-                        </p>
-                      </div>
-                    ))}
-                </div>
-              </section>
-
-              <section className="space-y-4">
-                <h3
-                  style={sectionHeadingStyle}
-                  className="text-red-300/60 uppercase tracking-[1.5px] text-[11px]"
-                >
-                  Key Challenges
-                </h3>
-                <div className="space-y-3">
-                  {Array.isArray(llm?.challenges) &&
-                    llm.challenges.map((ch: string, idx: number) => (
-                      <div key={idx} className="flex gap-3 items-start">
-                        <div className="mt-2 h-1 w-1 rounded-full bg-white/20 shrink-0" />
-                        <p
-                          style={bodyTextStyle}
-                          className="text-[14px] font-[300] text-white/60"
-                        >
-                          {ch}
-                        </p>
-                      </div>
-                    ))}
-                </div>
-              </section>
-            </div>
-
-            <section className="mb-12 p-4 rounded-2xl bg-gradient-to-br from-[#F2D08C]/[0.05] to-transparent border border-[#F2D08C]/10">
-              <h3
-                style={sectionHeadingStyle}
-                className="text-[#F2D08C] text-center mb-6 uppercase tracking-[2px]"
-              >
-                Your Cognitive Signature
-              </h3>
-              <div className="space-y-4">
-                {llm?.energyBlueprint &&
-                  llm.energyBlueprint
-                    .split("\n\n")
-                    .map((p: string, i: number) => (
-                      <p
-                        key={i}
-                        style={bodyTextStyle}
-                        className="text-[14px] font-[300] text-white/80 leading-[1.6]"
-                      >
-                        {p}
-                      </p>
-                    ))}
-              </div>
-            </section>
-
-            <div className="space-y-8">
-              {Array.isArray(llm?.tryThis) && llm.tryThis.length > 0 && (
-                <section>
-                  <h3
-                    style={sectionHeadingStyle}
-                    className="text-[#F2D08C] mb-2 uppercase tracking-[1.5px] text-[11px]"
-                  >
-                    Try This:
-                  </h3>
-                  <div className="space-y-4">
-                    {llm.tryThis.map((item: string, idx: number) => (
-                      <div key={idx} className="flex gap-4 items-center">
-                        <div className="h-6 w-6 rounded-full bg-[#F2D08C]/10 border border-[#F2D08C]/20 flex items-center justify-center shrink-0">
-                          <span className="text-[#F2D08C] text-[10px] font-bold">
-                            {idx + 1}
-                          </span>
-                        </div>
-                        <p
-                          style={bodyTextStyle}
-                          className="text-[13px] font-[400] text-white/80"
-                        >
-                          {item}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {Array.isArray(llm?.avoidThis) && llm.avoidThis.length > 0 && (
-                <section>
-                  <h3
-                    style={sectionHeadingStyle}
-                    className="text-red-400/60 mb-2 uppercase tracking-[1.5px] text-[11px]"
-                  >
-                    Avoid This:
-                  </h3>
-                  <div className="space-y-3">
-                    {llm.avoidThis.map((item: string, idx: number) => (
-                      <div
-                        key={idx}
-                        className="flex gap-3 items-start px-4 py-3 rounded-xl bg-red-400/[0.02] border border-red-400/10"
-                      >
-                        <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-red-400/30 shrink-0" />
-                        <p
-                          style={bodyTextStyle}
-                          className="text-[13px] font-[300] text-white/50"
-                        >
-                          {item}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
             </div>
           </div>
+
+          <TryThis tryThis={Array.isArray(llm?.tryThis) ? llm.tryThis : []} />
+
+          <AvoidThis
+            avoidThis={Array.isArray(llm?.avoidThis) ? llm.avoidThis : []}
+          />
         </div>
       </div>
     </div>

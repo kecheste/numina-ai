@@ -3,7 +3,7 @@
 import React from "react";
 import AppBar from "@/components/navigation/appBar";
 import { type TestResultResponse } from "@/lib/api-client";
-import { Progress } from "@/components/ui/progress";
+import { DimensionScores } from "../../components/DimensionScores";
 
 interface StarseedOriginResultProps {
   result: TestResultResponse;
@@ -58,20 +58,14 @@ export function StarseedOriginResultView({
             </p>
           </div>
 
-          <div className="mb-8 space-y-4">
-            <h3 className="text-[#FFFFFF] text-[11px] uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
-              Cosmic Resonance Scores
-            </h3>
-            {Object.entries(scores).map(([name, score]: [string, any]) => (
-              <div key={name} className="space-y-1.5">
-                <div className="flex justify-between text-[11px] uppercase tracking-tighter">
-                  <span className="text-white/70">{name}</span>
-                  <span className="text-[#F2D08C] font-semibold">{score}%</span>
-                </div>
-                <Progress value={score} className="h-1.5 bg-white/10" />
-              </div>
-            ))}
-          </div>
+          <DimensionScores
+            title="Cosmic Resonance Scores"
+            dimensions={Object.keys(scores).map((name) => ({
+              key: name,
+              label: name.charAt(0).toUpperCase() + name.slice(1),
+            }))}
+            scores={scores}
+          />
 
           {traits.length > 0 && (
             <div className="mb-8">

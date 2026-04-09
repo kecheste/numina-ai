@@ -3,7 +3,7 @@
 import React from "react";
 import AppBar from "@/components/navigation/appBar";
 import { type TestResultResponse } from "@/lib/api-client";
-import { Progress } from "@/components/ui/progress";
+import { DimensionScores } from "../../components/DimensionScores";
 
 interface CoreValuesResultProps {
   result: TestResultResponse;
@@ -53,20 +53,20 @@ export function CoreValuesResult({
             {data.shortDescription}
           </p>
 
-          <div className="mb-8 space-y-4">
-            <h3 className="text-[#FFFFFF] text-[11px] uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
-              Value Resonance Scores
-            </h3>
-            {Object.entries(scores).map(([name, score]: [string, any]) => (
-              <div key={name} className="space-y-1.5">
-                <div className="flex justify-between text-[11px] uppercase tracking-tighter">
-                  <span className="text-white/70 capitalize">{name}</span>
-                  <span className="text-[#F2D08C] font-semibold">{score}%</span>
-                </div>
-                <Progress value={score} className="h-1.5 bg-white/10" />
-              </div>
-            ))}
-          </div>
+          <DimensionScores
+            title="Value Resonance Scores"
+            dimensions={[
+              { key: "growth", label: "Growth", color: "#F2D08C" },
+              { key: "connection", label: "Connection", color: "#BA8CF2" },
+              { key: "freedom", label: "Freedom", color: "#8CCBF2" },
+              { key: "security", label: "Security", color: "#8CF2BC" },
+              { key: "impact", label: "Impact", color: "#F28C8C" },
+              { key: "creativity", label: "Creativity", color: "#F2BC8C" },
+              { key: "harmony", label: "Harmony", color: "#8CD9F2" },
+              { key: "achievement", label: "Achievement", color: "#D9F28C" },
+            ]}
+            scores={scores}
+          />
 
           {traits.length > 0 && (
             <div className="mb-8">
