@@ -51,10 +51,7 @@ export function AstrologyChartResultView({
   const tryThis = llm?.tryThis ?? [];
   const avoidThis = llm?.avoidThis ?? [];
   const spiritualInsight = llm?.spiritualInsight ?? null;
-  const overlaps = (llm?.synchronicities ?? []) as {
-    label?: string;
-    description?: string;
-  }[];
+
   const narrative = result.narrative ?? null;
 
   return (

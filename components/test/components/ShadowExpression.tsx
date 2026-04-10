@@ -1,33 +1,33 @@
 import React from "react";
-import { SparklingIcon } from "@/components/icons/sparkling";
+import { Icon } from "@iconify/react";
 
-interface IChallengeProps {
-  challenges?: string[];
+interface IShadowExpressionProps {
+  shadowExpression?: string[];
 }
 
-export function Challenge({ challenges }: IChallengeProps) {
+export function ShadowExpression({ shadowExpression }: IShadowExpressionProps) {
   return (
     <div className="mb-[40px]">
-      {challenges && challenges.length > 0 && (
+      {shadowExpression && shadowExpression.length > 0 && (
         <>
           <p
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}
-            className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
+            className="text-[15px] font-[350] text-[#F2D08C] mb-[20px] text-left"
           >
-            Challenges
+            Shadow Expression
           </p>
           <div className="flex flex-col gap-[10px]">
-            {challenges.map((s: string) => (
+            {shadowExpression.map((s: string) => (
               <div key={s} className="flex items-start text-left gap-2">
                 <div>
-                  <SparklingIcon />
+                  <Icon icon={"mdi:star"} color="#F2D08C" />
                 </div>
                 <p
                   style={{
                     lineHeight: "15px",
                     fontFamily: "var(--font-gotham)",
                   }}
-                  className="text-[13px] text-[#F2D08C] font-[350]"
+                  className="text-[13px] text-[#FFFFFF] font-[3050]"
                 >
                   {s}
                 </p>

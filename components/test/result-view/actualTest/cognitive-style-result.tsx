@@ -110,13 +110,14 @@ export function CognitiveStyleResult({
               style={{ fontFamily: "var(--font-gotham)" }}
               className="text-[16px] font-[325] text-[#F2D08C] rounded-[5px] px-[8px] uppercase border border-[#F2D08C]/70 mb-[8px]"
             >
-              {llm?.title || styles?.primary}
+              {llm?.title?.replace("The ", "") ||
+                styles?.primary?.replace("The ", "")}
             </h1>
           </div>
 
           <h1
             style={{ lineHeight: "23px", fontFamily: "var(--font-gotham)" }}
-            className="text-[11px] font-[300] text-[#D9D9D9] px-[8px] mb-[40px] text-center"
+            className="text-[13px] font-[300] text-[#F2D08C] mb-[40px] text-center uppercase"
           >
             Secondary Influence: {styles?.secondary}
           </h1>
@@ -160,8 +161,8 @@ export function CognitiveStyleResult({
             challenges={Array.isArray(llm?.challenges) ? llm.challenges : []}
           />
 
-          <div className="mb-[40px] space-y-[10px] text-left">
-            <h3 className="text-[#FFFFFF] text-[15px] font-[350]">
+          <div className="mb-[40px] text-left">
+            <h3 className="text-[#FFFFFF] text-[15px] font-[350] mb-[12px]">
               Cognitive Signature
             </h3>
             <div className="space-y-4">

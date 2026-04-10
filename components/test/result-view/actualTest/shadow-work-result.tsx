@@ -5,6 +5,10 @@ import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
 import { TestResultResponse } from "@/lib/api-client";
 import { DimensionScores } from "../../components/DimensionScores";
+import { SpiritualInsight } from "../../components/SpiritualInsight";
+import { BluePrint } from "../../components/Blueprint";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface ShadowWorkScores {
   suppressed_expression: number;
@@ -101,226 +105,103 @@ export function ShadowWorkResult({
       >
         <AppBar
           handleBack={onClose}
+          handleLogout={() => router.push("/logout")}
           shellRef={shellRef}
-          handleLogout={() => router.push("/welcome")}
         />
 
-        <div className="flex flex-col pt-4 pb-2 flex-1 overflow-y-auto">
-          <div className="px-[24px] pb-12">
-            <div className="text-center mb-10">
-              <div className="inline-block px-3 py-1 rounded-full mb-4">
-                <span className="text-[13px] font-[400] text-[#F2D08C] tracking-[2px]">
-                  Shadow Work Lens
-                </span>
-              </div>
-              <h1
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                  lineHeight: "40px",
-                }}
-                className="text-[20px] font-[300] text-white mb-2"
-              >
-                {content?.llm_result_json?.title}
-              </h1>
-              {typeof content?.llm_result_json?.shortDescription ===
-                "string" && (
-                <p
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                    lineHeight: "22px",
-                  }}
-                  className="text-[14px] font-[300] text-white/60 max-w-[380px] mx-auto italic"
-                >
-                  {content?.llm_result_json?.shortDescription}
-                </p>
+        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+          >
+            Your Shadow Work Lens
+          </h1>
+
+          <div className="flex flex-col items-center mb-[40px]">
+            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+              {content?.llm_result_json?.title?.replace("The ", "")}
+            </h2>
+            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
+              {content?.llm_result_json?.oneSentenceInsight || "A strong tendency to guard vulnerability through control, distance, or overthinking."}
+            </p>
+          </div>
+
+          <SpiritualInsight
+            title=""
+            spiritualInsight={content?.llm_result_json?.shortDescription}
+          />
+
+          {scores && (
+            <DimensionScores
+              title="Core Dimensions"
+              dimensions={Object.entries(SHADOW_LABELS).map(([key, label]) => ({
+                key,
+                label,
+              }))}
+              scores={scores}
+            />
+          )}
+
+          {qualitative && (
+            <div className="mb-6 space-y-2 text-left">
+              {qualitative.emotion_coping && (
+                <div className="rounded-xl text-[#FFFFFF] py-4">
+                  <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
+                    Emotional Response Style
+                  </p>
+                  <p className="text-white/80 text-[13px] font-[300] italic">
+                    "{qualitative.emotion_coping}"
+                  </p>
+                </div>
               )}
-            </div>
-
-            {scores && (
-              <DimensionScores
-                title="Core Dimensions"
-                dimensions={Object.entries(SHADOW_LABELS).map(([key, label]) => ({
-                  key,
-                  label,
-                }))}
-                scores={scores}
-              />
-            )}
-
-            {qualitative && (
-              <div className="mb-6 space-y-2">
-                {qualitative.emotion_coping && (
-                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 mx-2">
-                    <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
-                      Emotional Response Style
-                    </p>
-                    <p className="text-white/80 text-[13px] font-[300] italic">
-                      "{qualitative.emotion_coping}"
-                    </p>
-                  </div>
-                )}
-                {qualitative.inner_critic_relationship && (
-                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 mx-2">
-                    <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
-                      Inner Critic Dialogue
-                    </p>
-                    <p className="text-white/80 text-[13px] font-[300] italic">
-                      "{qualitative.inner_critic_relationship}"
-                    </p>
-                  </div>
-                )}
-                {qualitative.shadow_check_in_frequency && (
-                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 mx-2">
-                    <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
-                      Shadow Reflection Frequency
-                    </p>
-                    <p className="text-white/80 text-[13px] font-[300] italic">
-                      {qualitative.shadow_check_in_frequency}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className="mb-10">
-              {typeof content?.llm_result_json?.summary === "string" && (
-                <div
-                  style={bodyTextStyle}
-                  className="text-[14px] font-[300] text-white/70 leading-[1.6] text-justify"
-                >
-                  {content?.llm_result_json?.summary}
+              {qualitative.inner_critic_relationship && (
+                <div className="rounded-xl text-[#FFFFFF] py-4">
+                  <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
+                    Inner Critic Dialogue
+                  </p>
+                  <p className="text-white/80 text-[13px] font-[300] italic">
+                    "{qualitative.inner_critic_relationship}"
+                  </p>
+                </div>
+              )}
+              {qualitative.shadow_check_in_frequency && (
+                <div className="rounded-xl text-[#FFFFFF] py-4">
+                  <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
+                    Shadow Reflection Frequency
+                  </p>
+                  <p className="text-white/80 text-[13px] font-[300] italic">
+                    {qualitative.shadow_check_in_frequency}
+                  </p>
                 </div>
               )}
             </div>
+          )}
 
-            <div className="space-y-10 text-left">
-              {typeof content?.llm_result_json?.shadowPattern === "string" && (
-                <section className="relative overflow-hidden p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                  <h3
-                    style={sectionHeadingStyle}
-                    className="text-[#F2D08C] mb-3 uppercase tracking-[1.5px] text-[11px]"
-                  >
-                    Shadow Pattern
-                  </h3>
-                  <div
-                    style={bodyTextStyle}
-                    className="text-[14px] font-[300] text-white/80 leading-[1.6]"
-                  >
-                    {content?.llm_result_json?.shadowPattern}
-                  </div>
-                </section>
-              )}
+          <SpiritualInsight
+            title=""
+            spiritualInsight={content?.llm_result_json?.summary}
+          />
 
-              {typeof content?.llm_result_json?.secondaryPattern ===
-                "string" && (
-                <section className="px-4">
-                  <h3
-                    style={sectionHeadingStyle}
-                    className="text-[#F2D08C] mb-3 uppercase tracking-[1.5px] text-[11px]"
-                  >
-                    Secondary Pattern
-                  </h3>
-                  <p
-                    style={bodyTextStyle}
-                    className="text-[14px] font-[300] text-white/70 leading-[1.6]"
-                  >
-                    {content?.llm_result_json?.secondaryPattern}
-                  </p>
-                </section>
-              )}
+          <BluePrint
+            title="Shadow Pattern"
+            blueprint={content?.llm_result_json?.shadowPattern}
+          />
+          <BluePrint
+            title="Secondary Pattern"
+            blueprint={content?.llm_result_json?.secondaryPattern}
+          />
+          <BluePrint
+            title="Hidden Strength"
+            blueprint={content?.llm_result_json?.hiddenStrength}
+          />
+          <BluePrint
+            title="Growth Edge"
+            blueprint={content?.llm_result_json?.growthEdge}
+          />
 
-              <div className="grid grid-cols-1 gap-4">
-                {typeof content?.llm_result_json?.hiddenStrength ===
-                  "string" && (
-                  <section className="p-4 rounded-xl bg-white/[0.03] border border-white/10 group">
-                    <h3
-                      style={sectionHeadingStyle}
-                      className="text-[#F2D08C] mb-3 uppercase tracking-[1.5px] text-[11px]"
-                    >
-                      Hidden Strength
-                    </h3>
-                    <p
-                      style={bodyTextStyle}
-                      className="text-[14px] font-[300] text-white/80 leading-[1.6]"
-                    >
-                      {content?.llm_result_json?.hiddenStrength}
-                    </p>
-                  </section>
-                )}
+          <TryThis tryThis={content?.llm_result_json?.tryThis || []} />
 
-                {typeof content?.llm_result_json?.growthEdge === "string" && (
-                  <section className="p-4 rounded-xl bg-[#F2D08C]/[0.02] border border-[#F2D08C]/10">
-                    <h3
-                      style={sectionHeadingStyle}
-                      className="text-[#F2D08C] mb-3 uppercase tracking-[1.5px] text-[11px]"
-                    >
-                      Growth Edge
-                    </h3>
-                    <p
-                      style={bodyTextStyle}
-                      className="text-[14px] font-[300] text-white/80 leading-[1.6]"
-                    >
-                      {content?.llm_result_json?.growthEdge}
-                    </p>
-                  </section>
-                )}
-              </div>
-
-              {Array.isArray(content?.llm_result_json?.tryThis) &&
-                content?.llm_result_json?.tryThis.length > 0 && (
-                  <section className="rounded-2xl bg-white/[0.01] border border-white/5">
-                    <h3
-                      style={sectionHeadingStyle}
-                      className="text-[#F2D08C] mb-4 uppercase tracking-[1.5px] text-[11px]"
-                    >
-                      Try This:
-                    </h3>
-                    <div className="space-y-4">
-                      {content?.llm_result_json?.tryThis.map((item, idx) => (
-                        <div key={idx} className="flex gap-4 items-start">
-                          <div className="mt-[6px] h-[5px] w-[5px] rounded-full bg-[#F2D08C] shadow-[0_0_4px_#F2D08C] shrink-0" />
-                          <p
-                            style={bodyTextStyle}
-                            className="text-[14px] font-[350] text-white/70 leading-[1.5]"
-                          >
-                            {typeof item === "string"
-                              ? item
-                              : JSON.stringify(item)}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-              {Array.isArray(content?.llm_result_json?.avoidThis) &&
-                content?.llm_result_json?.avoidThis.length > 0 && (
-                  <section className="">
-                    <h3
-                      style={sectionHeadingStyle}
-                      className="text-red-400/80 mb-4 uppercase tracking-[1.5px] text-[11px]"
-                    >
-                      Avoid This:
-                    </h3>
-                    <div className="space-y-4">
-                      {content?.llm_result_json?.avoidThis.map((item, idx) => (
-                        <div key={idx} className="flex gap-4 items-start">
-                          <div className="mt-[6px] h-[5px] w-[5px] rounded-full bg-red-400/40 shrink-0" />
-                          <p
-                            style={bodyTextStyle}
-                            className="text-[14px] font-[350] text-white/60 leading-[1.5]"
-                          >
-                            {typeof item === "string"
-                              ? item
-                              : JSON.stringify(item)}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-            </div>
-          </div>
+          <AvoidThis avoidThis={content?.llm_result_json?.avoidThis || []} />
         </div>
       </div>
     </div>

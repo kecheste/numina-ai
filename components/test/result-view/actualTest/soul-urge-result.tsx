@@ -3,6 +3,14 @@
 import React from "react";
 import { TestResultResponse } from "@/lib/api-client";
 import AppBar from "@/components/navigation/appBar";
+import { BluePrint } from "../../components/Blueprint";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { SpiritualInsight } from "../../components/SpiritualInsight";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
+import { InnerMotivations } from "../../components/InnerMotivations";
+import { ShadowExpression } from "../../components/ShadowExpression";
 
 interface SoulUrgeResultProps {
   result: TestResultResponse;
@@ -81,218 +89,45 @@ export function SoulUrgeResult({
       >
         <AppBar
           handleBack={onClose}
-          shellRef={shellRef}
           handleLogout={onLogout}
+          shellRef={shellRef}
         />
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          {/* Header */}
-          <h1 className="text-[21px] font-[500] text-white mb-1">
-            Soul Urge / Heart&apos;s Desire
-          </h1>
-          <h2
-            className="text-[13px] font-[300] mb-6 mt-1"
-            style={{ color: theme.accent }}
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
           >
-            Your Inner Drive
-          </h2>
+            Your Soul Urge / Heart's Desire
+          </h1>
 
-          {/* Soul Urge Number Badge */}
-          {soulUrgeNumber > 0 && (
-            <div
-              className="mb-8 p-5 rounded-2xl border flex items-center gap-5"
-              style={{
-                borderColor: theme.accent + "44",
-                background: theme.glow,
-              }}
-            >
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold flex-shrink-0"
-                style={{ background: theme.accent + "22", color: theme.accent }}
-              >
-                {soulUrgeNumber}
-              </div>
-              <div>
-                <p className="text-white/50 text-[11px] uppercase tracking-widest mb-1">
-                  Soul Urge Number{isMaster ? " · Master" : ""}
-                </p>
-                <p className="text-white font-[500] text-[16px]">
-                  {data.title || theme.label || `Soul Urge ${soulUrgeNumber}`}
-                </p>
-              </div>
-            </div>
-          )}
+          <div className="flex flex-col items-center mb-[40px]">
+            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+              {data?.title?.replace("The ", "")}
+            </h2>
+            {/* <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px]">
+              Balance between your energy modes is currently low
+            </p> */}
+          </div>
 
-          {/* Core Desire */}
-          {coreDesireParas.length > 0 && (
-            <div className="mb-8">
-              <h2
-                className="text-[13px] font-[300] mb-3 uppercase tracking-wider"
-                style={{ color: theme.accent }}
-              >
-                Core Desire
-              </h2>
-              <div className="space-y-3">
-                {coreDesireParas.map((para, i) => (
-                  <p
-                    key={i}
-                    className="text-white/80 text-[14px] leading-relaxed"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
+          <BluePrint title="Core Desire" blueprint={data?.coreDesire} />
 
-          {/* Inner Motivations */}
-          {innerMotivations.length > 0 && (
-            <div className="mb-8">
-              <h2
-                className="text-[13px] font-[300] mb-3 uppercase tracking-wider"
-                style={{ color: theme.accent }}
-              >
-                Inner Motivations
-              </h2>
-              <ul className="space-y-2 text-[13px] text-white/80">
-                {innerMotivations.map((m, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span
-                      style={{ color: theme.accent }}
-                      className="mt-0.5 shrink-0"
-                    >
-                      ›
-                    </span>
-                    <span>{m}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <InnerMotivations innerMotivations={innerMotivations} />
 
-          {/* Shadow Expression */}
-          {shadowExpression.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-[13px] font-[300] mb-3 uppercase tracking-wider text-[#F28C8C]">
-                Shadow Expression
-              </h2>
-              <ul className="space-y-2 text-[13px] text-white/80">
-                {shadowExpression.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-[#F28C8C] mt-0.5 shrink-0">›</span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <ShadowExpression shadowExpression={shadowExpression} />
 
-          {/* Strengths & Challenges grid */}
-          {(strengths.length > 0 || challenges.length > 0) && (
-            <div className="grid grid-cols-1 gap-4 mb-8">
-              {strengths.length > 0 && (
-                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <h3
-                    className="text-[12px] uppercase tracking-wider mb-2 font-[400]"
-                    style={{ color: theme.accent }}
-                  >
-                    Strengths
-                  </h3>
-                  <ul className="space-y-1.5">
-                    {strengths.map((s, i) => (
-                      <li key={i} className="text-white/70 text-[12px]">
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {challenges.length > 0 && (
-                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <h3 className="text-[12px] uppercase tracking-wider mb-2 font-[400] text-[#F28C8C]">
-                    Challenges
-                  </h3>
-                  <ul className="space-y-1.5">
-                    {challenges.map((c, i) => (
-                      <li key={i} className="text-white/70 text-[12px]">
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
+          <Strength strengths={strengths} />
 
-          {/* Fulfillment Path */}
-          {fulfillmentPathParas.length > 0 && (
-            <div className="mb-8">
-              <h2
-                className="text-[13px] font-[300] mb-3 uppercase tracking-wider"
-                style={{ color: theme.accent }}
-              >
-                Fulfillment Path
-              </h2>
-              <div className="space-y-3">
-                {fulfillmentPathParas.map((para, i) => (
-                  <p
-                    key={i}
-                    className="text-white/80 text-[14px] leading-relaxed italic"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
+          <Challenge challenges={challenges} />
 
-          {/* Try This */}
-          {tryThis.length > 0 && (
-            <div
-              className="mb-6 p-4 rounded-xl border"
-              style={{
-                background: theme.glow,
-                borderColor: theme.accent + "44",
-              }}
-            >
-              <h3
-                className="text-[13px] font-[500] mb-3"
-                style={{ color: theme.accent }}
-              >
-                Alignment Practices
-              </h3>
-              <ul className="space-y-2 text-white/80 text-[13px]">
-                {tryThis.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span
-                      style={{ color: theme.accent }}
-                      className="mt-0.5 shrink-0 font-bold"
-                    >
-                      {i + 1}.
-                    </span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <SpiritualInsight
+            spiritualInsight={data.fulfillmentPath}
+            title="Fulfillment Path"
+          />
 
-          {/* Avoid This */}
-          {avoidThis.length > 0 && (
-            <div className="bg-white/5 p-4 rounded-xl border border-[#F28C8C44]">
-              <h3 className="text-[#F28C8C] text-[13px] font-[500] mb-3">
-                Misalignment Patterns
-              </h3>
-              <ul className="space-y-2 text-white/80 text-[13px]">
-                {avoidThis.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-[#F28C8C] mt-0.5 shrink-0">✕</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <TryThis tryThis={tryThis} />
+
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>

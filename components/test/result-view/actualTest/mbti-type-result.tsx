@@ -1,10 +1,16 @@
 "use client";
 
-import { useRef } from "react";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
 
 import { type TestResultResponse } from "@/lib/api-client";
+import { BluePrint } from "../../components/Blueprint";
+import { DimensionScores } from "../../components/DimensionScores";
+import { CoreTraits } from "../../components/CoreTraits";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface MbtiTypeResultProps {
   onClose: () => void;
@@ -18,63 +24,6 @@ function ensureStringArray(value: unknown): string[] {
     return value.map((x) => (typeof x === "string" ? x : String(x)));
   }
   return [];
-}
-
-function ParagraphBlock({ text }: { text?: string }) {
-  if (!text) return null;
-  const paragraphs = text
-    .replace(/\\n/g, "\n")
-    .split("\n")
-    .filter((p) => p.trim().length > 0);
-  return (
-    <div className="flex flex-col gap-4">
-      {paragraphs.map((p, i) => (
-        <p
-          key={i}
-          style={{ fontFamily: "var(--font-gotham)", lineHeight: "22px" }}
-          className="text-[13px] font-[300] text-white"
-        >
-          {p.trim()}
-        </p>
-      ))}
-    </div>
-  );
-}
-
-function ChipList({ items, gold }: { items: string[]; gold?: boolean }) {
-  if (!items.length) return null;
-  return (
-    <div className="flex flex-wrap gap-2">
-      {items.map((item, idx) => (
-        <span
-          key={idx}
-          className="border border-[#F2D08C]/50 rounded-[7px] px-3 text-left"
-          style={{ fontFamily: "var(--font-gotham)", lineHeight: "18px" }}
-        >
-          <span
-            className={`text-[12px] font-[300] ${gold ? "text-[#F2D08C]" : "text-white"}`}
-          >
-            {item}
-          </span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <h3
-      style={{ fontFamily: "var(--font-gotham)" }}
-      className="text-[14px] font-[400] text-[#F2D08C] uppercase tracking-wide mb-3"
-    >
-      {children}
-    </h3>
-  );
-}
-
-function Divider() {
-  return <div className="w-full h-px bg-white/10 my-6" />;
 }
 
 export function MbtiTypeResult({
@@ -92,11 +41,7 @@ export function MbtiTypeResult({
 
   const overview: string = llm?.overview ?? "";
 
-  const narration: string = llm?.narrative ?? "";
-
   const cognitiveStyle: string = llm?.cognitiveStyle || "";
-
-  const spiritualInsight: string = llm?.spiritualInsight || "";
 
   const coreTraits = ensureStringArray(llm?.coreTraits ?? result?.insights);
   const strengths = ensureStringArray(llm?.strengths ?? result?.insights);
@@ -117,142 +62,52 @@ export function MbtiTypeResult({
       >
         <AppBar
           handleBack={onClose}
-          handleLogout={onLogout || (() => router.push("/welcome"))}
+          handleLogout={onLogout}
           shellRef={shellRef}
         />
 
-        <div className="px-[24px] py-6 pb-4 flex-1 overflow-y-auto">
-          {/* Header */}
-          <div className="text-center mb-6">
-            <p
-              style={{ fontFamily: "var(--font-gotham)" }}
-              className="text-[12px] font-[300] text-[#F2D08C] uppercase tracking-widest mb-2"
-            >
-              Your Personality Type
-            </p>
+        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+          >
+            Your Personality Type (MBTI)
+          </h1>
+
+          <div className="flex flex-col items-center mb-[40px]">
             <h1
-              style={{ fontFamily: "var(--font-gotham)", lineHeight: "38px" }}
-              className="text-[32px] font-[500] text-white"
+              style={{ fontFamily: "var(--font-gotham)" }}
+              className="text-[16px] font-[350] text-[#F2D08C] border border-[#F2D08C] px-2 rounded-[5px]"
             >
               {typeLabel}
             </h1>
+            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
+              {llm?.oneSentenceInsight || "Very strong preference for structure, logic, and steadiness."}
+            </p>
           </div>
 
-          {/* Overview */}
-          {overview && (
-            <>
-              <ParagraphBlock text={overview} />
-              <Divider />
-            </>
-          )}
+          <BluePrint title="" blueprint={overview} />
 
-          {/* Dimension Profile */}
-          {confidence && Object.keys(confidence).length > 0 && (
-            <>
-              <SectionTitle>Dimension Profile</SectionTitle>
-              <div className="flex flex-col gap-[14px] mb-2">
-                {Object.entries(confidence).map(([trait, pct]) => (
-                  <div key={trait} className="flex flex-col gap-2 w-full">
-                    <div
-                      className="flex justify-between text-[#FFFFFF] text-[13px] font-[300]"
-                      style={{ fontFamily: "var(--font-gotham)" }}
-                    >
-                      <span>{trait}</span>
-                      <span className="text-[#F2D08C]">{String(pct)}%</span>
-                    </div>
-                    <div className="w-full h-[5px] bg-white/10 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-[#F2D08C] rounded-full"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Divider />
-            </>
-          )}
+          <DimensionScores
+            title="Dimension Profile"
+            scores={confidence}
+            dimensions={Object.keys(confidence).map((key) => ({
+              key,
+              label: key.charAt(0).toUpperCase() + key.slice(1),
+            }))}
+          />
 
-          {/* Core Traits */}
-          {coreTraits.length > 0 && (
-            <>
-              <SectionTitle>Core Traits</SectionTitle>
-              <ChipList items={coreTraits} gold />
-              <Divider />
-            </>
-          )}
+          <CoreTraits coreTraits={coreTraits} />
 
-          {/* Strengths */}
-          {strengths.length > 0 && (
-            <>
-              <SectionTitle>Strengths</SectionTitle>
-              <ChipList items={strengths} gold />
-              <Divider />
-            </>
-          )}
+          <Strength strengths={strengths} />
 
-          {/* Challenges */}
-          {challenges.length > 0 && (
-            <>
-              <SectionTitle>Challenges</SectionTitle>
-              <ChipList items={challenges} />
-              <Divider />
-            </>
-          )}
+          <Challenge challenges={challenges} />
 
-          {/* Cognitive Style */}
-          {cognitiveStyle && (
-            <>
-              <SectionTitle>Cognitive Style</SectionTitle>
-              <ParagraphBlock text={cognitiveStyle} />
-              <Divider />
-            </>
-          )}
+          <BluePrint title="Cognitive Style" blueprint={llm?.summary} />
 
-          {/* Try This */}
-          {tryThis.length > 0 && (
-            <>
-              <SectionTitle>Try This</SectionTitle>
-              <ul className="flex flex-col gap-1 list-disc pl-4">
-                {tryThis.map((item, idx) => (
-                  <li key={idx}>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-gotham)",
-                        lineHeight: "18px",
-                      }}
-                      className="text-[13px] font-[300] text-white text-left"
-                    >
-                      {item}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-              <Divider />
-            </>
-          )}
+          <TryThis tryThis={tryThis} />
 
-          {/* Avoid This */}
-          {avoidThis.length > 0 && (
-            <>
-              <SectionTitle>Avoid This</SectionTitle>
-              <ul className="flex flex-col gap-1 list-disc pl-4">
-                {avoidThis.map((item, idx) => (
-                  <li key={idx}>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-gotham)",
-                        lineHeight: "20px",
-                      }}
-                      className="text-[13px] font-[300] text-white text-left"
-                    >
-                      {item}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>

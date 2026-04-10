@@ -2,23 +2,23 @@ import React from "react";
 import { SparklingIcon } from "@/components/icons/sparkling";
 
 interface IStrengthProps {
-  strengths: string[];
+  strengths?: string[];
 }
 
 export function Strength({ strengths }: IStrengthProps) {
   return (
-    <div>
-      {strengths.length > 0 && (
+    <div className="mb-[40px]">
+      {strengths && strengths.length > 0 && (
         <>
           <p
             style={{ fontFamily: "var(--font-gotham)" }}
             className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
           >
-            Core Strengths
+            Strengths
           </p>
-          <div className="flex flex-wrap gap-1 mb-[40px]">
+          <div className="flex flex-col gap-[10px] items-start">
             {strengths.map((s: string) => (
-              <div key={s} className="flex items-center gap-2">
+              <div key={s} className="flex items-start text-left gap-2">
                 <div>
                   <SparklingIcon />
                 </div>

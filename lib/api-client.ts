@@ -13,7 +13,6 @@ export function getWsBaseUrl(): string {
   return base.replace(/^http/, "ws");
 }
 
-
 export function getStoredToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(AUTH_TOKEN_KEY);
@@ -524,6 +523,7 @@ export interface TestResultResponse {
   extracted_json?: any | null;
   llm_result_json?: {
     title?: string;
+    oneSentenceInsight?: string;
     energyProfile?: string;
     summary?: string;
     shortDescription?: string;

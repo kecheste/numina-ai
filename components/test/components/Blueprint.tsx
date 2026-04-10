@@ -16,7 +16,7 @@ export function BluePrint({ blueprint, title }: IBluePrintProps) {
           >
             {title}
           </p>
-          <div className="flex flex-col gap-[10px] mb-[40px] text-left">
+          <div className="flex flex-col gap-[30px] mb-[40px] text-left">
             {blueprint.split("\n\n").map((para: string, i: number) => (
               <p
                 key={i}

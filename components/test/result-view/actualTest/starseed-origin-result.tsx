@@ -4,6 +4,13 @@ import React from "react";
 import AppBar from "@/components/navigation/appBar";
 import { type TestResultResponse } from "@/lib/api-client";
 import { DimensionScores } from "../../components/DimensionScores";
+import { SpiritualInsight } from "../../components/SpiritualInsight";
+import { CoreTraits } from "../../components/CoreTraits";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { BluePrint } from "../../components/Blueprint";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface StarseedOriginResultProps {
   result: TestResultResponse;
@@ -37,26 +44,31 @@ export function StarseedOriginResultView({
       >
         <AppBar
           handleBack={onClose}
-          shellRef={shellRef}
           handleLogout={onLogout}
+          shellRef={shellRef}
         />
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+          >
             Your Starseed Origin
           </h1>
-          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-6">
-            Your Result
-          </h2>
 
-          <div className="mb-8">
-            <h3 className="text-[#F2D08C] text-[11px] uppercase tracking-wider mb-2 border-b border-white/10 pb-2">
-              Origin Summary
-            </h3>
-            <p className="text-white/80 text-[13px] font-[250] leading-relaxed italic">
-              {data.originSummary || data.shortDescription}
+          <div className="flex flex-col items-center mb-[40px]">
+            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+              {data?.title?.replace("The ", "")}
+            </h2>
+            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
+              {data?.oneSentenceInsight || "Cosmic resonance centered on freedom, sensitivity, and higher perspective."}
             </p>
           </div>
+
+          <SpiritualInsight
+            title="Origin Summary"
+            spiritualInsight={data.originSummary}
+          />
 
           <DimensionScores
             title="Cosmic Resonance Scores"
@@ -67,130 +79,19 @@ export function StarseedOriginResultView({
             scores={scores}
           />
 
-          {traits.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-[#FFFFFF] text-[11px] uppercase tracking-wider mb-3">
-                Core Traits
-              </h2>
-              <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-1">
-                {traits.map((t: string, i: number) => (
-                  <li
-                    className="border border-[#FFFFFF]/30 text-[#F2D08C] rounded-md px-2 py-0.5 bg-white/5"
-                    style={{ lineHeight: "18px" }}
-                    key={i}
-                  >
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <CoreTraits coreTraits={traits} />
 
-          <div className="flex flex-col gap-4 mb-8">
-            {strengths.length > 0 && (
-              <div>
-                <h3 className="text-[#008049] text-[11px] uppercase tracking-wider mb-2">
-                  Strengths
-                </h3>
-                <div className="space-y-2 flex flex-wrap gap-1">
-                  {strengths.map((s: string, i: number) => (
-                    <p
-                      key={i}
-                      style={{
-                        lineHeight: "16px",
-                      }}
-                      className="text-white/80 text-[11px] leading-tight text-left border rounded-md px-3 border-[#F2D08C]/50"
-                    >
-                      {s}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            )}
-            {challenges.length > 0 && (
-              <div>
-                <h3 className="text-[#F28C8C] text-[11px] uppercase tracking-wider mb-2">
-                  Challenges
-                </h3>
-                <div className="space-y-2 flex flex-wrap gap-1">
-                  {challenges.map((c: string, i: number) => (
-                    <p
-                      key={i}
-                      style={{
-                        lineHeight: "16px",
-                      }}
-                      className="text-white/80 text-[11px] leading-tight text-left border rounded-md px-3 border-[#F2D08C]/50"
-                    >
-                      {c}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <Strength strengths={strengths} />
 
-          {data.spiritualInsight && (
-            <div className="mb-8 bg-[#F28C8C1A] p-5 rounded-2xl border border-[#F28C8C33]">
-              <h2 className="text-[#F28C8C] font-[500] text-[14px] mb-2 uppercase tracking-wide">
-                Spiritual Insight
-              </h2>
-              <p className="text-white/90 text-[13px] leading-relaxed italic">
-                "{data.spiritualInsight}"
-              </p>
-            </div>
-          )}
+          <Challenge challenges={challenges} />
 
-          {(data.cosmicProfile || data.summary) && (
-            <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-[500] text-[15px] mb-3 uppercase tracking-wide">
-                Cosmic Profile
-              </h2>
-              <div className="space-y-4 text-left font-[250]">
-                {(data.cosmicProfile || data.summary).split("\n\n").map((para: string, i: number) => (
-                  <p
-                    key={i}
-                    className="text-white/80 text-[13px] leading-relaxed"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
+          <SpiritualInsight spiritualInsight={data?.spiritualInsight} />
 
-          <div className="space-y-6">
-            {tryThis.length > 0 && (
-              <div>
-                <h2 className="text-[#008049] font-[500] text-[14px] mb-3">
-                  Try This:
-                </h2>
-                <ul className="space-y-2 text-white/80 text-[13px] text-left">
-                  {tryThis.map((t: string, i: number) => (
-                    <li key={i} className="flex gap-2 leading-snug">
-                      <span className="text-[#008049] mt-0.5">✦</span>
-                      <span>{t}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+          <BluePrint blueprint={data?.cosmicProfile} title="Cosmic Profile" />
 
-            {avoidThis.length > 0 && (
-              <div>
-                <h2 className="text-[#F28C8C] font-[500] text-[14px] mb-3">
-                  Avoid This:
-                </h2>
-                <ul className="space-y-2 text-white/80 text-[13px] text-left">
-                  {avoidThis.map((a: string, i: number) => (
-                    <li key={i} className="flex gap-2 leading-snug">
-                      <span className="text-[#F28C8C] mt-0.5">✦</span>
-                      <span>{a}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+          <TryThis tryThis={tryThis} />
+
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>

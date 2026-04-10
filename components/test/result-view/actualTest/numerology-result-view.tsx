@@ -1,8 +1,16 @@
 "use client";
+
 import React from "react";
 
 import AppBar from "@/components/navigation/appBar";
 import { TestResultResponse } from "@/lib/api-client";
+import { BluePrint } from "../../components/Blueprint";
+import { CoreTraits } from "../../components/CoreTraits";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { SpiritualInsight } from "../../components/SpiritualInsight";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface NumerologyScores {
   life_path: number;
@@ -115,7 +123,7 @@ export function NumerologyResultView({
   const strengths = content?.llm_result_json?.strengths;
   const challenges = Array.isArray(content?.llm_result_json?.challenges)
     ? content?.llm_result_json?.challenges
-    : null;
+    : undefined;
   const spiritualInsight = content?.llm_result_json?.spiritualInsight;
   const blueprint =
     content?.llm_result_json?.corePattern ||
@@ -125,16 +133,13 @@ export function NumerologyResultView({
   const avoidThis = content?.llm_result_json?.avoidThis;
 
   const hasNumberSections = lifePath || soulUrge || expression || birthday;
-  const hasStrengthsChallenges =
-    (strengths && strengths.length > 0) ||
-    (challenges && challenges.length > 0);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
       <div
         ref={shellRef}
         style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 pt-2 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col"
+        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
       >
         <AppBar
           handleBack={onClose}
@@ -142,13 +147,13 @@ export function NumerologyResultView({
           shellRef={shellRef}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-16 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[300] text-[#FFFFFF] mb-1 text-center tracking-widest">
+        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[40px] text-center"
+          >
             Your Numerology
           </h1>
-          <p className="text-[12px] font-[300] text-[#F2D08C] mt-1 mb-8 text-center tracking-[0.2em]">
-            Your Result
-          </p>
 
           {hasNumberSections && (
             <div className="mb-10 gap-8 flex flex-col">
@@ -175,148 +180,19 @@ export function NumerologyResultView({
             </div>
           )}
 
-          {blueprint && (
-            <div className="mb-10">
-              <Paragraphs
-                text={blueprint}
-                className="text-[13px] font-[300] text-white/85 leading-relaxed text-center"
-              />
-            </div>
-          )}
+          <BluePrint title="" blueprint={blueprint} />
 
-          <div>
-            <h3
-              className="text-[16px] font-[400] text-[#FFFFFF] mb-4"
-              style={{ lineHeight: "24px" }}
-            >
-              Core Traits
-            </h3>
-            {coreTraits && coreTraits.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-2 mb-10">
-                {coreTraits.map((trait) => (
-                  <span
-                    key={trait}
-                    className="border border-[#F2D08C]/50 rounded-[20px] px-3 py-1 text-[11px] font-[350] text-[#F2D08C]"
-                  >
-                    {trait}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
+          <CoreTraits coreTraits={coreTraits} />
 
-          {hasStrengthsChallenges && (
-            <div className="mb-10">
-              <h3
-                className="text-[16px] font-[400] text-[#F2D08C] mb-4"
-                style={{ lineHeight: "24px" }}
-              >
-                Strengths &amp; Challenges
-              </h3>
-              <div className="space-y-5">
-                {strengths && strengths.length > 0 && (
-                  <div>
-                    <p className="text-[11px] font-[400] text-[#F2D08C] mb-2 uppercase tracking-widest">
-                      Strengths
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {strengths.map((s) => (
-                        <span
-                          key={s}
-                          className="border border-white/25 text-[12px] font-[300] text-white rounded-md px-2 py-0.5"
-                        >
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {challenges && challenges.length > 0 && (
-                  <div>
-                    <p className="text-[11px] font-[400] text-[#F2D08C] mb-2 uppercase tracking-widest">
-                      Challenges
-                    </p>
-                    <div className="flex flex-wrap gap-2 text-left">
-                      {challenges.map((c) => (
-                        <span
-                          key={c}
-                          className="border border-white/25 text-[12px] font-[300] text-white rounded-md px-2 py-0.5"
-                        >
-                          {c}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+          <Strength strengths={strengths} />
 
-          {spiritualInsight && (
-            <div className="mb-8">
-              <h3
-                className="text-[16px] font-[400] text-[#F2D08C] mb-3"
-                style={{ lineHeight: "24px" }}
-              >
-                Spiritual Insight
-              </h3>
-              <p
-                className="text-[13px] font-[300] text-white/85 italic border-l-2 border-[#F2D08C]/60 pl-4"
-                style={{ lineHeight: "20px" }}
-              >
-                {spiritualInsight}
-              </p>
-            </div>
-          )}
+          <Challenge challenges={challenges} />
 
-          {tryThis && tryThis.length > 0 && (
-            <div className="mb-4 text-left">
-              <h3
-                className="text-[16px] font-[400] text-[#F2D08C] mb-3"
-                style={{ lineHeight: "24px" }}
-              >
-                Try This
-              </h3>
-              <ul className="list-disc pl-5">
-                {tryThis.map((t, i) => (
-                  <li
-                    key={i}
-                    className="text-[12px] font-[300] text-white/85"
-                    style={{ lineHeight: "20px" }}
-                  >
-                    <div className="flex gap-2">
-                      <span>{t}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <SpiritualInsight spiritualInsight={spiritualInsight} />
 
-          {avoidThis && avoidThis.length > 0 && (
-            <div className="text-left">
-              <h3
-                className="text-[16px] font-[400] text-[#F2D08C] mb-3"
-                style={{ lineHeight: "24px" }}
-              >
-                Avoid This
-              </h3>
+          <TryThis tryThis={tryThis} />
 
-              <ul className=" list-disc pl-5">
-                {avoidThis.map((a, i) => (
-                  <li
-                    key={i}
-                    className="text-[12px] font-[300] text-white/85"
-                    style={{ lineHeight: "20px" }}
-                  >
-                    <div className="flex gap-2">
-                      <span>{a}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>

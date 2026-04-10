@@ -1,13 +1,13 @@
 import React from "react";
 
 interface ICoreTraitsProps {
-  coreTraits: string[];
+  coreTraits?: string[];
 }
 
 export function CoreTraits({ coreTraits }: ICoreTraitsProps) {
   return (
     <div>
-      {coreTraits.length > 0 && (
+      {coreTraits && coreTraits?.length > 0 && (
         <>
           <p
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}

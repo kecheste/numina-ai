@@ -1,10 +1,14 @@
 import React from "react";
 
 interface ISpiritualInsightProps {
-  spiritualInsight: string | null | undefined;
+  spiritualInsight?: string | null | undefined;
+  title?: string;
 }
 
-export function SpiritualInsight({ spiritualInsight }: ISpiritualInsightProps) {
+export function SpiritualInsight({
+  spiritualInsight,
+  title = "Spiritual Insight",
+}: ISpiritualInsightProps) {
   return (
     <div>
       {spiritualInsight && (
@@ -13,7 +17,7 @@ export function SpiritualInsight({ spiritualInsight }: ISpiritualInsightProps) {
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}
             className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
           >
-            Spiritual Insight
+            {title}
           </p>
           <div className="flex flex-col gap-[10px] mb-[40px] text-left">
             <p
@@ -23,7 +27,7 @@ export function SpiritualInsight({ spiritualInsight }: ISpiritualInsightProps) {
               }}
               className="text-[13px] border-l border-[#F2D08C] pl-[8px] text-[#F2D08C] font-[350]"
             >
-              {spiritualInsight}
+              "{spiritualInsight}"
             </p>
           </div>
         </>

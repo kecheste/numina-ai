@@ -18,7 +18,7 @@ export function DimensionScores({
   scores,
 }: IDimensionScoresProps) {
   return (
-    <div className="mb-[40px]">
+    <div className="mb-[60px]">
       <h3
         className="text-[15px] font-[350] text-[#FFFFFF] text-left mb-[20px]"
         style={{ fontFamily: "var(--font-gotham)" }}
@@ -42,7 +42,7 @@ export function DimensionScores({
                   {val}%
                 </span> */}
               </div>
-              <div className="relative h-[4px] w-full bg-white/10 rounded-full overflow-hidden">
+              <div className="relative h-[4px] w-full bg-[#F2D08C2B] rounded-full overflow-hidden">
                 <div
                   className="absolute left-0 top-0 h-full transition-all duration-1000 ease-out"
                   style={{

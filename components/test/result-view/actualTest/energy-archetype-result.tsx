@@ -34,13 +34,6 @@ export function EnergyArchetypeResult({
   const tryThis = Array.isArray(data.tryThis) ? data.tryThis : [];
   const avoidThis = Array.isArray(data.avoidThis) ? data.avoidThis : [];
 
-  const archetypeColors: Record<string, string> = {
-    visionary: "#F2D08C",
-    analyst: "#8CB8F2",
-    integrator: "#8CF2BB",
-    overloaded: "#F28C8C",
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
       <div
@@ -62,20 +55,14 @@ export function EnergyArchetypeResult({
             Your Energy Archetype
           </h1>
 
-          {extracted.balance_score !== undefined && (
-            <div className="mb-[40px] flex flex-col items-center">
-              <p className="text-[#F2D08C] text-[13px] uppercase">
-                Balance Score
-              </p>
-              <p className="text-[#F2D08C] px-4 pt-1 border border-[#F2D08C] rounded-[5px] font-bold text-[18px]">
-                {extracted.balance_score}%
-              </p>
-              <p className="text-[#D9D9D9] text-[11px] pt-[12px] px-[40px]">
-                Reflects the alignment between your Integrator and Overloaded
-                Circuit dimensions.
-              </p>
-            </div>
-          )}
+          <div className="flex flex-col items-center mb-[40px]">
+            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+              {data?.title?.replace("The ", "")}
+            </h2>
+            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px]">
+              {data?.oneSentenceInsight || "Balance between your energy modes is currently low"}
+            </p>
+          </div>
 
           <DimensionScores
             title="Dimension Profile"

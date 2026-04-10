@@ -1,11 +1,15 @@
 "use client";
 
-import { useRef } from "react";
 import AppBar from "@/components/navigation/appBar";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 
 import { type TestResultResponse } from "@/lib/api-client";
+import { SpiritualInsight } from "../../components/SpiritualInsight";
+import { CoreTraits } from "../../components/CoreTraits";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { BluePrint } from "../../components/Blueprint";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface LifePathResultViewProps {
   onClose: () => void;
@@ -27,8 +31,6 @@ export function LifePathResultView({
   result,
   onLogout,
 }: LifePathResultViewProps) {
-  const router = useRouter();
-
   const llm = result?.llm_result_json;
 
   const title = llm?.title ?? result?.test_title ?? "Life Path Number";
@@ -59,203 +61,42 @@ export function LifePathResultView({
       >
         <AppBar
           handleBack={onClose}
-          handleLogout={onLogout || (() => router.push("/welcome"))}
+          handleLogout={onLogout}
           shellRef={shellRef}
         />
 
-        <div className="px-[24px] py-6 pb-4 flex-1 overflow-y-auto">
-          <div className="text-center mb-1">
-            <h1
-              style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
-              className="text-[21px] font-[400] text-white"
-            >
-              Your Life Path
-            </h1>
-            <p
-              style={{ fontFamily: "var(--font-gotham)" }}
-              className="text-[13px] mt-4 font-[300] text-[#F2D08C]"
-            >
-              Your Result
-            </p>
-          </div>
+        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+          >
+            Your Life Path
+          </h1>
 
-          <div className="text-center mb-8 mt-4">
-            <p
-              style={{ fontFamily: "var(--font-gotham)", lineHeight: "21px" }}
-              className="text-[14px] font-[300] text-white"
-            >
-              {shortDescription}
-            </p>
-          </div>
-
-          {coreTraits.length > 0 && (
-            <div className="text-left mb-6">
-              <h3
-                style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
-                className="text-[15px] font-[350] text-white"
-              >
-                Core Traits
-              </h3>
-              <div className="flex flex-wrap gap-1">
-                {coreTraits.map((trait, idx) => (
-                  <span
-                    key={idx}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2"
-                    style={{
-                      fontFamily: "var(--font-gotham)",
-                      lineHeight: "14px",
-                    }}
-                  >
-                    <span className="text-[12px] font-[300] text-[#F2D08C]">
-                      {trait}
-                    </span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {strengths.length > 0 && (
-            <div className="text-left mb-6">
-              <h3
-                style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
-                className="text-[15px] font-[350] text-white"
-              >
-                Strengths
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {strengths.map((strength, idx) => (
-                  <span
-                    key={idx}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
-                    style={{
-                      fontFamily: "var(--font-gotham)",
-                      lineHeight: "12px",
-                    }}
-                  >
-                    <span className="text-[12px] font-[300] text-[#F2D08C]">
-                      {strength}
-                    </span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {challenges.length > 0 && (
-            <div className="text-left mb-6">
-              <h3
-                style={{ fontFamily: "var(--font-gotham)", lineHeight: "24px" }}
-                className="text-[15px] font-[600] text-white mb-3"
-              >
-                Challenges
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {challenges.map((challenge, idx) => (
-                  <span
-                    key={idx}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[17px]"
-                    style={{
-                      fontFamily: "var(--font-gotham)",
-                      lineHeight: "12px",
-                    }}
-                  >
-                    <span className="text-[12px] font-[300] text-white">
-                      {challenge}
-                    </span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {spiritualInsight && (
-            <div className="text-left mb-8">
-              <h3
-                style={{ fontFamily: "var(--font-gotham)", lineHeight: "24px" }}
-                className="text-[15px] font-[600] text-white mb-1"
-              >
-                Spiritual Insight
-              </h3>
-              <p
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[13px] font-[300] text-white"
-              >
-                {spiritualInsight}
-              </p>
-            </div>
-          )}
-
-          <div className="text-center mb-10">
-            <h2
-              style={{ fontFamily: "var(--font-gotham)", lineHeight: "33px" }}
-              className="text-[21px] font-[400] text-[#F2D08C] mb-4"
-            >
-              Your Life Path Pattern
+          <div className="flex flex-col items-center mb-[40px]">
+            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+              {title?.replace("The ", "")}
             </h2>
-            <div
-              style={{ fontFamily: "var(--font-gotham)" }}
-              className="flex flex-col gap-6 text-[13px] font-[300] text-[#FFFFFF] text-left"
-            >
-              {narrative
-                ?.replace(/\\n/g, "\n")
-                .split("\n")
-                .filter((line) => line.trim().length > 0)
-                .map((paragraph, idx) => (
-                  <p key={idx}>{paragraph.trim()}</p>
-                ))}
-            </div>
+            {/* <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px]">
+              Balance between your energy modes is currently low
+            </p> */}
           </div>
 
-          {tryThis.length > 0 && (
-            <div className="text-left mb-6">
-              <h3
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                  lineHeight: "24px",
-                }}
-                className="text-[15px] font-[600] text-white mb-2"
-              >
-                Try This
-              </h3>
-              <ul className="list-disc list-inside space-y-1">
-                {tryThis.map((item, idx) => (
-                  <li
-                    key={idx}
-                    style={{ fontFamily: "var(--font-gotham)" }}
-                    className="text-[13px] font-[300] text-[#F2D08C]"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <SpiritualInsight spiritualInsight={shortDescription} title="" />
 
-          {avoidThis.length > 0 && (
-            <div className="text-left mb-10">
-              <h3
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                  lineHeight: "24px",
-                }}
-                className="text-[15px] font-[600] text-white mb-2"
-              >
-                Avoid This
-              </h3>
-              <ul className="list-disc list-inside space-y-1">
-                {avoidThis.map((item, idx) => (
-                  <li
-                    key={idx}
-                    style={{ fontFamily: "var(--font-gotham)" }}
-                    className="text-[13px] font-[300] text-white/90"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <CoreTraits coreTraits={coreTraits} />
+
+          <Strength strengths={strengths} />
+
+          <Challenge challenges={challenges} />
+
+          <SpiritualInsight spiritualInsight={spiritualInsight} />
+
+          <BluePrint blueprint={narrative} title="Life Path Pattern" />
+
+          <TryThis tryThis={tryThis} />
+
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>

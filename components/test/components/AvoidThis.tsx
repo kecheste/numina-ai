@@ -1,13 +1,13 @@
 import React from "react";
 
 interface IAvoidThisProps {
-  avoidThis: string[];
+  avoidThis?: string[];
 }
 
 export function AvoidThis({ avoidThis }: IAvoidThisProps) {
   return (
     <div>
-      {avoidThis.length > 0 && (
+      {avoidThis && avoidThis.length > 0 && (
         <>
           <p
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}

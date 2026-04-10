@@ -1,8 +1,14 @@
 import React from "react";
-import { useRouter } from "next/navigation";
 import AppBar from "@/components/navigation/appBar";
 import { type TestResultResponse } from "@/lib/api-client";
 import { DimensionScores } from "../../components/DimensionScores";
+import { SpiritualInsight } from "../../components/SpiritualInsight";
+import { CoreTraits } from "../../components/CoreTraits";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { BluePrint } from "../../components/Blueprint";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface BigFiveResultProps {
   result: TestResultResponse;
@@ -17,8 +23,6 @@ export function BigFiveResult({
   onLogout,
   shellRef,
 }: BigFiveResultProps) {
-  const router = useRouter();
-
   const data = (result.llm_result_json as any) || {};
   const scores = (result.extracted_json as any) || {};
 
@@ -29,11 +33,11 @@ export function BigFiveResult({
   const avoidThis = Array.isArray(data.avoidThis) ? data.avoidThis : [];
 
   const dimensions = [
-    { key: "openness", label: "Openness", color: "#F2D08C" },
-    { key: "conscientiousness", label: "Conscientiousness", color: "#8CF2BC" },
-    { key: "extraversion", label: "Extraversion", color: "#8CCBF2" },
-    { key: "agreeableness", label: "Agreeableness", color: "#BA8CF2" },
-    { key: "neuroticism", label: "Neuroticism", color: "#F28C8C" },
+    { key: "openness", label: "Openness" },
+    { key: "conscientiousness", label: "Conscientiousness" },
+    { key: "extraversion", label: "Extraversion" },
+    { key: "agreeableness", label: "Agreeableness" },
+    { key: "neuroticism", label: "Neuroticism" },
   ];
 
   return (
@@ -41,31 +45,32 @@ export function BigFiveResult({
       <div
         ref={shellRef}
         style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col pt-2"
+        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
       >
         <AppBar
           handleBack={onClose}
-          handleLogout={onLogout || (() => router.push("/welcome"))}
+          handleLogout={onLogout}
           shellRef={shellRef}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-4 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
+        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+          >
             Your Big Five Personality
           </h1>
-          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-4">
-            Your Result
-          </h2>
 
-          <p
-            style={{
-              fontFamily: "var(--font-gotham)",
-              lineHeight: "22px",
-            }}
-            className="text-[14px] font-[300] text-white/60 max-w-[380px] mx-auto italic mb-8"
-          >
-            {data.shortDescription}
-          </p>
+          <div className="flex flex-col items-center mb-[40px]">
+            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+              {data?.title?.replace("The ", "")}
+            </h2>
+            {/* <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px]">
+              Balance between your energy modes is currently low
+            </p> */}
+          </div>
+
+          <SpiritualInsight spiritualInsight={data?.shortDescription} />
 
           <DimensionScores
             title="Dimension Profile"
@@ -73,91 +78,20 @@ export function BigFiveResult({
             scores={scores}
           />
 
-          {traits.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#FFFFFF] font-[300] text-[13px] mb-2 uppercase tracking-wider">
-                Core Traits
-              </h2>
-              <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-1">
-                {traits.map((t: string, i: number) => (
-                  <li
-                    className="border border-[#FFFFFF]/30 text-[#F2D08C] rounded-md px-2 py-0.5 bg-white/5"
-                    style={{ lineHeight: "18px" }}
-                    key={i}
-                  >
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <CoreTraits coreTraits={traits} />
 
-          {strengths.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[500] text-[14px] mb-2">
-                Strengths
-              </h2>
-              <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
-                {strengths.map((s: string, i: number) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <Strength strengths={strengths} />
 
-          {challenges.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F28C8C] font-[500] text-[14px] mb-2">
-                Challenges
-              </h2>
-              <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
-                {challenges.map((c: string, i: number) => (
-                  <li key={i}>{c}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <Challenge challenges={challenges} />
 
-          {data.summary && (
-            <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
-                Your Psychological Signature
-              </h2>
-              <div className="space-y-4 text-left">
-                {data.summary.split("\n\n").map((para: string, i: number) => (
-                  <p key={i} className="text-white/80 text-[13px] text-justify">
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
+          <BluePrint
+            blueprint={data?.summary}
+            title="Psychological Signature"
+          />
 
-          {tryThis.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#008049] font-[500] text-[14px] mb-2">
-                Try This
-              </h2>
-              <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
-                {tryThis.map((t: string, i: number) => (
-                  <li key={i}>{t}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <TryThis tryThis={tryThis} />
 
-          {avoidThis.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-[#F28C8C] font-[500] text-[14px] mb-2">
-                Avoid This
-              </h2>
-              <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
-                {avoidThis.map((a: string, i: number) => (
-                  <li key={i}>{a}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>

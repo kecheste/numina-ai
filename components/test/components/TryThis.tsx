@@ -2,13 +2,13 @@ import React from "react";
 import { SparklingIcon } from "@/components/icons/sparkling";
 
 interface ITryThisProps {
-  tryThis: string[];
+  tryThis?: string[];
 }
 
 export function TryThis({ tryThis }: ITryThisProps) {
   return (
     <div>
-      {tryThis.length > 0 && (
+      {tryThis && tryThis.length > 0 && (
         <>
           <p
             style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}

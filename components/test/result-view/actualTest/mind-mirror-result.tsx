@@ -3,6 +3,13 @@
 import React from "react";
 import { TestResultResponse } from "@/lib/api-client";
 import AppBar from "@/components/navigation/appBar";
+import { SpiritualInsight } from "../../components/SpiritualInsight";
+import { CoreTraits } from "../../components/CoreTraits";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { BluePrint } from "../../components/Blueprint";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface MindMirrorResultProps {
   result: TestResultResponse;
@@ -33,225 +40,56 @@ export function MindMirrorResult({
       >
         <AppBar
           handleBack={onClose}
-          shellRef={shellRef}
           handleLogout={onLogout}
+          shellRef={shellRef}
         />
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+          >
             Your Mind Mirror
           </h1>
-          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-4">
-            Your Result
-          </h2>
 
-          {data.shortDescription && (
-            <p className="text-white/80 text-[13px] mb-4">
-              {data.shortDescription}
+          <div className="flex flex-col items-center mb-[40px]">
+            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+              {data?.title?.replace("The ", "")}
+            </h2>
+            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px]">
+              {data?.oneSentenceInsight || "Balance between your energy modes is currently low"}
             </p>
-          )}
+          </div>
 
-          {data.mentalPattern && (
-            <div className="mb-6">
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[350] text-[15px] mb-2"
-              >
-                Mental Pattern
-              </h2>
-              <p className="text-white/80 text-left font-[300] text-[13px]">
-                {data.mentalPattern}
-              </p>
-            </div>
-          )}
+          <SpiritualInsight spiritualInsight={data?.shortDescription} />
 
-          {data.emotionalTone && (
-            <div className="mb-4">
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[350] text-[15px] mb-2"
-              >
-                Emotional Tone
-              </h2>
-              <p className="text-white/80 text-left font-[300] text-[13px]">
-                {data.emotionalTone}
-              </p>
-            </div>
-          )}
+          <BluePrint title="Mental Pattern" blueprint={data.mentalPattern} />
 
-          {data.currentImbalance && (
-            <div className="mb-4">
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[350] text-[15px] mb-2"
-              >
-                Current Imbalance
-              </h2>
-              <p className="text-white/80 text-left font-[300] text-[13px]">
-                {data.currentImbalance}
-              </p>
-            </div>
-          )}
+          <BluePrint title="Emotional Tone" blueprint={data.emotionalTone} />
 
-          {data.hiddenInsight && (
-            <div className="mb-4">
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[350] text-[15px] mb-2"
-              >
-                Hidden Insight
-              </h2>
-              <p className="text-white/80 text-left font-[300] text-[13px]">
-                {data.hiddenInsight}
-              </p>
-            </div>
-          )}
+          <BluePrint
+            title="Current Imbalance"
+            blueprint={data.currentImbalance}
+          />
 
-          {data.growthDirection && (
-            <div className="mb-4">
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[350] text-[15px] mb-2"
-              >
-                Growth Direction
-              </h2>
-              <p className="text-white/80 text-left font-[300] text-[13px]">
-                {data.growthDirection}
-              </p>
-            </div>
-          )}
+          <BluePrint title="Hidden Insight" blueprint={data.hiddenInsight} />
 
-          {traits.length > 0 && (
-            <div style={{ fontFamily: "var(--font-gotham)" }} className="mb-2">
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[300] text-[13px] my-2"
-              >
-                Core Traits
-              </h2>
-              <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-1">
-                {traits.map((t, i) => (
-                  <li
-                    style={{
-                      lineHeight: "16px",
-                    }}
-                    className="text-[#F2D08C] border border-[#ffffff]/50 rounded-md px-2"
-                    key={i}
-                  >
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <BluePrint
+            title="Growth Direction"
+            blueprint={data.growthDirection}
+          />
 
-          {strengths.length > 0 && (
-            <div className="mb-2">
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[300] text-[13px] my-2"
-              >
-                Strengths
-              </h2>
-              <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-2">
-                {strengths.map((s, i) => (
-                  <li
-                    key={i}
-                    style={{
-                      lineHeight: "16px",
-                    }}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[18px]"
-                  >
-                    {s}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <CoreTraits coreTraits={traits} />
 
-          {challenges.length > 0 && (
-            <div>
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[300] text-[13px] my-2"
-              >
-                Challenges
-              </h2>
-              <ul className="space-y-1 text-[13px] text-left text-white/80 flex flex-wrap gap-2">
-                {challenges.map((c, i) => (
-                  <li
-                    key={i}
-                    style={{
-                      lineHeight: "16px",
-                    }}
-                    className="border border-[#F2D08C]/50 rounded-[7px] px-2 h-[18px]"
-                  >
-                    {c}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <Strength strengths={strengths} />
 
-          {data.summary && (
-            <div>
-              <h2 className="text-[#F2D08C] font-semibold mb-2 mt-6">
-                Your Inner Reflection
-              </h2>
-              {data.summary && (
-                <div
-                  style={{ fontFamily: "var(--font-gotham)" }}
-                  className="space-y-4 text-left"
-                >
-                  {data.summary.split("\n\n").map((para: string, i: number) => (
-                    <p
-                      key={i}
-                      style={{ fontFamily: "var(--font-gotham)" }}
-                      className="text-white/80 text-[14px]"
-                    >
-                      {para}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          <Challenge challenges={challenges} />
 
-          {tryThis.length > 0 && (
-            <div>
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[350] text-[14px] my-2 mt-4"
-              >
-                Try This:
-              </h2>
-              <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
-                {tryThis.map((item, i) => (
-                  <li className="text-[13px]" key={i}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <BluePrint title="Inner Reflection" blueprint={data.summary} />
 
-          {avoidThis.length > 0 && (
-            <div>
-              <h2
-                style={{ fontFamily: "var(--font-gotham)" }}
-                className="text-[#F2D08C] font-[350] text-[14px] my-2 mt-4"
-              >
-                Avoid This:
-              </h2>
-              <ul className="list-disc ml-5 space-y-1 text-white/80 text-[13px] text-left">
-                {avoidThis.map((item, i) => (
-                  <li className="text-[13px]" key={i}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <TryThis tryThis={tryThis} />
+
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>

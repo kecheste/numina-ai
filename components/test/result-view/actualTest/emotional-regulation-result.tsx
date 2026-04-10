@@ -1,8 +1,14 @@
 import React from "react";
+
 import { useRouter } from "next/navigation";
 import AppBar from "@/components/navigation/appBar";
 import { type TestResultResponse } from "@/lib/api-client";
 import { DimensionScores } from "../../components/DimensionScores";
+import { BluePrint } from "../../components/Blueprint";
+import { Strength } from "../../components/Strength";
+import { Challenge } from "../../components/Challenge";
+import { TryThis } from "../../components/TryThis";
+import { AvoidThis } from "../../components/AvoidThis";
 
 interface EmotionalRegulationResultProps {
   result: TestResultResponse;
@@ -28,10 +34,10 @@ export function EmotionalRegulationResult({
   const avoidThis = Array.isArray(data.avoidThis) ? data.avoidThis : [];
 
   const dimensions = [
-    { key: "containment", label: "Quiet Containment", color: "#F2D08C" },
-    { key: "reflective", label: "Reflective Processor", color: "#BA8CF2" },
-    { key: "expressive", label: "Expressive Releaser", color: "#8CCBF2" },
-    { key: "adaptive", label: "Adaptive Regulator", color: "#8CF2BC" },
+    { key: "containment", label: "Quiet Containment" },
+    { key: "reflective", label: "Reflective Processor" },
+    { key: "expressive", label: "Expressive Releaser" },
+    { key: "adaptive", label: "Adaptive Regulator" },
   ];
 
   return (
@@ -39,21 +45,27 @@ export function EmotionalRegulationResult({
       <div
         ref={shellRef}
         style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col pt-2"
+        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
       >
         <AppBar
           handleBack={onClose}
-          handleLogout={onLogout || (() => router.push("/welcome"))}
+          handleLogout={onLogout}
           shellRef={shellRef}
         />
 
         <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1 className="text-[21px] font-[500] text-[#FFFFFF] mb-1">
-            Your Emotional Regulation
+          <h1
+            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+          >
+            Your Emotional Regulation Type
           </h1>
-          <h2 className="text-[13px] font-[300] text-[#F2D08C] mb-4">
-            {data.title || "Your Profile"}
-          </h2>
+
+          <div className="flex flex-col items-center">
+            <h2 className="text-[16px]  font-[325] text-[#F2D08C] mb-[40px] rounded-[5px] uppercase border border-[#F2D08C] px-2">
+              {data?.title}
+            </h2>
+          </div>
 
           <DimensionScores
             title="Regulation Dynamics"
@@ -61,109 +73,17 @@ export function EmotionalRegulationResult({
             scores={scores}
           />
 
-          {data.overview && (
-            <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
-                Overview
-              </h2>
-              <div className="space-y-4 text-left">
-                {data.overview.split("\n\n").map((para: string, i: number) => (
-                  <p
-                    key={i}
-                    className="text-white/80 text-[14px] leading-relaxed font-[250]"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
+          <BluePrint blueprint={data?.overview} title="" />
 
-          {strengths.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F2D08C] font-[500] text-[15px] mb-2">
-                Strengths
-              </h2>
-              <div className="text-white/80 text-[14px] font-[250] flex flex-wrap gap-1">
-                {strengths.map((s: string, i: number) => (
-                  <p
-                    key={i}
-                    style={{
-                      lineHeight: "17px",
-                    }}
-                    className="px-2 border rounded-md border-[#FFFFFF]/50"
-                  >
-                    {s}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
+          <Strength strengths={strengths} />
 
-          {challenges.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#F28C8C] font-[500] text-[15px] mb-2">
-                Challenges
-              </h2>
-              <div className="text-white/80 text-[14px] font-[250] flex flex-wrap gap-1">
-                {challenges.map((c: string, i: number) => (
-                  <p
-                    key={i}
-                    style={{
-                      lineHeight: "17px",
-                    }}
-                    className="px-2 border rounded-md border-[#F2D08C]/50"
-                  >
-                    {c}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
+          <Challenge challenges={challenges} />
 
-          {data.summary && (
-            <div className="mb-8">
-              <h2 className="text-[#F2D08C] font-semibold mb-3 mt-4 text-[15px]">
-                Your Emotional Pattern
-              </h2>
-              <div className="space-y-4 text-left">
-                {data.summary.split("\n\n").map((para: string, i: number) => (
-                  <p
-                    key={i}
-                    className="text-white/80 text-[14px] leading-relaxed font-[250]"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
+          <BluePrint blueprint={data?.summary} title="Emotional Pattern" />
 
-          {tryThis.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-[#8CF2BC] font-[500] text-[15px] mb-2">
-                Try This
-              </h2>
-              <ul className="list-disc ml-5 space-y-2 text-white/80 text-[14px] font-[250] text-left">
-                {tryThis.map((t: string, i: number) => (
-                  <li key={i}>{t}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <TryThis tryThis={tryThis} />
 
-          {avoidThis.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-[#F28C8C] font-[500] text-[15px] mb-2">
-                Avoid This
-              </h2>
-              <ul className="list-disc ml-5 space-y-2 text-white/80 text-[14px] font-[250] text-left">
-                {avoidThis.map((a: string, i: number) => (
-                  <li key={i}>{a}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <AvoidThis avoidThis={avoidThis} />
         </div>
       </div>
     </div>
