@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "@iconify/react";
+import { AsteriskIcon } from "lucide-react";
 
 interface IPersonalityTraitsProps {
   personality?: string[];
@@ -14,10 +15,10 @@ function renderTraits(items?: string[]) {
   return items.slice(0, 3).map((value, index) => (
     <div
       key={`${LABELS[index]}-${value}`}
-      className="flex items-start text-left gap-2"
+      className="flex items-start text-left gap-1"
     >
       <div>
-        <Icon icon="mdi:star" />
+        <AsteriskIcon />
       </div>
       <p
         style={{
@@ -26,7 +27,7 @@ function renderTraits(items?: string[]) {
         }}
         className="text-[13px] text-[#D9D9D9] font-[350]"
       >
-        <span className="text-white">{LABELS[index]}:</span> {value}
+        <span className="text-white">{LABELS[index]} - </span> {value}
       </p>
     </div>
   ));

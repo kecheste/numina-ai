@@ -71,11 +71,11 @@ export function PastLifeVibesResult({
           </h1>
 
           <div className="mb-[40px] flex flex-col items-center">
-            <p className="text-[#F2D08C] px-4 border border-[#F2D08C] rounded-[5px] font-bold text-[18px]">
+            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
               {data?.title?.replace("The ", "")}
-            </p>
+            </h2>
 
-            <p className="text-[#D9D9D9] text-[11px] pt-[12px] px-[40px]">
+            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
               {data?.oneSentenceInsight || "Dominant archetypal resonance"}
             </p>
           </div>
