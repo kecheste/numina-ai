@@ -105,6 +105,73 @@ function PreviewSynthesis({ result }: { result: SynthesisResponse["result"] }) {
   );
 }
 
+function InnerAlignmentSection({
+  alignment,
+}: {
+  alignment?: NonNullable<SynthesisResponse["result"]["innerAlignment"]>;
+}) {
+  if (!alignment) return null;
+  const metrics = [
+    { label: "MIND", data: alignment.mind },
+    { label: "HEART", data: alignment.heart },
+    { label: "BODY", data: alignment.body },
+    { label: "SOUL", data: alignment.soul },
+    { label: "SPIRIT", data: alignment.spirit },
+  ].filter((m) => m.data);
+
+  if (metrics.length === 0) return null;
+
+  return (
+    <div className="my-[40px]">
+      <h2 className="font-[350] text-[15px] text-[#FFFFFF]">
+        Your Inner Alignment
+      </h2>
+      <div className="text-[13px] font-[350] text-[#D9D9D9] mb-[40px]">
+        <p>
+          A holistic snapshot of your energetic expression across five key areas
+          of self:
+        </p>
+        <ul className="list-disc pl-[22px] space-y-1 my-2">
+          {metrics.map((m) => (
+            <li key={m.label} className="pl-1">
+              <span className="capitalize text-white font-[400]">
+                {m.label.toLowerCase()}
+              </span>{" "}
+              &ndash; {m.data.text}
+            </li>
+          ))}
+        </ul>
+        <p>
+          These scores reflect how clearly each aspect is expressed in your
+          current profile. Not a judgment &mdash; but a mirror for
+          self-awareness and gentle rebalancing.
+        </p>
+      </div>
+
+      <div className="space-y-[28px]">
+        {metrics.map((m) => (
+          <div key={m.label} className="relative">
+            <div className="flex justify-between items-end mb-[6px]">
+              <span className="text-[#D9D9D9] text-[13px] font-[325] uppercase">
+                {m.label}
+              </span>
+              <span className="text-[#F2D08C] text-[13px] font-[325]">
+                {m.data.percentage}%
+              </span>
+            </div>
+            <div className="h-[3px] w-full bg-[#F2D08C2B] relative rounded-full">
+              <div
+                className="absolute left-0 top-0 h-full bg-[#F2D08C]"
+                style={{ width: `${m.data.percentage}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function FullSynthesis({ result }: { result: SynthesisResponse["result"] }) {
   return (
     <section className="space-y-1 px-[28px] text-left">
@@ -194,7 +261,7 @@ function FullSynthesis({ result }: { result: SynthesisResponse["result"] }) {
         title="Final Insight"
       />
 
-      <BluePrint title="Right Now" blueprint={result?.currentEnergy} />
+      <InnerAlignmentSection alignment={result?.innerAlignment} />
     </section>
   );
 }

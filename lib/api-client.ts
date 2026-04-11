@@ -627,6 +627,13 @@ export interface SynthesisResponse {
     avoidThis?: string[];
     finalInsight?: string;
     currentEnergy?: string;
+    innerAlignment?: {
+      mind: { percentage: number; text: string };
+      heart: { percentage: number; text: string };
+      body: { percentage: number; text: string };
+      soul: { percentage: number; text: string };
+      spirit: { percentage: number; text: string };
+    };
   };
 }
 
