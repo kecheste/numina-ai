@@ -6,7 +6,7 @@ interface IconProps {
   className?: string;
 }
 
-export const AtericksIcon: React.FC<IconProps> = ({
+export const AtericksIconSVG: React.FC<IconProps> = ({
   size = 24,
   color = "#D9D9D999",
   className = "",

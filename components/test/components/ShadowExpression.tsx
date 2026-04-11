@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "@iconify/react";
+import { AtericksIconSVG } from "@/components/icons/astericks";
 
 interface IShadowExpressionProps {
   shadowExpression?: string[];
@@ -20,7 +21,7 @@ export function ShadowExpression({ shadowExpression }: IShadowExpressionProps) {
             {shadowExpression.map((s: string) => (
               <div key={s} className="flex items-start text-left gap-2">
                 <div>
-                  <Icon icon={"mdi:star"} color="#F2D08C" />
+                  <AtericksIconSVG />
                 </div>
                 <p
                   style={{

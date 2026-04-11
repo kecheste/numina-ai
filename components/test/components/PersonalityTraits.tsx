@@ -1,6 +1,5 @@
+import { AtericksIconSVG } from "@/components/icons/astericks";
 import React from "react";
-import { Icon } from "@iconify/react";
-import { AsteriskIcon } from "lucide-react";
 
 interface IPersonalityTraitsProps {
   personality?: string[];
@@ -18,7 +17,7 @@ function renderTraits(items?: string[]) {
       className="flex items-start text-left gap-1"
     >
       <div>
-        <AsteriskIcon />
+        <AtericksIconSVG />
       </div>
       <p
         style={{
