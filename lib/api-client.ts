@@ -592,20 +592,29 @@ export interface TestResultResponse {
   } | null;
 }
 
+export interface DominantPattern {
+  pattern: string;
+  evidence: {
+    source: string;
+    weight: number;
+  }[];
+  totalWeight: number;
+}
+
 export interface SynthesisResponse {
   type: "preview" | "full";
   completed_count: number;
   result: {
     // Preview keys
     youAre?: string;
-    sureThings?: string[];
+    sureThings?: string;
     identitySummary?: string;
     growthAreas?: string[];
     nextFocus?: string;
     // Full synthesis keys (14 sections + hero line)
     identityLine?: string;
     coreIdentity?: string;
-    dominantPatterns?: string[];
+    dominantPatterns?: DominantPattern[];
     hiddenPatterns?: string[];
     emergingPatterns?: string[];
     innerConflictMap?: string;

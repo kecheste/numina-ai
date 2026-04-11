@@ -8,6 +8,13 @@ import {
 } from "@/lib/api-client";
 import { getTestUi } from "@/lib/constants/testUiMap";
 import { TestCard } from "@/components/cards/test-card";
+import { BluePrint } from "../test/components/Blueprint";
+import { Patterns } from "../test/components/Patterns";
+import { Strength } from "../test/components/Strength";
+import { Challenge } from "../test/components/Challenge";
+import { SpiritualInsight } from "../test/components/SpiritualInsight";
+import { TryThis } from "../test/components/TryThis";
+import { AvoidThis } from "../test/components/AvoidThis";
 
 interface SynthesisPageProps {
   isPremium: boolean;
@@ -47,31 +54,6 @@ function PillList({
   );
 }
 
-function BulletList({
-  items,
-  color = "gold",
-}: {
-  items: string[];
-  color?: "gold" | "silver" | "muted" | "red";
-}) {
-  const cls = {
-    gold: "text-[#F2D08C]",
-    silver: "text-[#D9D9D9]",
-    muted: "text-[#9ca3af]",
-    red: "text-[#f87171]",
-  }[color];
-  return (
-    <ul className="space-y-1 mt-1">
-      {items.map((item, i) => (
-        <li key={i} className={`flex items-start gap-2 text-[13px] font-[300] ${cls}`}>
-          <span className="mt-[3px] shrink-0 w-1 h-1 rounded-full bg-current opacity-70" />
-          {item}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 function QuoteBlock({ text }: { text: string }) {
   return (
     <p className="text-[13px] font-[300] text-[#E7E7E7] border-l-2 border-[#F2D08C66] pl-3 leading-relaxed">
@@ -86,14 +68,17 @@ function PreviewSynthesis({ result }: { result: SynthesisResponse["result"] }) {
       {result.youAre && (
         <>
           <SectionHeading label="You Are" />
-          <p className="text-[13px] font-[400] text-[#F2D08C]">{result.youAre}</p>
+          <p className="text-[13px] font-[400] text-[#F2D08C]">
+            {result.youAre}
+          </p>
         </>
       )}
       {(result.sureThings?.length ?? 0) > 0 && (
         <>
           <SectionHeading label="Sure Things" />
-          <p className="text-[12px] text-[#9ca3af] mb-1">Patterns that stand out across your tests</p>
-          <PillList items={result.sureThings!} color="gold" />
+          <p className="text-[13px] font-[300] text-[#E7E7E7] leading-relaxed">
+            {result.sureThings}
+          </p>
         </>
       )}
       {result.identitySummary && (
@@ -111,7 +96,9 @@ function PreviewSynthesis({ result }: { result: SynthesisResponse["result"] }) {
       {result.nextFocus && (
         <>
           <SectionHeading label="Next Focus" />
-          <p className="text-[13px] font-[400] text-[#F2D08C]">{result.nextFocus}</p>
+          <p className="text-[13px] font-[400] text-[#F2D08C]">
+            {result.nextFocus}
+          </p>
         </>
       )}
     </section>
@@ -121,138 +108,93 @@ function PreviewSynthesis({ result }: { result: SynthesisResponse["result"] }) {
 function FullSynthesis({ result }: { result: SynthesisResponse["result"] }) {
   return (
     <section className="space-y-1 px-[28px] text-left">
+      <div className="flex flex-col gap-[12px] mb-[30px] mt-[20px]">
+        <p className="text-[#FFFFFF] text-[15px] font-[350]">All in all</p>
+        <p className="text-[13px] font-[350] text-[#F2D08C] border-l border-[#F2D08C] pl-2">
+          {result.identityLine}
+        </p>
+      </div>
 
-      {(result.identityLine || (result.dominantPatterns?.length ?? 0) > 0) && (
-        <div className="mb-6 mt-1 rounded-2xl border border-[#F2D08C]/25 bg-gradient-to-b from-[#F2D08C]/8 to-transparent px-4 py-4 space-y-3">
-          {result.identityLine && (
-            <p className="text-[16px] font-[400] text-[#F2D08C] leading-snug tracking-tight">
-              {result.identityLine}
-            </p>
-          )}
-          {(result.dominantPatterns?.length ?? 0) > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {result.dominantPatterns!.slice(0, 5).map((item, i) => (
-                <span
-                  key={i}
-                  className="text-[#E7E7E7] border border-[#E7E7E7]/30 rounded-[10px] px-2.5 py-0.5 text-[11px] font-[300]"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+      <div className="flex flex-col gap-[12px] mb-[20px]">
+        <p className="text-[#FFFFFF] text-[15px] font-[350]">Sure Things</p>
+        <p className="text-[13px] font-[350] text-[#FFFFFF]">
+          {result.sureThings}
+        </p>
+      </div>
 
-      {result.coreIdentity && (
-        <>
-          <SectionHeading label="🧬 Your Core Identity" />
-          <QuoteBlock text={result.coreIdentity} />
-        </>
-      )}
-
-      {(result.hiddenPatterns?.length ?? 0) > 0 && (
-        <>
-          <SectionHeading label="🫥 Hidden Patterns" />
-          <p className="text-[11px] text-[#9ca3af] mb-1">Present but underused</p>
-          <BulletList items={result.hiddenPatterns!} color="silver" />
-        </>
-      )}
-
-      {(result.emergingPatterns?.length ?? 0) > 0 && (
-        <>
-          <SectionHeading label="🌱 Emerging Patterns" />
-          <PillList items={result.emergingPatterns!} color="silver" />
-        </>
-      )}
-
-      {result.innerConflictMap && (
-        <>
-          <SectionHeading label="⚖️ Inner Conflict Map" />
-          <div className="mt-1 rounded-xl border border-[#F2D08C]/20 bg-[#F2D08C]/5 p-3">
-            <p className="text-[13px] font-[300] text-[#E7E7E7] leading-relaxed">
-              {result.innerConflictMap}
-            </p>
+      <div className="mb-[40px]">
+        {(result.dominantPatterns?.length ?? 0) > 0 && (
+          <div className="flex flex-col gap-[8px]">
+            {result.dominantPatterns!.slice(0, 5).map((item, i) => (
+              <div
+                key={i}
+                className="border border-[#F2D08C] rounded-[5px] px-2"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <p className="text-[16px] font-[325] text-[#F2D08C] uppercase">
+                    {item.pattern}
+                  </p>
+                </div>
+                <div className="flex items-center flex-wrap">
+                  <p className="text-[#FFFFFF] text-[11px] font-[350] mr-2">
+                    Confirmed by
+                  </p>
+                  {item?.evidence?.map((ev, ei) => (
+                    <span
+                      key={ei}
+                      className="text-[#D9D9D9] text-[11px] font-[300]"
+                    >
+                      {ev.source}
+                      {ei < item.evidence.length - 1 ? " / " : " "}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-        </>
-      )}
+        )}
+      </div>
 
-      {(result.coreStrengths?.length ?? 0) > 0 && (
-        <>
-          <SectionHeading label="💎 Core Strengths" />
-          <p className="text-[11px] text-[#9ca3af] mb-1">Confirmed across multiple assessments</p>
-          <BulletList items={result.coreStrengths!} color="gold" />
-        </>
-      )}
+      <BluePrint title="Your Core Identity" blueprint={result?.coreIdentity} />
 
-      {(result.coreChallenges?.length ?? 0) > 0 && (
-        <>
-          <SectionHeading label="⚠️ Core Challenges" />
-          <BulletList items={result.coreChallenges!} color="muted" />
-        </>
-      )}
+      <Patterns patterns={result.hiddenPatterns} title="Hidden Patterns" />
 
-      {result.psychologicalProfile && (
-        <>
-          <SectionHeading label="🧠 Psychological Profile" />
-          <QuoteBlock text={result.psychologicalProfile} />
-        </>
-      )}
+      <Patterns patterns={result.emergingPatterns} title="Emerging Patterns" />
 
-      {result.spiritualBlueprint && (
-        <>
-          <SectionHeading label="✨ Spiritual Blueprint" />
-          <QuoteBlock text={result.spiritualBlueprint} />
-        </>
-      )}
+      <BluePrint
+        title="Inner Conflict Map"
+        blueprint={result?.innerConflictMap}
+      />
 
-      {result.yourDirection && (
-        <>
-          <SectionHeading label="🧭 Your Direction" />
-          <p className="text-[13px] font-[400] text-[#F2D08C] leading-relaxed mt-1">
-            {result.yourDirection}
-          </p>
-        </>
-      )}
+      <Strength strengths={result?.coreStrengths} />
 
-      {(result.tryThis?.length ?? 0) > 0 && (
-        <>
-          <SectionHeading label="🛠 Try This" />
-          <BulletList items={result.tryThis!} color="silver" />
-        </>
-      )}
+      <Challenge challenges={result?.coreChallenges} />
 
-      {(result.avoidThis?.length ?? 0) > 0 && (
-        <>
-          <SectionHeading label="🚫 Avoid This" />
-          <BulletList items={result.avoidThis!} color="red" />
-        </>
-      )}
+      <BluePrint
+        title="Psychological Profile"
+        blueprint={result?.psychologicalProfile}
+      />
 
-      {result.finalInsight && (
-        <div className="mt-5 rounded-2xl border border-[#F2D08C]/30 bg-gradient-to-b from-[#F2D08C]/10 to-transparent p-4">
-          <p className="text-[11px] font-[400] text-[#F2D08C]/70 uppercase tracking-widest mb-1.5">
-            🔮 Final Insight
-          </p>
-          <p className="text-[13px] font-[400] text-white leading-relaxed">
-            {result.finalInsight}
-          </p>
-        </div>
-      )}
+      <BluePrint
+        title="Spiritual Blueprint"
+        blueprint={result?.spiritualBlueprint}
+      />
 
-      {result.currentEnergy && (
-        <div className="mt-3 rounded-2xl border border-[#a8b4c8]/25 bg-gradient-to-b from-[#6b82a8]/10 to-transparent p-4">
-          <p className="text-[11px] font-[400] text-[#a8c4e0]/70 uppercase tracking-widest mb-1.5">
-            ⚡ Right Now
-          </p>
-          <p className="text-[11px] text-[#9ca3af] mb-2">
-            Based on your current-state assessments
-          </p>
-          <p className="text-[13px] font-[300] text-[#c9d8e8] italic leading-relaxed">
-            {result.currentEnergy}
-          </p>
-        </div>
-      )}
+      <SpiritualInsight
+        spiritualInsight={result.yourDirection}
+        title="Your Direction"
+      />
+
+      <TryThis tryThis={result.tryThis} />
+
+      <AvoidThis avoidThis={result.avoidThis} />
+
+      <SpiritualInsight
+        spiritualInsight={result?.finalInsight}
+        title="Final Insight"
+      />
+
+      <BluePrint title="Right Now" blueprint={result?.currentEnergy} />
     </section>
   );
 }
@@ -279,7 +221,9 @@ export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
           setError(e instanceof Error ? e.message : "Failed to load synthesis");
         }
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -291,12 +235,19 @@ export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
         const byId = new Map<number, { test_id: number; test_title: string }>();
         completed.forEach((r) => {
           if (!byId.has(r.test_id))
-            byId.set(r.test_id, { test_id: r.test_id, test_title: r.test_title });
+            byId.set(r.test_id, {
+              test_id: r.test_id,
+              test_title: r.test_title,
+            });
         });
         setResults(Array.from(byId.values()));
       })
-      .catch(() => { if (!cancelled) setResults([]); });
-    return () => { cancelled = true; };
+      .catch(() => {
+        if (!cancelled) setResults([]);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [synthesis?.completed_count]);
 
   const completedTests = useMemo(
@@ -341,7 +292,7 @@ export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
       </div>
 
       <div className="text-center space-y-3">
-        <h1 className="text-[21px] font-light text-white">
+        <h1 className="text-[21px] font-[300] text-[#FFFFFF]">
           {isFull ? "Your Full Synthesis" : "Your Synthesis"}
         </h1>
         {synthesis && completedTests.length > 0 && (
@@ -389,9 +340,10 @@ export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
             Unlock your synthesis
           </h2>
           <p className="text-[13px] font-[400] text-[#F2D08C]">
-            Complete at least 3 onboarding tests to generate a preview synthesis.
-            It will be stored and shown here when you return. Complete 6 tests
-            and upgrade to premium to unlock your full portrait.
+            Complete at least 3 onboarding tests to generate a preview
+            synthesis. It will be stored and shown here when you return.
+            Complete 6 tests and upgrade to premium to unlock your full
+            portrait.
           </p>
           <p className="text-[13px] font-[300] text-[#9ca3af]">
             Go to Explore to take more tests.
@@ -399,13 +351,13 @@ export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
         </section>
       )}
 
-      {synthesis && result && (
-        isFull ? (
+      {synthesis &&
+        result &&
+        (isFull ? (
           <FullSynthesis result={result} />
         ) : (
           <PreviewSynthesis result={result} />
-        )
-      )}
+        ))}
     </div>
   );
 }
