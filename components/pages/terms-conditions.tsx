@@ -19,7 +19,7 @@ export function TermsAndConditions() {
       </h1>
 
       <p className="text-[11px] text-[#F2D08C] mb-1">
-        Last updated: [Month] [Day], [Year]
+        Last updated: Apr 14, 2026
       </p>
 
       <p className="text-[13px] leading-[23px] text-white font-[400] mb-4">

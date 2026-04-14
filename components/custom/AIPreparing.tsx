@@ -4,7 +4,7 @@ function AIPreparing() {
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-black via-[#0a0a0a] to-black px-6">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(242,208,140,0.08),transparent)]" />
-      <div className="relative w-full max-w-[380px] rounded-2xl bg-gradient-to-b from-[#1a1814] to-[#0d0c0a] border border-[#F2D08C30] shadow-[0_0_60px_rgba(242,208,140,0.12)] px-8 py-10 text-center">
+      <div className="relative w-full max-w-[380px] px-8 py-10 text-center">
         <div className="mb-6 flex justify-center">
           <div className="h-14 w-14 rounded-full border-2 border-[#F2D08C30] border-t-[#F2D08C] animate-spin" />
         </div>

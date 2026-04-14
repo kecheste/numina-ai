@@ -107,10 +107,10 @@ export function MbtiBlueprintResult({
             {displayTraits.slice(0, 4).map((trait, idx) => (
               <div
                 key={idx}
-                className="border border-[#F2D08C]/50 rounded-[8px] px-3"
+                className="border border-[#F2D08C] rounded-[5px] px-3"
                 style={{ fontFamily: "var(--font-gotham)" }}
               >
-                <span className="text-[12px] font-[300] text-[#F2D08C]">
+                <span className="text-[13px] font-[350] text-[#F2D08C]">
                   {trait}
                 </span>
               </div>

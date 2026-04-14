@@ -141,7 +141,12 @@ export default function AboutYourself({
                 ariaInvalid={showNameError}
               />
               {showNameError && (
-                <p className="text-sm text-red-400 mt-1 text-left">
+                <p
+                  className="text-[13px] text-red-400 mt-1 text-center"
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                  }}
+                >
                   {nameValidation.message}
                 </p>
               )}
@@ -161,7 +166,12 @@ export default function AboutYourself({
                     ariaInvalid={showEmailError}
                   />
                   {showEmailError && (
-                    <p className="text-sm text-red-400 mt-1 text-left">
+                    <p
+                      className="text-[13px] text-red-400 mt-1 text-center"
+                      style={{
+                        fontFamily: "var(--font-gotham)",
+                      }}
+                    >
                       {emailValidation.message}
                     </p>
                   )}
@@ -179,7 +189,12 @@ export default function AboutYourself({
                     ariaInvalid={showPasswordError}
                   />
                   {showPasswordError && (
-                    <p className="text-sm text-red-400 mt-1 text-left">
+                    <p
+                      className="text-[13px] text-red-400 mt-1 text-center"
+                      style={{
+                        fontFamily: "var(--font-gotham)",
+                      }}
+                    >
                       {passwordValidation.message}
                     </p>
                   )}

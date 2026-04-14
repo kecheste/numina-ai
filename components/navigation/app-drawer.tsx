@@ -34,8 +34,6 @@ export function AppDrawer({
   };
 
   const menuItems = [
-    { label: "My Tests", href: "/home/tests" },
-    { label: "My Synthesis", href: "/home/synthesis" },
     { label: "Manage Subscription", href: "/home/subscription" },
     { label: "Help / FAQ", href: "/home/faq" },
     { label: "Contact Support", href: "/home/contact" },
