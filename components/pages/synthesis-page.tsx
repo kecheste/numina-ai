@@ -191,7 +191,7 @@ function FullSynthesis({ result }: { result: SynthesisResponse["result"] }) {
 
       <div className="mb-[40px]">
         {(result.dominantPatterns?.length ?? 0) > 0 && (
-          <div className="flex flex-col gap-[8px]">
+          <div className="flex flex-col gap-[12px]">
             {result.dominantPatterns!.slice(0, 5).map((item, i) => (
               <div
                 key={i}
