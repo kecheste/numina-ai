@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 import { apiCreateCheckoutSession } from "@/lib/api-client";
+import { BlackSparkleIcon } from "../icons/sparclesIcon";
 
 interface SubscriptionModalProps {
   onUpgrade: () => void;
@@ -118,7 +119,9 @@ export function SubscriptionModal({
                 Redirecting to secure payment…
               </span>
             ) : (
-              "✨ Unlock for $9.99 / month"
+              <span className="flex items-center gap-2">
+                <BlackSparkleIcon /> Unlock for $9.99 / month
+              </span>
             )}
           </Button>
 

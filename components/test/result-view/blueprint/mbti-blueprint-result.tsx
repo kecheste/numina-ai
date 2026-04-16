@@ -103,24 +103,25 @@ export function MbtiBlueprintResult({
             What this says about you
           </h2>
 
-          <div className="flex flex-wrap gap-2 justify-center mb-6">
+          <div className="flex flex-col gap-[10px] mb-6">
             {displayTraits.slice(0, 4).map((trait, idx) => (
-              <div
+              <p
                 key={idx}
-                className="border border-[#F2D08C] rounded-[5px] px-3"
-                style={{ fontFamily: "var(--font-gotham)" }}
+                style={{
+                  lineHeight: "15px",
+                  fontFamily: "var(--font-gotham)",
+                }}
+                className="text-left text-[13px] border border-[#F2D08C] border-[#F2D08C] rounded-[5px] py-0.5 pl-[8px] text-[#F2D08C] font-[350]"
               >
-                <span className="text-[13px] font-[350] text-[#F2D08C]">
-                  {trait}
-                </span>
-              </div>
+                {trait}
+              </p>
             ))}
           </div>
 
           <Button
             onClick={onClose}
             style={{
-              fontFamily: "var(--font-gotham)",
+              fontFamily: "var(--font-arp80)",
               fontWeight: 400,
               lineHeight: "33px",
             }}

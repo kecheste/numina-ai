@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { BlackSparkleIcon } from "../icons/sparclesIcon";
 
 interface TestIntroProps {
   isPremium: boolean;
@@ -107,7 +108,7 @@ export function TestIntro({
                   mb-4
                 "
               >
-                ✨ Unlock for $9.99 / month
+                <BlackSparkleIcon /> Unlock for $9.99 / month
               </Button>
 
               <Button

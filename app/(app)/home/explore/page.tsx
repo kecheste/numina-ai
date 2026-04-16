@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ExplorePage as ExploreScreen } from "@/components/pages/explore-page";
 import PageLoader from "@/components/custom/loader";
 import { useAuth } from "@/contexts/auth-context";
+import { NumerologyBlueprintResult } from "@/components/test/result-view/blueprint";
 
 export default function ExplorePage() {
   const { user } = useAuth();

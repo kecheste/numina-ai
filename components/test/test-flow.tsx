@@ -191,7 +191,7 @@ export function TestFlow({
       <div
         ref={shellRef}
         style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative pt-4 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center pb-4"
+        className="relative pt-2 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center pb-4"
       >
         <AppBar
           shellRef={shellRef}
