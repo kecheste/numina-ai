@@ -10,6 +10,7 @@ import { Strength } from "../../components/Strength";
 import { Challenge } from "../../components/Challenge";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
+import { MobileFrame } from "@/components/layout/mobile-frame";
 
 interface CognitiveStyleScores {
   analytical: number;
@@ -85,11 +86,11 @@ export function CognitiveStyleResult({
   const llm = content?.llm_result_json;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
+    <div className="fixed inset-0 z-50">
+      <MobileFrame
         ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
+        scrollable={true}
+        className="relative pt-2"
       >
         <AppBar
           handleBack={onClose}
@@ -187,7 +188,7 @@ export function CognitiveStyleResult({
             avoidThis={Array.isArray(llm?.avoidThis) ? llm.avoidThis : []}
           />
         </div>
-      </div>
+      </MobileFrame>
     </div>
   );
 }

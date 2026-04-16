@@ -8,6 +8,7 @@ import { SpiritualInsight } from "../../components/SpiritualInsight";
 import { InnerMotivations } from "../../components/InnerMotivations";
 import { DimensionGrid } from "../../components/DimensionGrid";
 import { AlignmentAnalysis } from "../../components/AlignmentAnalysis";
+import { MobileFrame } from "@/components/layout/mobile-frame";
 
 interface SoulCompassResultProps {
   result: TestResultResponse;
@@ -55,11 +56,11 @@ export function SoulCompassResult({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
+    <div className="fixed inset-0 z-50">
+      <MobileFrame
         ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
+        scrollable={true}
+        className="relative pt-2"
       >
         <AppBar
           handleBack={onClose}
@@ -107,7 +108,7 @@ export function SoulCompassResult({
             title="Suggested Reflection"
           />
         </div>
-      </div>
+      </MobileFrame>
     </div>
   );
 }

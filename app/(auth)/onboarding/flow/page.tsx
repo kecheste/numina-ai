@@ -12,6 +12,7 @@ import {
 import { MBTITypeOnboardingTestIntro } from "@/components/test/result-view/onboarding-mbti-intro";
 import AIPreparing from "@/components/custom/AIPreparing";
 import type { MbtiResultData } from "@/components/test/result-view/blueprint/mbti-blueprint-result";
+import { MobileFrame } from "@/components/layout/mobile-frame";
 
 export default function OnboardingFlowPage() {
   const shellRef = useRef<HTMLDivElement>(null);
@@ -48,31 +49,25 @@ export default function OnboardingFlowPage() {
       return <AIPreparing />;
     }
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-        <div
-          ref={shellRef}
-          className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col"
-        >
+      <div className="fixed inset-0 z-50">
+        <MobileFrame ref={shellRef} scrollable={true}>
           <ChakraBlueprintResult
             onClose={handleChakraBlueprintNext}
             shellRef={shellRef}
             strongestChakra={chakraResult.llm_result_json?.strongestChakra ?? null}
             needsBalance={chakraResult.llm_result_json?.needsRebalancing ?? null}
           />
-        </div>
+        </MobileFrame>
       </div>
     );
   }
 
   if (step === "mbti_intro") {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-        <div
-          ref={shellRef}
-          className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col justify-center"
-        >
+      <div className="fixed inset-0 z-50">
+        <MobileFrame ref={shellRef} scrollable={true} className="justify-center">
           <MBTITypeOnboardingTestIntro onClose={handleMbtiIntroNext} />
-        </div>
+        </MobileFrame>
       </div>
     );
   }
@@ -104,17 +99,14 @@ export default function OnboardingFlowPage() {
       extracted_json: mbtiResult.extracted_json as any,
     };
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-        <div
-          ref={shellRef}
-          className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col"
-        >
+      <div className="fixed inset-0 z-50">
+        <MobileFrame ref={shellRef} scrollable={true}>
           <MbtiBlueprintResult
             onClose={handleMbtiBlueprintNext}
             shellRef={shellRef}
             resultData={mbtiData}
           />
-        </div>
+        </MobileFrame>
       </div>
     );
   }

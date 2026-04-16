@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { hasBirthDataInSession, hasDobFlowIntent } from "@/lib/birth-data";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { MobileFrame } from "@/components/layout/mobile-frame";
 
 export default function AuthLayout({
   children,
@@ -90,5 +91,9 @@ export default function AuthLayout({
     if (pathname === "/about" && !hasBirthDataInSession()) return null;
   }
 
-  return <div className="min-h-[100dvh] overflow-y-auto">{children}</div>;
+  return (
+    <MobileFrame scrollable={true} className="px-[35px] sm:px-[36px]">
+      {children}
+    </MobileFrame>
+  );
 }

@@ -74,184 +74,163 @@ export default function AboutYourself({
   };
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
-      <div
-        className="
-          w-full
-          h-dvh 
-          sm:h-auto
-          sm:min-h-0
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-black
-          overflow-y-auto 
-          flex
-          flex-col
-          items-center
-          text-center
-          px-[35px]
-          sm:px-[36px]
-          pt-4
-          pb-4
-        "
-      >
-        <div className="flex justify-center mb-8">
-          <NuminaLogoIcon />
+    <div className="flex flex-col items-center w-full px-[35px] sm:px-[36px] pt-4 pb-4">
+      <div className="flex justify-center mb-8">
+        <NuminaLogoIcon />
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center w-full">
+        <div className="flex flex-col items-center text-center">
+          <h1
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "33px",
+            }}
+            className="text-[18px] font-bold text-white mb-3"
+          >
+            About yourself
+          </h1>
+
+          <p
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "22px",
+            }}
+            className="text-[15px] font-light text-[#9ca3af] max-w-[320px]"
+          >
+            {registrationMode
+              ? "Enter your full name (first and last), email, and password to create your account."
+              : "Enter your full name to personalize your experience. Email is optional but enter it if you want to save your results or revisit them later."}
+          </p>
         </div>
 
-        <div className="flex-1 flex flex-col justify-center w-full">
-          <div className="flex flex-col items-center text-center">
-            <h1
+        {error && (
+          <p className="text-sm text-red-400 mt-2 max-w-[320px]">{error}</p>
+        )}
+
+        <div className="mt-10 space-y-4">
+          <div>
+            <GoldInput
+              placeholder="Your Full Name (e.g. John Alex Doe)"
+              value={fullName}
+              onChange={(v) => {
+                setFullName(v);
+                setTouched((t) => ({ ...t, name: true }));
+              }}
+              onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+              ariaInvalid={showNameError}
+            />
+            {showNameError && (
+              <p
+                className="text-[13px] text-red-400 mt-1 text-center"
+                style={{
+                  fontFamily: "var(--font-gotham)",
+                }}
+              >
+                {nameValidation.message}
+              </p>
+            )}
+          </div>
+          {registrationMode && (
+            <>
+              <div>
+                <GoldInput
+                  placeholder="Your E-mail"
+                  value={email}
+                  onChange={(v) => {
+                    setEmail(v);
+                    setTouched((t) => ({ ...t, email: true }));
+                  }}
+                  onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                  type="email"
+                  ariaInvalid={showEmailError}
+                />
+                {showEmailError && (
+                  <p
+                    className="text-[13px] text-red-400 mt-1 text-center"
+                    style={{
+                      fontFamily: "var(--font-gotham)",
+                    }}
+                  >
+                    {emailValidation.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <GoldInput
+                  placeholder="Set Password (min 8 characters)"
+                  value={password}
+                  onChange={(v) => {
+                    setPassword(v);
+                    setTouched((t) => ({ ...t, password: true }));
+                  }}
+                  onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                  type="password"
+                  ariaInvalid={showPasswordError}
+                />
+                {showPasswordError && (
+                  <p
+                    className="text-[13px] text-red-400 mt-1 text-center"
+                    style={{
+                      fontFamily: "var(--font-gotham)",
+                    }}
+                  >
+                    {passwordValidation.message}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="pt-10 w-full text-center">
+          {isPending ? (
+            <div
+              className="
+              w-full
+              h-[60px]
+              sm:h-[67px]
+              rounded-[10px]
+              flex items-center justify-center
+              bg-[#F2D08CE0]
+            "
+            >
+              <div
+                className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
+                aria-hidden
+              />
+            </div>
+          ) : (
+            <Button
+              disabled={
+                !fullName.trim() ||
+                (registrationMode && (!email.trim() || password.length < 8))
+              }
               style={{
-                fontFamily: "var(--font-gotham)",
+                fontFamily: "var(--font-arp80)",
+                fontWeight: 400,
                 lineHeight: "33px",
               }}
-              className="text-[18px] font-bold text-white mb-3"
+              onClick={handleSubmit}
+              className="
+              w-full
+              h-[60px]
+              sm:h-[67px]
+              bg-[#F2D08CE0]
+              hover:bg-[#F2D08CC0]
+              cursor-pointer
+              text-black
+              rounded-[10px]
+              text-[18px]
+              sm:text-[21px]
+              transition-colors
+              disabled:opacity-50
+              disabled:cursor-not-allowed
+            "
             >
-              About yourself
-            </h1>
-
-            <p
-              style={{
-                fontFamily: "var(--font-gotham)",
-                lineHeight: "22px",
-              }}
-              className="text-[15px] font-light text-[#9ca3af] max-w-[320px]"
-            >
-              {registrationMode
-                ? "Enter your full name (first and last), email, and password to create your account."
-                : "Enter your full name to personalize your experience. Email is optional but enter it if you want to save your results or revisit them later."}
-            </p>
-          </div>
-
-          {error && (
-            <p className="text-sm text-red-400 mt-2 max-w-[320px]">{error}</p>
+              Reveal My Path
+            </Button>
           )}
-
-          <div className="mt-10 space-y-4">
-            <div>
-              <GoldInput
-                placeholder="Your Full Name (e.g. John Alex Doe)"
-                value={fullName}
-                onChange={(v) => {
-                  setFullName(v);
-                  setTouched((t) => ({ ...t, name: true }));
-                }}
-                onBlur={() => setTouched((t) => ({ ...t, name: true }))}
-                ariaInvalid={showNameError}
-              />
-              {showNameError && (
-                <p
-                  className="text-[13px] text-red-400 mt-1 text-center"
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                  }}
-                >
-                  {nameValidation.message}
-                </p>
-              )}
-            </div>
-            {registrationMode && (
-              <>
-                <div>
-                  <GoldInput
-                    placeholder="Your E-mail"
-                    value={email}
-                    onChange={(v) => {
-                      setEmail(v);
-                      setTouched((t) => ({ ...t, email: true }));
-                    }}
-                    onBlur={() => setTouched((t) => ({ ...t, email: true }))}
-                    type="email"
-                    ariaInvalid={showEmailError}
-                  />
-                  {showEmailError && (
-                    <p
-                      className="text-[13px] text-red-400 mt-1 text-center"
-                      style={{
-                        fontFamily: "var(--font-gotham)",
-                      }}
-                    >
-                      {emailValidation.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <GoldInput
-                    placeholder="Set Password (min 8 characters)"
-                    value={password}
-                    onChange={(v) => {
-                      setPassword(v);
-                      setTouched((t) => ({ ...t, password: true }));
-                    }}
-                    onBlur={() => setTouched((t) => ({ ...t, password: true }))}
-                    type="password"
-                    ariaInvalid={showPasswordError}
-                  />
-                  {showPasswordError && (
-                    <p
-                      className="text-[13px] text-red-400 mt-1 text-center"
-                      style={{
-                        fontFamily: "var(--font-gotham)",
-                      }}
-                    >
-                      {passwordValidation.message}
-                    </p>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className="pt-10 w-full">
-            {isPending ? (
-              <div
-                className="
-                w-full
-                h-[60px]
-                sm:h-[67px]
-                rounded-[10px]
-                flex items-center justify-center
-                bg-[#F2D08CE0]
-              "
-              >
-                <div
-                  className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
-                  aria-hidden
-                />
-              </div>
-            ) : (
-              <Button
-                disabled={
-                  !fullName.trim() ||
-                  (registrationMode && (!email.trim() || password.length < 8))
-                }
-                style={{
-                  fontFamily: "var(--font-arp80)",
-                  fontWeight: 400,
-                  lineHeight: "33px",
-                }}
-                onClick={handleSubmit}
-                className="
-                w-full
-                h-[60px]
-                sm:h-[67px]
-                bg-[#F2D08CE0]
-                hover:bg-[#F2D08CC0]
-                cursor-pointer
-                text-black
-                rounded-[10px]
-                text-[18px]
-                sm:text-[21px]
-                transition-colors
-                disabled:opacity-50
-                disabled:cursor-not-allowed
-              "
-              >
-                Reveal My Path
-              </Button>
-            )}
-          </div>
         </div>
       </div>
     </div>

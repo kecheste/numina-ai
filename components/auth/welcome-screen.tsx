@@ -12,87 +12,66 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onStartJourney, onLogin }: WelcomeScreenProps) {
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
-      <div
-        className="
-          w-full
-          h-dvh 
-          sm:h-auto
-          sm:min-h-0
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-black
-          overflow-y-auto 
-          flex
-          flex-col
-          items-center
-          text-center
-          px-[35px]
-          sm:px-[36px]
-          pt-4
-          pb-4
-        "
-      >
-        <div className="flex items-center justify-center mt-auto">
-          <NuminaLogoIcon />
-        </div>
+    <>
+      <div className="flex items-center justify-center mt-auto">
+        <NuminaLogoIcon />
+      </div>
 
-        <p
-          className="text-[21px] text-white mt-12 sm:mt-[70px]"
+      <p
+        className="text-[21px] text-white mt-12 sm:mt-[70px]"
+        style={{
+          fontFamily: "var(--font-fangsong)",
+          fontWeight: 400,
+          lineHeight: "33px",
+        }}
+      >
+        Discover your unique soul map. Powered by AI, psychology & mysticism.
+      </p>
+
+      <div className="w-full mb-[120px] pt-[135px]">
+        <Button
+          onClick={onStartJourney}
           style={{
-            fontFamily: "var(--font-fangsong)",
+            fontFamily: "var(--font-arp80)",
             fontWeight: 400,
             lineHeight: "33px",
           }}
+          className="
+            cursor-pointer
+            hover:bg-[#F2D08CC0]
+            w-full
+            h-[60px]
+            sm:h-[67px]
+            bg-[#F2D08CE0]
+            text-black
+            rounded-[10px]
+            text-[18px]
+            sm:text-[21px]
+            transition-colors
+          "
         >
-          Discover your unique soul map. Powered by AI, psychology & mysticism.
-        </p>
-
-        <div className="w-full mb-[120px] pt-[135px]">
-          <Button
-            onClick={onStartJourney}
+          Start Your Journey
+        </Button>
+        {onLogin && (
+          <p
             style={{
-              fontFamily: "var(--font-arp80)",
-              fontWeight: 400,
-              lineHeight: "33px",
+              fontFamily: "var(--font-gotham)",
+              fontWeight: 500,
+              lineHeight: "24px",
             }}
-            className="
-              cursor-pointer
-              hover:bg-[#F2D08CC0]
-              w-full
-              h-[60px]
-              sm:h-[67px]
-              bg-[#F2D08CE0]
-              text-black
-              rounded-[10px]
-              text-[18px]
-              sm:text-[21px]
-              transition-colors
-            "
+            className="text-[14px] text-gray-400 mt-4"
           >
-            Start Your Journey
-          </Button>
-          {onLogin && (
-            <p
-              style={{
-                fontFamily: "var(--font-gotham)",
-                fontWeight: 500,
-                lineHeight: "24px",
-              }}
-              className="text-[14px] text-gray-400 mt-4"
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={onLogin}
+              className="text-[#F2D08C] hover:text-[#F2D08CC0 font-medium transition-colors"
             >
-              Already have an account?{" "}
-              <button
-                type="button"
-                onClick={onLogin}
-                className="text-[#F2D08C] hover:text-[#F2D08CC0 font-medium transition-colors"
-              >
-                Log in
-              </button>
-            </p>
-          )}
-        </div>
+              Log in
+            </button>
+          </p>
+        )}
       </div>
-    </div>
+    </>
   );
 }

@@ -9,6 +9,7 @@ import { RisingIcon } from "@/components/icons/rising-icon";
 import type { AstrologyBlueprintResponse } from "@/lib/api-client";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
+import { MobileFrame } from "@/components/layout/mobile-frame";
 
 interface AstrologyBlueprintResultProps {
   onClose: () => void;
@@ -40,11 +41,12 @@ export function AstrologyBlueprintResult({
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-        <div
+      <div className="fixed inset-0 z-50">
+        <MobileFrame
           ref={shellRef}
+          scrollable={false}
+          className="relative pt-4"
           style={{ fontFamily: "var(--font-gotham)" }}
-          className="relative pt-4 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center"
         >
           <div className="flex items-center border-b justify-between w-full bg-black pb-4 px-[24px] z-40 shrink-0">
             <div />
@@ -84,17 +86,18 @@ export function AstrologyBlueprintResult({
               `}</style>
             </div>
           </div>
-        </div>
+        </MobileFrame>
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
+    <div className="fixed inset-0 z-50">
+      <MobileFrame
         ref={shellRef}
+        scrollable={true}
+        className="relative pt-4"
         style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative pt-4 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center"
       >
         <AppBar
           hideBackButton
@@ -220,7 +223,7 @@ export function AstrologyBlueprintResult({
             Next Step
           </Button>
         </div>
-      </div>
+      </MobileFrame>
     </div>
   );
 }

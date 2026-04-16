@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { InfjIcon } from "@/components/icons/mysoul/infj";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
+import { MobileFrame } from "@/components/layout/mobile-frame";
 
 export interface MbtiResultData {
   personalityType: string;
@@ -48,11 +49,11 @@ export function MbtiBlueprintResult({
     : DEFAULT_TRAITS;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
+    <div className="fixed inset-0 z-50">
+      <MobileFrame
         ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative pt-2 w-full h-dvh sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-hidden flex flex-col items-center text-center"
+        scrollable={true}
+        className="relative pt-2"
       >
         <AppBar
           hideBackButton
@@ -130,7 +131,7 @@ export function MbtiBlueprintResult({
             Continue
           </Button>
         </div>
-      </div>
+      </MobileFrame>
     </div>
   );
 }

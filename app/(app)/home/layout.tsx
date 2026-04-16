@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
 import { AppDrawer } from "@/components/navigation/app-drawer";
@@ -7,7 +8,7 @@ import AppBar from "@/components/navigation/appBar";
 import { BottomNavigation } from "@/components/navigation/bottom-navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { MobileFrame } from "@/components/layout/mobile-frame";
 
 export default function HomeLayout({
   children,
@@ -41,26 +42,11 @@ export default function HomeLayout({
   }
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
-      <div
+    <>
+      <MobileFrame
         ref={shellRef}
-        className="
-          w-full
-          relative
-          h-dvh 
-          sm:h-auto
-          sm:min-h-0
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-black
-          flex
-          flex-col
-          items-center
-          text-center
-          pt-2
-          pb-4
-          overflow-hidden
-        "
+        scrollable={false}
+        className="relative pt-2 pb-4"
       >
         <AppBar
           user={user}
@@ -76,7 +62,7 @@ export default function HomeLayout({
         <div className="w-full shrink-0">
           <BottomNavigation />
         </div>
-      </div>
+      </MobileFrame>
 
       {showSubscription && (
         <SubscriptionModal
@@ -84,6 +70,6 @@ export default function HomeLayout({
           onUpgrade={() => setShowSubscription(false)}
         />
       )}
-    </div>
+    </>
   );
 }
