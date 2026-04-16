@@ -19,7 +19,11 @@ interface DOBScreenProps {
   isPending?: boolean;
 }
 
-export function DOBScreen({ onContinue, onBack, isPending = false }: DOBScreenProps) {
+export function DOBScreen({
+  onContinue,
+  onBack,
+  isPending = false,
+}: DOBScreenProps) {
   const [year, setYear] = useState<string | null>(null);
   const [month, setMonth] = useState<string | null>(null);
   const [day, setDay] = useState<string | null>(null);
@@ -50,13 +54,17 @@ export function DOBScreen({ onContinue, onBack, isPending = false }: DOBScreenPr
 
   const yearNum = year ? parseInt(year, 10) : 0;
   const monthIndex = month ? months.indexOf(month) + 1 : 0;
-  const maxDay = yearNum && monthIndex ? getDaysInMonth(yearNum, monthIndex) : 31;
+  const maxDay =
+    yearNum && monthIndex ? getDaysInMonth(yearNum, monthIndex) : 31;
   const days = Array.from({ length: maxDay }, (_, i) => `${i + 1}`);
 
   const timeValidation = validateTimeOfBirth(time);
   const [timeTouched, setTimeTouched] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
-  const showTimeError = (timeTouched || submitAttempted) && time.trim() !== "" && !timeValidation.valid;
+  const showTimeError =
+    (timeTouched || submitAttempted) &&
+    time.trim() !== "" &&
+    !timeValidation.valid;
 
   const dayNum = day ? parseInt(day, 10) : 0;
   const dayValid = !day || (dayNum >= 1 && dayNum <= maxDay);
@@ -177,7 +185,12 @@ export function DOBScreen({ onContinue, onBack, isPending = false }: DOBScreenPr
               onBlur={() => setTimeTouched(true)}
             />
             {showTimeError && (
-              <p className="text-sm text-red-400 mt-1 text-left">
+              <p
+                className="text-[13px] text-red-400 mt-1 text-center"
+                style={{
+                  fontFamily: "var(--font-gotham)",
+                }}
+              >
                 {timeValidation.message}
               </p>
             )}

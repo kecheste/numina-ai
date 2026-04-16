@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 import {
   apiGetDailyMessage,
-  apiGetSynthesis,
   apiListTestResults,
 } from "@/lib/api-client";
 import type { TestResultResponse } from "@/lib/api-client";
@@ -84,7 +83,6 @@ export function SoulRevealScreen() {
   );
 
   const [completedTestsCount, setCompletedTestsCount] = useState(0);
-  const [sureThings, setSureThings] = useState<string[]>([]);
 
   const firstName = getFirstName(user?.name ?? null);
   const firstNameDisplay = firstName
@@ -138,30 +136,7 @@ export function SoulRevealScreen() {
     };
   }, [user?.id, user?.life_path_number, refreshUser]);
 
-  useEffect(() => {
-    let cancelled = false;
-    apiGetSynthesis()
-      .then((data) => {
-        if (cancelled || !data?.result) return;
-        const raw = (data.result as { sureThings?: unknown }).sureThings;
-        if (Array.isArray(raw)) {
-          const cleaned = raw
-            .map((x) =>
-              typeof x === "string" ? x.trim() : String(x ?? "").trim(),
-            )
-            .filter((x) => x.length > 0);
-          if (cleaned.length > 0) {
-            setSureThings(cleaned);
-          }
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setSureThings([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -337,16 +312,19 @@ export function SoulRevealScreen() {
         </p>
 
         <div className="flex flex-wrap gap-[5px] justify-center">
-          {(sureThings.length > 0 ? sureThings : MOST_SURE_DEFAULT_TAGS)
-            .slice(0, 4)
+          {(user?.most_sure_things && user.most_sure_things.length > 0
+            ? user.most_sure_things
+            : MOST_SURE_DEFAULT_TAGS
+          )
+            .slice(0, 5)
             .map((tag) => (
               <span
                 key={tag}
                 style={{
                   fontFamily: "var(--font-gotham)",
-                  fontWeight: "325",
+                  fontWeight: "350",
                 }}
-                className="p-1 rounded-[7px] border border-[#F2D08C]/40 text-[12px] text-[#F2D08C]"
+                className="px-3 rounded-[5px] border border-[#F2D08C] text-[12px] text-[#F2D08C]"
               >
                 {tag}
               </span>

@@ -15,6 +15,7 @@ export interface UserProfile {
   subscription_status: string;
   is_active: boolean;
   role: string;
+  most_sure_things: string[] | null;
   created_at: string;
   updated_at: string;
 }

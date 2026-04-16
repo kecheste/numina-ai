@@ -175,6 +175,7 @@ export interface UserProfile {
   astrology_blueprint: any | null;
   numerology_blueprint: any[] | null;
   onboarding_complete: boolean;
+  most_sure_things: string[] | null;
   created_at: string;
   updated_at: string;
 }
