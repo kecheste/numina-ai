@@ -2,10 +2,10 @@ import React from "react";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
 import { AppDrawer } from "./app-drawer";
 import { Icon } from "@iconify/react";
+import { useShell } from "@/contexts/ShellContext";
 
 interface AppBarProps {
   user?: any;
-  shellRef: React.RefObject<HTMLDivElement | null>;
   handleLogout?: () => void;
   hideBackButton?: boolean;
   handleBack?: () => void;
@@ -13,20 +13,18 @@ interface AppBarProps {
 
 function AppBar({
   user,
-  shellRef,
   handleLogout,
   hideBackButton,
   handleBack,
 }: AppBarProps) {
+  const { shellRef } = useShell();
+
   return (
     <div className="bg-black border-b w-full flex justify-between items-center text-xs text-gray-400 pb-4 z-40 relative px-[24px] shrink-0">
       {hideBackButton ? (
         <div className="w-[32px] h-[32px]"></div>
       ) : (
-        <button
-          onClick={handleBack}
-          className="cursor-pointer w-[32px] h-[32px]"
-        >
+        <button onClick={handleBack} className="cursor-pointer w-[32px] h-[32px]">
           <Icon
             icon="icons8:left-arrow"
             color="#D9D9D9"

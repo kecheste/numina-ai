@@ -10,17 +10,13 @@ import { Challenge } from "../../components/Challenge";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
 import { SpiritualInsight } from "../../components/SpiritualInsight";
-import { MobileFrame } from "@/components/layout/mobile-frame";
-
 export function AstrologyChartResultView({
   result,
   onClose,
-  shellRef,
   onLogout,
 }: {
   result: TestResultResponse;
   onClose: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
   onLogout: () => void;
 }) {
   const llm = result?.llm_result_json;
@@ -56,185 +52,178 @@ export function AstrologyChartResultView({
   const narrative = result.narrative ?? null;
 
   return (
-    <div className="fixed inset-0 z-50">
-      <MobileFrame
-        ref={shellRef}
-        scrollable={true}
-        className="relative pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          handleLogout={onLogout}
-          shellRef={shellRef}
-        />
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2 w-full">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={onLogout}
+      />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[40px] text-center"
-          >
-            Your Astrology Chart
-          </h1>
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[40px] text-center"
+        >
+          Your Astrology Chart
+        </h1>
 
-          {traits.length > 0 && (
-            <>
-              <h2
-                style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}
-                className="text-[15px] font-[350] text-[#FFFFFF] text-left mb-[10px]"
-              >
-                Cosmic Summary
-              </h2>
-              <div className="flex flex-col items-start gap-2 mb-[40px]">
-                {traits.map((trait: string) => (
-                  <span
-                    key={trait}
-                    style={{
-                      fontFamily: "var(--font-gotham)",
-                    }}
-                    className="border border-[#F2D08C] rounded-[5px] px-2 text-[13px] font-[350] text-[#F2D08C]"
-                  >
-                    {trait}
-                  </span>
-                ))}
-              </div>
-            </>
-          )}
-
-          <div className="grid grid-cols-5 gap-2 w-full text-left mb-[30px]">
-            <div className="col-span-1">
-              <SunIcon />
+        {traits.length > 0 && (
+          <>
+            <h2
+              style={{ lineHeight: "21px", fontFamily: "var(--font-gotham)" }}
+              className="text-[15px] font-[350] text-[#FFFFFF] text-left mb-[10px]"
+            >
+              Cosmic Summary
+            </h2>
+            <div className="flex flex-col items-start gap-2 mb-[40px]">
+              {traits.map((trait: string) => (
+                <span
+                  key={trait}
+                  style={{
+                    fontFamily: "var(--font-gotham)",
+                  }}
+                  className="border border-[#F2D08C] rounded-[5px] px-2 text-[13px] font-[350] text-[#F2D08C]"
+                >
+                  {trait}
+                </span>
+              ))}
             </div>
-            <div className="col-span-4">
-              <h3
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                }}
-                className="text-[15px] font-[350] text-white mb-0.5"
-              >
-                Sun Sign
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                }}
-                className="text-[13px] font-[350] text-[#F2D08C]"
-              >
-                {sunDesc}
-              </p>
-            </div>
+          </>
+        )}
+
+        <div className="grid grid-cols-5 gap-2 w-full text-left mb-[30px]">
+          <div className="col-span-1">
+            <SunIcon />
           </div>
-
-          <div className="grid grid-cols-5 gap-2 w-full text-left mb-[30px]">
-            <div className="col-span-1">
-              <MoonIcon />
-            </div>
-            <div className="col-span-4">
-              <h3
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                }}
-                className="text-[15px] font-[350] text-white mb-0.5"
-              >
-                Moon Sign
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                }}
-                className="text-[13px] font-[350] text-[#F2D08C]"
-              >
-                {moonDesc}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-5 gap-2 w-full text-left mb-[30px]">
-            <div className="col-span-1">
-              <RisingIcon />
-            </div>
-            <div className="col-span-4">
-              <h3
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                }}
-                className="text-[15px] font-[350] text-white mb-0.5"
-              >
-                Rising Sign
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                }}
-                className="text-[13px] font-[350] text-[#F2D08C]"
-              >
-                {risingDesc}
-              </p>
-            </div>
-          </div>
-
-          {elements.length > 0 && (
-            <>
-              <h3
-                className="text-[15px] font-[350] text-[#FFFFFF] mb-[10px] text-left"
-                style={{ fontFamily: "var(--font-gotham)" }}
-              >
-                Element Distribution
-              </h3>
-              <div className="flex flex-col items-start gap-2 mb-[40px]">
-                {elements.map(({ name, count }) => (
-                  <span
-                    key={name}
-                    style={{ fontFamily: "var(--font-gotham)" }}
-                    className="border border-[#F2D08C] rounded-[5px] px-2 text-[13px] font-[350] text-[#F2D08C]"
-                  >
-                    {name} {count}
-                  </span>
-                ))}
-              </div>
-            </>
-          )}
-
-          {narrative && (
-            <>
-              <h3
-                className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
-                style={{ fontFamily: "var(--font-gotham)" }}
-              >
-                Your astrological pattern
-              </h3>
-              <div
-                className="flex flex-col text-left gap-6 text-[13px] font-[300] text-[#FFFFFF] mb-[40px]"
-                style={{ fontFamily: "var(--font-gotham)" }}
-              >
-                {narrative
-                  .replace(/\\n/g, "\n")
-                  .split("\n")
-                  .filter((l) => l.trim())
-                  .map((p, i) => (
-                    <p
-                      key={i}
-                      style={{
-                        fontFamily: "var(--font-gotham)",
-                        lineHeight: "19px",
-                      }}
-                      className="border-l border-[#F2D08C] pl-[8px] py-0 m-0 text-[13px] font-[350] text-[#FFFFFF]"
-                    >
-                      {p.trim()}
-                    </p>
-                  ))}
-              </div>
-            </>
-          )}
-
-          <div className="text-left mb-6">
-            <Strength strengths={strengths} />
-            <Challenge challenges={challenges} />
-            <TryThis tryThis={tryThis} />
-            <AvoidThis avoidThis={avoidThis} />
-            <SpiritualInsight spiritualInsight={spiritualInsight} />
+          <div className="col-span-4">
+            <h3
+              style={{
+                fontFamily: "var(--font-gotham)",
+              }}
+              className="text-[15px] font-[350] text-white mb-0.5"
+            >
+              Sun Sign
+            </h3>
+            <p
+              style={{
+                fontFamily: "var(--font-gotham)",
+              }}
+              className="text-[13px] font-[350] text-[#F2D08C]"
+            >
+              {sunDesc}
+            </p>
           </div>
         </div>
-      </MobileFrame>
+
+        <div className="grid grid-cols-5 gap-2 w-full text-left mb-[30px]">
+          <div className="col-span-1">
+            <MoonIcon />
+          </div>
+          <div className="col-span-4">
+            <h3
+              style={{
+                fontFamily: "var(--font-gotham)",
+              }}
+              className="text-[15px] font-[350] text-white mb-0.5"
+            >
+              Moon Sign
+            </h3>
+            <p
+              style={{
+                fontFamily: "var(--font-gotham)",
+              }}
+              className="text-[13px] font-[350] text-[#F2D08C]"
+            >
+              {moonDesc}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-5 gap-2 w-full text-left mb-[30px]">
+          <div className="col-span-1">
+            <RisingIcon />
+          </div>
+          <div className="col-span-4">
+            <h3
+              style={{
+                fontFamily: "var(--font-gotham)",
+              }}
+              className="text-[15px] font-[350] text-white mb-0.5"
+            >
+              Rising Sign
+            </h3>
+            <p
+              style={{
+                fontFamily: "var(--font-gotham)",
+              }}
+              className="text-[13px] font-[350] text-[#F2D08C]"
+            >
+              {risingDesc}
+            </p>
+          </div>
+        </div>
+
+        {elements.length > 0 && (
+          <>
+            <h3
+              className="text-[15px] font-[350] text-[#FFFFFF] mb-[10px] text-left"
+              style={{ fontFamily: "var(--font-gotham)" }}
+            >
+              Element Distribution
+            </h3>
+            <div className="flex flex-col items-start gap-2 mb-[40px]">
+              {elements.map(({ name, count }) => (
+                <span
+                  key={name}
+                  style={{ fontFamily: "var(--font-gotham)" }}
+                  className="border border-[#F2D08C] rounded-[5px] px-2 text-[13px] font-[350] text-[#F2D08C]"
+                >
+                  {name} {count}
+                </span>
+              ))}
+            </div>
+          </>
+        )}
+
+        {narrative && (
+          <>
+            <h3
+              className="text-[15px] font-[350] text-[#FFFFFF] mb-[20px] text-left"
+              style={{ fontFamily: "var(--font-gotham)" }}
+            >
+              Your astrological pattern
+            </h3>
+            <div
+              className="flex flex-col text-left gap-6 text-[13px] font-[300] text-[#FFFFFF] mb-[40px]"
+              style={{ fontFamily: "var(--font-gotham)" }}
+            >
+              {narrative
+                .replace(/\\n/g, "\n")
+                .split("\n")
+                .filter((l) => l.trim())
+                .map((p, i) => (
+                  <p
+                    key={i}
+                    style={{
+                      fontFamily: "var(--font-gotham)",
+                      lineHeight: "19px",
+                    }}
+                    className="border-l border-[#F2D08C] pl-[8px] py-0 m-0 text-[13px] font-[350] text-[#FFFFFF]"
+                  >
+                    {p.trim()}
+                  </p>
+                ))}
+            </div>
+          </>
+        )}
+
+        <div className="text-left mb-6">
+          <Strength strengths={strengths} />
+          <Challenge challenges={challenges} />
+          <TryThis tryThis={tryThis} />
+          <AvoidThis avoidThis={avoidThis} />
+          <SpiritualInsight spiritualInsight={spiritualInsight} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -11,12 +11,9 @@ import { SpiritualInsight } from "../../components/SpiritualInsight";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
 import { BluePrint } from "../../components/Blueprint";
-import { MobileFrame } from "@/components/layout/mobile-frame";
-
 interface EnergyArchetypeResultProps {
   result: TestResultResponse;
   onClose: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
   onLogout: () => void;
 }
 
@@ -24,7 +21,6 @@ export function EnergyArchetypeResult({
   result,
   onLogout,
   onClose,
-  shellRef,
 }: EnergyArchetypeResultProps) {
   const data = result.llm_result_json || {};
   const extracted = result.extracted_json || {};
@@ -36,61 +32,55 @@ export function EnergyArchetypeResult({
   const avoidThis = Array.isArray(data.avoidThis) ? data.avoidThis : [];
 
   return (
-    <div className="fixed inset-0 z-50">
-      <MobileFrame
-        ref={shellRef}
-        scrollable={true}
-        className="relative pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          handleLogout={onLogout}
-          shellRef={shellRef}
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2 w-full">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={onLogout}
+      />
+
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+        >
+          Your Energy Archetype
+        </h1>
+
+        <div className="flex flex-col items-center mb-[40px]">
+          <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+            {data?.title?.replace("The ", "")}
+          </h2>
+          <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px]">
+            {data?.oneSentenceInsight ||
+              "Balance between your energy modes is currently low"}
+          </p>
+        </div>
+
+        <DimensionScores
+          title="Dimension Profile"
+          dimensions={[
+            { key: "visionary", label: "Visionary" },
+            { key: "analyst", label: "Analyst" },
+            { key: "integrator", label: "Integrator" },
+            { key: "overloaded", label: "Overloaded Circuit" },
+          ]}
+          scores={scores}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
-          >
-            Your Energy Archetype
-          </h1>
+        <CoreTraits coreTraits={traits} />
 
-          <div className="flex flex-col items-center mb-[40px]">
-            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
-              {data?.title?.replace("The ", "")}
-            </h2>
-            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px]">
-              {data?.oneSentenceInsight || "Balance between your energy modes is currently low"}
-            </p>
-          </div>
+        <Strength strengths={strengths} />
 
-          <DimensionScores
-            title="Dimension Profile"
-            dimensions={[
-              { key: "visionary", label: "Visionary" },
-              { key: "analyst", label: "Analyst" },
-              { key: "integrator", label: "Integrator" },
-              { key: "overloaded", label: "Overloaded Circuit" },
-            ]}
-            scores={scores}
-          />
+        <Challenge challenges={challenges} />
 
-          <CoreTraits coreTraits={traits} />
+        <SpiritualInsight spiritualInsight={data.spiritualInsight} />
 
-          <Strength strengths={strengths} />
+        <BluePrint title="Energy Archetype" blueprint={data.summary} />
 
-          <Challenge challenges={challenges} />
+        <TryThis tryThis={tryThis} />
 
-          <SpiritualInsight spiritualInsight={data.spiritualInsight} />
-
-          <BluePrint title="Energy Archetype" blueprint={data.summary} />
-
-          <TryThis tryThis={tryThis} />
-
-          <AvoidThis avoidThis={avoidThis} />
-        </div>
-      </MobileFrame>
+        <AvoidThis avoidThis={avoidThis} />
+      </div>
     </div>
   );
 }

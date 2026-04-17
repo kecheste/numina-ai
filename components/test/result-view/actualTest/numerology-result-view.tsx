@@ -11,49 +11,6 @@ import { Challenge } from "../../components/Challenge";
 import { SpiritualInsight } from "../../components/SpiritualInsight";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
-import { MobileFrame } from "@/components/layout/mobile-frame";
-
-interface NumerologyScores {
-  life_path: number;
-  soul_urge: number;
-  expression: number;
-  birthday: number;
-  birth_day?: number;
-}
-
-export interface NumerologyContent {
-  title?: string;
-  lifePath?: string;
-  soulUrge?: string;
-  expression?: string;
-  birthday?: string;
-  coreTraits?: string[];
-  strengths?: string[];
-  challenges?: string[];
-  spiritualInsight?: string;
-  yourBlueprint?: string;
-  summary?: string;
-  narrative?: string;
-  tryThis?: string[];
-  avoidThis?: string[];
-  extracted_json?: NumerologyScores;
-}
-
-function Paragraphs({ text, className }: { text: string; className?: string }) {
-  const lines = text
-    .replace(/\\n/g, "\n")
-    .split("\n")
-    .filter((l) => l.trim().length > 0);
-  return (
-    <div className={className}>
-      {lines.map((line, i) => (
-        <p key={i} className={i > 0 ? "mt-3" : ""}>
-          {line.trim()}
-        </p>
-      ))}
-    </div>
-  );
-}
 
 function NumberSection({
   text,
@@ -103,12 +60,10 @@ function NumberSection({
 export function NumerologyResultView({
   content,
   onClose,
-  shellRef,
   onLogout,
 }: {
   content?: TestResultResponse | null;
   onClose: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
   onLogout: () => void;
 }) {
   const lpValue = content?.extracted_json?.lifePath;
@@ -136,66 +91,59 @@ export function NumerologyResultView({
   const hasNumberSections = lifePath || soulUrge || expression || birthday;
 
   return (
-    <div className="fixed inset-0 z-50">
-      <MobileFrame
-        ref={shellRef}
-        scrollable={true}
-        className="relative pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          handleLogout={onLogout}
-          shellRef={shellRef}
-        />
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2 w-full">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={onLogout}
+      />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[40px] text-center"
-          >
-            Your Numerology
-          </h1>
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[40px] text-center"
+        >
+          Your Numerology
+        </h1>
 
-          {hasNumberSections && (
-            <div className="mb-10 gap-8 flex flex-col">
-              <NumberSection
-                text={lifePath}
-                number={lpValue}
-                title={"Life Path"}
-              />
-              <NumberSection
-                text={expression}
-                number={exValue}
-                title={"Expression"}
-              />
-              <NumberSection
-                text={soulUrge}
-                number={suValue}
-                title={"Soul Urge"}
-              />
-              <NumberSection
-                text={birthday}
-                number={bdValue}
-                title={"Birthday"}
-              />
-            </div>
-          )}
+        {hasNumberSections && (
+          <div className="mb-10 gap-8 flex flex-col">
+            <NumberSection
+              text={lifePath}
+              number={lpValue}
+              title={"Life Path"}
+            />
+            <NumberSection
+              text={expression}
+              number={exValue}
+              title={"Expression"}
+            />
+            <NumberSection
+              text={soulUrge}
+              number={suValue}
+              title={"Soul Urge"}
+            />
+            <NumberSection
+              text={birthday}
+              number={bdValue}
+              title={"Birthday"}
+            />
+          </div>
+        )}
 
-          <BluePrint title="" blueprint={blueprint} />
+        <BluePrint title="" blueprint={blueprint} />
 
-          <CoreTraits coreTraits={coreTraits} />
+        <CoreTraits coreTraits={coreTraits} />
 
-          <Strength strengths={strengths} />
+        <Strength strengths={strengths} />
 
-          <Challenge challenges={challenges} />
+        <Challenge challenges={challenges} />
 
-          <SpiritualInsight spiritualInsight={spiritualInsight} />
+        <SpiritualInsight spiritualInsight={spiritualInsight} />
 
-          <TryThis tryThis={tryThis} />
+        <TryThis tryThis={tryThis} />
 
-          <AvoidThis avoidThis={avoidThis} />
-        </div>
-      </MobileFrame>
+        <AvoidThis avoidThis={avoidThis} />
+      </div>
     </div>
   );
 }

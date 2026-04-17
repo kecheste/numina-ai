@@ -8,7 +8,7 @@ import AppBar from "@/components/navigation/appBar";
 import { BottomNavigation } from "@/components/navigation/bottom-navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
-import { MobileFrame } from "@/components/layout/mobile-frame";
+import { useShell } from "@/contexts/ShellContext";
 
 export default function HomeLayout({
   children,
@@ -17,9 +17,14 @@ export default function HomeLayout({
 }) {
   const router = useRouter();
   const { user, isAuthenticated, isLoading, logout } = useAuth();
-  const shellRef = useRef<HTMLDivElement>(null);
+  const { setScrollable } = useShell();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showSubscription, setShowSubscription] = useState(false);
+
+  useEffect(() => {
+    setScrollable(false);
+    return () => setScrollable(true);
+  }, [setScrollable]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -43,15 +48,10 @@ export default function HomeLayout({
 
   return (
     <>
-      <MobileFrame
-        ref={shellRef}
-        scrollable={false}
-        className="relative pt-2 pb-4"
-      >
+      <div className="flex flex-col h-full relative pt-2 pb-4">
         <AppBar
           user={user}
           handleLogout={handleLogout}
-          shellRef={shellRef}
           hideBackButton
         />
 
@@ -62,7 +62,7 @@ export default function HomeLayout({
         <div className="w-full shrink-0">
           <BottomNavigation />
         </div>
-      </MobileFrame>
+      </div>
 
       {showSubscription && (
         <SubscriptionModal

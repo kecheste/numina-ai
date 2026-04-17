@@ -18,12 +18,9 @@ import { Strength } from "../../components/Strength";
 import { Challenge } from "../../components/Challenge";
 import { SpiritualInsight } from "../../components/SpiritualInsight";
 import { TryThis } from "../../components/TryThis";
-import { MobileFrame } from "@/components/layout/mobile-frame";
-
 interface ZodiacElementModalityResultProps {
   result: TestResultResponse;
   onClose: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
   onLogout: () => void;
 }
 
@@ -61,7 +58,6 @@ export function ZodiacElementModalityResultView({
   result,
   onLogout,
   onClose,
-  shellRef,
 }: ZodiacElementModalityResultProps) {
   const data = (result.llm_result_json as ZodiacLLMResult) || {};
   const extracted = result.extracted_json || {};
@@ -71,58 +67,51 @@ export function ZodiacElementModalityResultView({
   const accentColor = ELEMENT_COLORS[element] || "#F2D08C";
 
   return (
-    <div className="fixed inset-0 z-50">
-      <MobileFrame
-        ref={shellRef}
-        scrollable={true}
-        className="relative pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          handleLogout={onLogout}
-          shellRef={shellRef}
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={onLogout}
+      />
+
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] text-center"
+        >
+          Your zodiac element & modality
+        </h1>
+        <div
+          className="flex items-center my-[36px] gap-2 text-[13px] font-[400] tracking-wider text-center w-full justify-center"
+          style={{ color: accentColor }}
+        >
+          <span className="uppercase text-[#F2D08C] border border-[#F2D08C] rounded-[5px] px-2 text-[16px]">
+            {modality}
+          </span>
+          <span className="uppercase text-[#F2D08C] border border-[#F2D08C] rounded-[5px] px-2 text-[16px]">
+            {element}
+          </span>
+        </div>
+
+        <BluePrint title="" blueprint={data?.energyProfile} />
+
+        {/* Big Three Summary */}
+        <div className="flex flex-col gap-[9px] mb-10 items-start">
+          <SmallTraitCard label="Sun" value={extracted.sun_sign} />
+          <SmallTraitCard label="Moon" value={extracted.moon_sign} />
+          <SmallTraitCard label="Rising" value={extracted.rising_sign} />
+        </div>
+
+        <CoreTraits coreTraits={data.coreTraits} />
+        <Strength strengths={data.strengths} />
+        <Challenge challenges={data.challenges} />
+
+        <SpiritualInsight
+          title="Shadow Pattern"
+          spiritualInsight={data.shadowPattern}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] text-center"
-          >
-            Your zodiac element & modality
-          </h1>
-          <div
-            className="flex items-center my-[36px] gap-2 text-[13px] font-[400] tracking-wider text-center w-full justify-center"
-            style={{ color: accentColor }}
-          >
-            <span className="uppercase text-[#F2D08C] border border-[#F2D08C] rounded-[5px] px-2 text-[16px]">
-              {modality}
-            </span>
-            <span className="uppercase text-[#F2D08C] border border-[#F2D08C] rounded-[5px] px-2 text-[16px]">
-              {element}
-            </span>
-          </div>
-
-          <BluePrint title="" blueprint={data?.energyProfile} />
-
-          {/* Big Three Summary */}
-          <div className="flex flex-col gap-[9px] mb-10 items-start">
-            <SmallTraitCard label="Sun" value={extracted.sun_sign} />
-            <SmallTraitCard label="Moon" value={extracted.moon_sign} />
-            <SmallTraitCard label="Rising" value={extracted.rising_sign} />
-          </div>
-
-          <CoreTraits coreTraits={data.coreTraits} />
-          <Strength strengths={data.strengths} />
-          <Challenge challenges={data.challenges} />
-
-          <SpiritualInsight
-            title="Shadow Pattern"
-            spiritualInsight={data.shadowPattern}
-          />
-
-          <TryThis tryThis={data.dailyEvolution} />
-        </div>
-      </MobileFrame>
+        <TryThis tryThis={data.dailyEvolution} />
+      </div>
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { useAuth } from "@/contexts/auth-context";
 import { hasBirthDataInSession, hasDobFlowIntent } from "@/lib/birth-data";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MobileFrame } from "@/components/layout/mobile-frame";
 
 export default function AuthLayout({
   children,
@@ -92,8 +91,8 @@ export default function AuthLayout({
   }
 
   return (
-    <MobileFrame scrollable={true} className="px-[35px] sm:px-[36px]">
+    <div className="flex flex-col flex-1 w-full px-[35px] sm:px-[36px]">
       {children}
-    </MobileFrame>
+    </div>
   );
 }

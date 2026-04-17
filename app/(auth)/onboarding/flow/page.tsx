@@ -12,10 +12,8 @@ import {
 import { MBTITypeOnboardingTestIntro } from "@/components/test/result-view/onboarding-mbti-intro";
 import AIPreparing from "@/components/custom/AIPreparing";
 import type { MbtiResultData } from "@/components/test/result-view/blueprint/mbti-blueprint-result";
-import { MobileFrame } from "@/components/layout/mobile-frame";
 
 export default function OnboardingFlowPage() {
-  const shellRef = useRef<HTMLDivElement>(null);
   const {
     step,
     chakraResult,
@@ -49,25 +47,18 @@ export default function OnboardingFlowPage() {
       return <AIPreparing />;
     }
     return (
-      <div className="fixed inset-0 z-50">
-        <MobileFrame ref={shellRef} scrollable={true}>
-          <ChakraBlueprintResult
-            onClose={handleChakraBlueprintNext}
-            shellRef={shellRef}
-            strongestChakra={chakraResult.llm_result_json?.strongestChakra ?? null}
-            needsBalance={chakraResult.llm_result_json?.needsRebalancing ?? null}
-          />
-        </MobileFrame>
-      </div>
+      <ChakraBlueprintResult
+        onClose={handleChakraBlueprintNext}
+        strongestChakra={chakraResult.llm_result_json?.strongestChakra ?? null}
+        needsBalance={chakraResult.llm_result_json?.needsRebalancing ?? null}
+      />
     );
   }
 
   if (step === "mbti_intro") {
     return (
-      <div className="fixed inset-0 z-50">
-        <MobileFrame ref={shellRef} scrollable={true} className="justify-center">
-          <MBTITypeOnboardingTestIntro onClose={handleMbtiIntroNext} />
-        </MobileFrame>
+      <div className="flex flex-col flex-1 justify-center">
+        <MBTITypeOnboardingTestIntro onClose={handleMbtiIntroNext} />
       </div>
     );
   }
@@ -99,39 +90,28 @@ export default function OnboardingFlowPage() {
       extracted_json: mbtiResult.extracted_json as any,
     };
     return (
-      <div className="fixed inset-0 z-50">
-        <MobileFrame ref={shellRef} scrollable={true}>
-          <MbtiBlueprintResult
-            onClose={handleMbtiBlueprintNext}
-            shellRef={shellRef}
-            resultData={mbtiData}
-          />
-        </MobileFrame>
-      </div>
+      <MbtiBlueprintResult
+        onClose={handleMbtiBlueprintNext}
+        resultData={mbtiData}
+      />
     );
   }
 
   if (step === "astrology_blueprint") {
     return (
-      <div className="fixed inset-0 z-50">
-        <AstrologyBlueprintResult
-          onClose={handleAstrologyNext}
-          shellRef={shellRef}
-          content={astrologyContent}
-        />
-      </div>
+      <AstrologyBlueprintResult
+        onClose={handleAstrologyNext}
+        content={astrologyContent}
+      />
     );
   }
 
   if (step === "numerology_blueprint") {
     return (
-      <div className="fixed inset-0 z-50">
-        <NumerologyBlueprintResult
-          onClose={handleNumerologyNext}
-          shellRef={shellRef}
-          content={numerologyContent}
-        />
-      </div>
+      <NumerologyBlueprintResult
+        onClose={handleNumerologyNext}
+        content={numerologyContent}
+      />
     );
   }
 
