@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify/react";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
@@ -195,7 +196,7 @@ export function DOBScreen({
         />
       </div>
 
-      <div className="mt-auto w-full">
+      <div className="mt-auto w-full pb-4">
         {isPending ? (
           <div
             className="
@@ -238,6 +239,19 @@ export function DOBScreen({
             Next Step
           </Button>
         )}
+
+        <div
+          className="mt-6 text-center text-[13px] font-[300] text-white/50"
+          style={{ fontFamily: "var(--font-gotham)" }}
+        >
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-[#F2D08C] hover:underline transition-all"
+          >
+            Log in
+          </Link>
+        </div>
       </div>
 
       <p
@@ -245,7 +259,7 @@ export function DOBScreen({
           fontFamily: "var(--font-gotham)",
           lineHeight: "14px",
         }}
-        className="text-[10px] font-[325] mb-2 mt-[55px]"
+        className="text-[10px] font-[325] mb-2 mt-8 text-center"
       >
         This information helps us calculate your astrological and energetic
         profile. If you’re unsure of your exact birth time, choose “I don’t
