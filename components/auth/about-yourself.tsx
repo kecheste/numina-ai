@@ -74,7 +74,7 @@ export default function AboutYourself({
   };
 
   return (
-    <div className="flex flex-col items-center w-full px-[35px] sm:px-[36px] pt-4 pb-4">
+    <div className="flex flex-col items-center w-full pt-4 pb-4 h-full">
       <div className="flex justify-center mb-8">
         <NuminaLogoIcon />
       </div>

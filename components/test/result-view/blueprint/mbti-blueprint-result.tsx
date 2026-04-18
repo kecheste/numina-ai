@@ -4,6 +4,32 @@ import { Button } from "@/components/ui/button";
 import { InfjIcon } from "@/components/icons/mysoul/infj";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
+
+const DEFAULT_DESCRIPTION =
+  "You are an INFJ – The Advocate, one of the rarest and most insightful personality types. You possess a unique blend of idealism, intuition, and a deep sense of purpose. Your natural inclination is to understand the underlying patterns in the world and to use that understanding to help others grow and evolve.";
+
+const DEFAULT_TRAITS = [
+  "Deeply intuitive and insightful",
+  "Strong sense of purpose and values",
+  "Empathetic and compassionate",
+  "Creative and imaginative",
+  "Value authenticity and meaning",
+  "Seek personal growth and development",
+  "Natural counselors and helpers",
+  "Value harmony and cooperation",
+];
+
+export interface MbtiResultData {
+  personalityType: string;
+  insights: string[];
+  recommendations: string[];
+  score: number;
+  narrative?: string;
+  extracted_json?: {
+    shortDescription?: string;
+  };
+}
+
 interface MbtiTypeResultProps {
   onClose: () => void;
   resultData?: MbtiResultData | null;

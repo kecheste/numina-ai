@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
-import { AppDrawer } from "@/components/navigation/app-drawer";
 import AppBar from "@/components/navigation/appBar";
 import { BottomNavigation } from "@/components/navigation/bottom-navigation";
 import { useAuth } from "@/contexts/auth-context";
@@ -48,12 +46,8 @@ export default function HomeLayout({
 
   return (
     <>
-      <div className="flex flex-col h-full relative pt-2 pb-4">
-        <AppBar
-          user={user}
-          handleLogout={handleLogout}
-          hideBackButton
-        />
+      <div style={{ fontFamily: "var(--font-gotham)" }} className="flex flex-col h-full w-full relative pt-2 pb-4">
+        <AppBar user={user} handleLogout={handleLogout} hideBackButton />
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto w-full">
           <div className="py-4">{children}</div>

@@ -105,7 +105,7 @@ export function DOBScreen({
     (time.trim() === "" || timeValidation.valid);
 
   return (
-    <div className="flex flex-col items-center w-full pt-4 pb-4">
+    <div className="flex flex-col items-center w-full pt-4 pb-4 h-full">
       <div className="flex justify-center mb-8">
         <NuminaLogoIcon />
       </div>
@@ -115,7 +115,7 @@ export function DOBScreen({
           fontFamily: "var(--font-gotham)",
           lineHeight: "33px",
         }}
-        className="text-[21px] font-[400] text-white mb-3"
+        className="text-[21px] font-[400] text-white mb-4"
       >
         Let's begin your self-discovery.
       </h1>
@@ -124,9 +124,10 @@ export function DOBScreen({
           fontFamily: "var(--font-gotham)",
           lineHeight: "22px",
         }}
-        className="text-[15px] font-[300] text-white mb-3"
+        className="text-[15px] font-[300] text-white mb-4"
       >
-        We'll use your birth data to create your personalized Soul Map.
+        We’ll use your birth data and responses to create your personalized Soul
+        Map — powered by AI, astrology, psychology, and numerology.
       </p>
 
       <h2
@@ -238,6 +239,18 @@ export function DOBScreen({
           </Button>
         )}
       </div>
+
+      <p
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "14px",
+        }}
+        className="text-[10px] font-[325] mb-2 mt-[55px]"
+      >
+        This information helps us calculate your astrological and energetic
+        profile. If you’re unsure of your exact birth time, choose “I don’t
+        know” — we’ll still give you accurate insights based on date and place.
+      </p>
     </div>
   );
 }

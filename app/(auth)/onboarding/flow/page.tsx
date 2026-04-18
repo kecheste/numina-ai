@@ -56,11 +56,7 @@ export default function OnboardingFlowPage() {
   }
 
   if (step === "mbti_intro") {
-    return (
-      <div className="flex flex-col flex-1 justify-center">
-        <MBTITypeOnboardingTestIntro onClose={handleMbtiIntroNext} />
-      </div>
-    );
+    return <MBTITypeOnboardingTestIntro onClose={handleMbtiIntroNext} />;
   }
 
   if (step === "mbti_test") {

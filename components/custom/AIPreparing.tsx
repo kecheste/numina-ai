@@ -2,7 +2,7 @@ import React from "react";
 
 function AIPreparing() {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-black via-[#0a0a0a] to-black px-6">
+    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-black via-[#0a0a0a] to-black px-6">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(242,208,140,0.08),transparent)]" />
       <div className="relative w-full max-w-[380px] px-8 py-10 text-center">
         <div className="mb-6 flex justify-center">

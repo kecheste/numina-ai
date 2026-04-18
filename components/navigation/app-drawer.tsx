@@ -6,6 +6,7 @@ import {
   DrawerTrigger,
   DrawerClose,
   DrawerPortal,
+  DrawerOverlay,
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { useAuth } from "@/contexts/auth-context";
@@ -50,15 +51,16 @@ export function AppDrawer({
       </DrawerTrigger>
 
       <DrawerPortal container={portalContainer.current}>
+        <DrawerOverlay />
         <DrawerTitle></DrawerTitle>
         <DrawerContent
           className="
-            fixed
+            absolute
             top-0
             right-0
             h-full
             w-[280px]
-            max-w-[75%]
+            max-w-[85%]
             bg-[#F2D08C]
             rounded-none
             z-50

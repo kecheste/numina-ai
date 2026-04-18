@@ -520,7 +520,7 @@ export interface TestResultResponse {
   personality_type: string | null;
   insights: string[] | null;
   recommendations: string[] | null;
-  narrative: string | null;
+  narrative: string | undefined;
   extracted_json?: any | null;
   llm_result_json?: {
     title?: string;
@@ -608,6 +608,7 @@ export interface SynthesisResponse {
   result: {
     // Preview keys
     youAre?: string;
+    mostSureThings?: string[];
     sureThings?: string;
     identitySummary?: string;
     growthAreas?: string[];

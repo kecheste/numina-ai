@@ -194,7 +194,9 @@ export function TestFlow({
   }
 
   return (
-    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2 pb-4">
+    <div style={{
+      fontFamily: "var(--font-gotham)",
+    }} className="absolute inset-0 z-50 bg-black flex flex-col pt-2 pb-4">
       <AppBar
         handleLogout={() => router.push("/welcome")}
         handleBack={handleBack}

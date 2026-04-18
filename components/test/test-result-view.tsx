@@ -113,33 +113,14 @@ export function TestResultView({
   } : undefined;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
-      <div
-        ref={shellRef}
-        className="
-          w-full
-          relative
-          h-dvh 
-          sm:h-auto
-          sm:min-h-0
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-black
-          flex
-          flex-col
-          items-center
-          text-center
-          pt-2
-          pb-4
-          overflow-hidden
-        "
-      >
-        <PageLoader>
-          <AppBar
-            handleBack={onBack}
-            handleLogout={() => router.push("/welcome")}
-            shellRef={shellRef}
-          />
+    <div style={{
+      fontFamily: "var(--font-gotham)",
+    }} className="absolute inset-0 z-50 flex flex-col bg-black overflow-hidden" ref={shellRef}>
+      <PageLoader>
+        <AppBar
+          handleBack={onBack}
+          handleLogout={() => router.push("/welcome")}
+        />
 
           <div className="px-[24px] py-6 pb-12 flex-1 overflow-y-scroll">
             <div className="text-center">
@@ -451,7 +432,6 @@ export function TestResultView({
             )}
           </div>
         </PageLoader>
-      </div>
     </div>
   );
 }

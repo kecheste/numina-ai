@@ -31,7 +31,7 @@ export function LoginScreen({
   const isComplete = email.trim().length > 0 && password.length > 0;
 
   return (
-    <div className="flex flex-col items-center w-full pt-4 pb-4">
+    <div className="flex flex-col items-center w-full pt-4 pb-4 h-full justify-center">
       <div className="flex justify-center mb-8">
         <NuminaLogoIcon />
       </div>

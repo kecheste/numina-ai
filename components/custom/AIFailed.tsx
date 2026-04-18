@@ -9,7 +9,7 @@ function AIFailed({
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 px-6 overflow-hidden">
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90 px-6 overflow-hidden">
       <div className="absolute w-[420px] h-[420px] rounded-full bg-[#F2D08C]/10 blur-3xl opacity-70"></div>
 
       <div className="relative w-full max-w-[360px] rounded-2xl bg-gradient-to-b from-[#1a1a1a] to-[#000000] border border-[#F2D08C40] shadow-[0_0_40px_rgba(242,208,140,0.2)] px-6 py-8 text-center backdrop-blur-md">

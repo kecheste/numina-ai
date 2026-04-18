@@ -11,6 +11,36 @@ interface NumerologyBlueprintResultProps {
   content?: NumerologyBlueprintResponse["items"] | null;
 }
 
+const DEFAULT_NUMEROLOGY_DATA = [
+  {
+    number: "7",
+    title: "Life Path Number",
+    description:
+      "The seeker, the thinker, and the searcher of Truth. You are introspective and analytical.",
+  },
+  {
+    number: "11",
+    title: "Master Number",
+    description:
+      "The intuitive messenger. You possess heightened awareness and visionary potential.",
+  },
+  {
+    number: "3",
+    title: "expression Number",
+    description:
+      "The creative spirit. You bring joy and inspiration through your artistic expression.",
+  },
+];
+
+function oneSentenceMaxChars(text: string | null | undefined) {
+  if (!text) return "";
+  const firstSentence = text.split(".")[0];
+  if (firstSentence.length > 100) {
+    return firstSentence.substring(0, 97) + "...";
+  }
+  return firstSentence + ".";
+}
+
 export function NumerologyBlueprintResult({
   onClose,
   content = undefined,
