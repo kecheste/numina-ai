@@ -1,13 +1,12 @@
 "use client";
 
-import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
+import { useEffect, useRef, useState } from "react";
 import { SubscriptionModal } from "@/components/modals/subscription-modal";
-import { AppDrawer } from "@/components/navigation/app-drawer";
 import AppBar from "@/components/navigation/appBar";
 import { BottomNavigation } from "@/components/navigation/bottom-navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useShell } from "@/contexts/ShellContext";
 
 export default function HomeLayout({
   children,
@@ -16,9 +15,14 @@ export default function HomeLayout({
 }) {
   const router = useRouter();
   const { user, isAuthenticated, isLoading, logout } = useAuth();
-  const shellRef = useRef<HTMLDivElement>(null);
+  const { setScrollable } = useShell();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showSubscription, setShowSubscription] = useState(false);
+
+  useEffect(() => {
+    setScrollable(false);
+    return () => setScrollable(true);
+  }, [setScrollable]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -41,33 +45,9 @@ export default function HomeLayout({
   }
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
-      <div
-        ref={shellRef}
-        className="
-          w-full
-          relative
-          h-dvh 
-          sm:h-auto
-          sm:min-h-0
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-black
-          flex
-          flex-col
-          items-center
-          text-center
-          pt-2
-          pb-4
-          overflow-hidden
-        "
-      >
-        <AppBar
-          user={user}
-          handleLogout={handleLogout}
-          shellRef={shellRef}
-          hideBackButton
-        />
+    <>
+      <div style={{ fontFamily: "var(--font-gotham)" }} className="flex flex-col h-full w-full relative pt-2 pb-4">
+        <AppBar user={user} handleLogout={handleLogout} hideBackButton />
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto w-full">
           <div className="py-4">{children}</div>
@@ -84,6 +64,6 @@ export default function HomeLayout({
           onUpgrade={() => setShowSubscription(false)}
         />
       )}
-    </div>
+    </>
   );
 }

@@ -21,14 +21,11 @@ export function TestIntro({
   onStart,
 }: TestIntroProps) {
   return (
-    <div className="fixed inset-0 z-50 flex justify-center">
+    <div className="absolute inset-0 z-50 flex justify-center bg-[#F2D08CE5]">
       <div
         className="
           w-full
-          min-h-screen
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-[#F2D08CE5]
+          h-full
           overflow-y-auto
           flex
           flex-col

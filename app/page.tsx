@@ -11,32 +11,13 @@ export default function Home() {
 
   useEffect(() => {
     if (isLoading) return;
-    router.replace(isAuthenticated ? "/home" : "/welcome");
-  }, [router, isAuthenticated, isLoading]);
+    router.replace("/welcome");
+  }, [router, isLoading]);
 
   return (
-    <div className="flex h-screen bg-white sm:items-center sm:justify-center">
-      <div
-        className="
-          relative
-          w-full
-          h-screen
-          bg-black
-          flex
-          flex-col 
-          items-center
-          justify-center
-          sm:h-auto
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          sm:border
-          sm:border-[#1f1f1f]
-        "
-      >
-        <NuminaLogoIcon />
-
-        <div className="w-10 h-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin mt-4" />
-      </div>
-    </div>
+    <>
+      <NuminaLogoIcon />
+      <div className="w-10 h-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin mt-4" />
+    </>
   );
 }

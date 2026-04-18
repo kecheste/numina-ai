@@ -4,19 +4,16 @@ import { Button } from "@/components/ui/button";
 import { ChakraFullIcon } from "@/components/icons/chakra-full";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
-
 const GOLD = "#F2D08C";
 
 interface ChakraPreviewResultProps {
   onClose: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
   strongestChakra?: string | null;
   needsBalance?: string | null;
 }
 
 export function ChakraBlueprintResult({
   onClose,
-  shellRef,
   strongestChakra,
   needsBalance,
 }: ChakraPreviewResultProps) {
@@ -25,14 +22,13 @@ export function ChakraBlueprintResult({
   const needs = needsBalance?.trim();
 
   return (
-    <div className="flex flex-col h-full bg-black pt-2">
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2 h-full w-full">
       <AppBar
         hideBackButton
         handleLogout={() => router.push("/welcome")}
-        shellRef={shellRef}
       />
 
-      <div className="flex flex-col items-center text-center flex-1 overflow-y-auto px-[32px] sm:px-[59px] pt-6 pb-8">
+      <div className="flex flex-col h-full items-center text-center flex-1 overflow-y-auto px-[32px] sm:px-[32px] pt-6 pb-8 w-full">
         <p
           style={{
             fontFamily: "var(--font-gotham)",

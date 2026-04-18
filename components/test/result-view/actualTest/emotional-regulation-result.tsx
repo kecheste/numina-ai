@@ -9,19 +9,16 @@ import { Strength } from "../../components/Strength";
 import { Challenge } from "../../components/Challenge";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
-
 interface EmotionalRegulationResultProps {
   result: TestResultResponse;
   onClose: () => void;
   onLogout?: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export function EmotionalRegulationResult({
   result,
   onClose,
   onLogout,
-  shellRef,
 }: EmotionalRegulationResultProps) {
   const router = useRouter();
 
@@ -41,50 +38,43 @@ export function EmotionalRegulationResult({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
-        ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          handleLogout={onLogout}
-          shellRef={shellRef}
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2 w-full">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={onLogout}
+      />
+
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+        >
+          Your Emotional Regulation Type
+        </h1>
+
+        <div className="flex flex-col items-center">
+          <h2 className="text-[16px]  font-[325] text-[#F2D08C] mb-[40px] rounded-[5px] uppercase border border-[#F2D08C] px-2">
+            {data?.title}
+          </h2>
+        </div>
+
+        <DimensionScores
+          title="Regulation Dynamics"
+          dimensions={dimensions}
+          scores={scores}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
-          >
-            Your Emotional Regulation Type
-          </h1>
+        <BluePrint blueprint={data?.overview} title="" />
 
-          <div className="flex flex-col items-center">
-            <h2 className="text-[16px]  font-[325] text-[#F2D08C] mb-[40px] rounded-[5px] uppercase border border-[#F2D08C] px-2">
-              {data?.title}
-            </h2>
-          </div>
+        <Strength strengths={strengths} />
 
-          <DimensionScores
-            title="Regulation Dynamics"
-            dimensions={dimensions}
-            scores={scores}
-          />
+        <Challenge challenges={challenges} />
 
-          <BluePrint blueprint={data?.overview} title="" />
+        <BluePrint blueprint={data?.summary} title="Emotional Pattern" />
 
-          <Strength strengths={strengths} />
+        <TryThis tryThis={tryThis} />
 
-          <Challenge challenges={challenges} />
-
-          <BluePrint blueprint={data?.summary} title="Emotional Pattern" />
-
-          <TryThis tryThis={tryThis} />
-
-          <AvoidThis avoidThis={avoidThis} />
-        </div>
+        <AvoidThis avoidThis={avoidThis} />
       </div>
     </div>
   );

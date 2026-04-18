@@ -9,12 +9,10 @@ import { Strength } from "../../components/Strength";
 import { Challenge } from "../../components/Challenge";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
-
 interface PastLifeVibesResultProps {
   result: TestResultResponse;
   onClose: () => void;
   onLogout?: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const ARCHETYPE_DIMENSIONS = [
@@ -36,7 +34,6 @@ export function PastLifeVibesResult({
   result,
   onClose,
   onLogout,
-  shellRef,
 }: PastLifeVibesResultProps) {
   const router = useRouter();
 
@@ -50,56 +47,49 @@ export function PastLifeVibesResult({
     : [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
-        ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          handleLogout={onLogout}
-          shellRef={shellRef}
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={onLogout}
+      />
+
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+        >
+          Your Past Life Vibes
+        </h1>
+
+        <div className="mb-[40px] flex flex-col items-center">
+          <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+            {data?.title?.replace("The ", "")}
+          </h2>
+
+          <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
+            {data?.oneSentenceInsight || "Dominant archetypal resonance"}
+          </p>
+        </div>
+
+        <DimensionScores
+          title="Ancient Archetypes"
+          dimensions={ARCHETYPE_DIMENSIONS}
+          scores={scores}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
-          >
-            Your Past Life Vibes
-          </h1>
+        <BluePrint title="Soul Narrative" blueprint={data.soulNarrative} />
 
-          <div className="mb-[40px] flex flex-col items-center">
-            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
-              {data?.title?.replace("The ", "")}
-            </h2>
+        <CoreTraits coreTraits={data.archetypeEchoes} />
 
-            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
-              {data?.oneSentenceInsight || "Dominant archetypal resonance"}
-            </p>
-          </div>
+        <Strength strengths={data.ancientGifts} />
 
-          <DimensionScores
-            title="Ancient Archetypes"
-            dimensions={ARCHETYPE_DIMENSIONS}
-            scores={scores}
-          />
+        <Challenge challenges={data.karmicShadows} />
 
-          <BluePrint title="Soul Narrative" blueprint={data.soulNarrative} />
+        <BluePrint title="Past Life Echoes" blueprint={data.pastLifeEchoes} />
 
-          <CoreTraits coreTraits={data.archetypeEchoes} />
+        <TryThis tryThis={tryThis} />
 
-          <Strength strengths={data.ancientGifts} />
-
-          <Challenge challenges={data.karmicShadows} />
-
-          <BluePrint title="Past Life Echoes" blueprint={data.pastLifeEchoes} />
-
-          <TryThis tryThis={tryThis} />
-
-          <AvoidThis avoidThis={avoidThis} />
-        </div>
+        <AvoidThis avoidThis={avoidThis} />
       </div>
     </div>
   );

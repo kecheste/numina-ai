@@ -105,160 +105,152 @@ export function DOBScreen({
     (time.trim() === "" || timeValidation.valid);
 
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
-      <div
-        className="
-          w-full
-          h-dvh 
-          sm:h-auto
-          sm:min-h-0
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-black
-          overflow-y-auto 
-          flex
-          flex-col
-          items-center
-          text-center
-          px-[35px]
-          sm:px-[36px]
-          pt-4
-          pb-4
-        "
+    <div className="flex flex-col items-center w-full pt-4 pb-4 h-full">
+      <div className="flex justify-center mb-8">
+        <NuminaLogoIcon />
+      </div>
+
+      <h1
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "33px",
+        }}
+        className="text-[21px] font-[400] text-white mb-4"
       >
-        <div className="flex justify-center mb-8">
-          <NuminaLogoIcon />
-        </div>
+        Let's begin your self-discovery.
+      </h1>
+      <p
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "22px",
+        }}
+        className="text-[15px] font-[300] text-white mb-4"
+      >
+        We’ll use your birth data and responses to create your personalized Soul
+        Map — powered by AI, astrology, psychology, and numerology.
+      </p>
 
-        <h1
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "33px",
-          }}
-          className="text-[21px] font-[400] text-white mb-3"
-        >
-          Let's begin your self-discovery.
-        </h1>
-        <p
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "22px",
-          }}
-          className="text-[15px] font-[300] text-white mb-3"
-        >
-          We'll use your birth data to create your personalized Soul Map.
-        </p>
+      <h2
+        style={{
+          fontFamily: "var(--font-arp80)",
+          lineHeight: "33px",
+        }}
+        className="text-[21px] font-[400] text-[#F2D08C] mb-4"
+      >
+        Date of Birth
+      </h2>
 
-        <h2
-          style={{
-            fontFamily: "var(--font-arp80)",
-            lineHeight: "33px",
-          }}
-          className="text-[21px] font-[400] text-[#F2D08C] mb-4"
-        >
-          Date of Birth
-        </h2>
-
-        <div className="space-y-4 w-full mb-4">
-          <Dropdown
-            label="Year"
-            value={year}
-            onChange={setYear}
-            options={years}
-          />
-          <Dropdown
-            label="Month"
-            value={month}
-            onChange={setMonth}
-            options={months}
-          />
-          <Dropdown label="Day" value={day} onChange={setDay} options={days} />
-          <div>
-            <TextInput
-              label="Time of Birth (optional)"
-              placeholder="24h format e.g. 14:30"
-              value={time}
-              onChange={(v) => {
-                setTime(v);
-                setTimeTouched(true);
-              }}
-              onBlur={() => setTimeTouched(true)}
-            />
-            {showTimeError && (
-              <p
-                className="text-[13px] text-red-400 mt-1 text-center"
-                style={{
-                  fontFamily: "var(--font-gotham)",
-                }}
-              >
-                {timeValidation.message}
-              </p>
-            )}
-          </div>
-          <PlaceAutocomplete
-            label="Place of Birth (optional)"
-            placeholder="Search for a city or place..."
-            value={place}
-            onInputChange={(text) => {
-              setPlace(text);
-              setPlaceLat(null);
-              setPlaceLng(null);
-              setPlaceTimezone(null);
+      <div className="space-y-4 w-full mb-4">
+        <Dropdown
+          label="Year"
+          value={year}
+          onChange={setYear}
+          options={years}
+        />
+        <Dropdown
+          label="Month"
+          value={month}
+          onChange={setMonth}
+          options={months}
+        />
+        <Dropdown label="Day" value={day} onChange={setDay} options={days} />
+        <div>
+          <TextInput
+            label="Time of Birth (optional)"
+            placeholder="24h format e.g. 14:30"
+            value={time}
+            onChange={(v) => {
+              setTime(v);
+              setTimeTouched(true);
             }}
-            onSelect={(placeName, lat, lng, timezone) => {
-              setPlace(placeName);
-              setPlaceLat(lat);
-              setPlaceLng(lng);
-              setPlaceTimezone(timezone);
-            }}
+            onBlur={() => setTimeTouched(true)}
           />
-        </div>
-
-        <div className="mt-auto w-full">
-          {isPending ? (
-            <div
-              className="
-                w-full
-                h-[60px]
-                sm:h-[67px]
-                rounded-[10px]
-                flex items-center justify-center
-                bg-[#F2D08CE0]
-              "
-            >
-              <div
-                className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
-                aria-hidden
-              />
-            </div>
-          ) : (
-            <Button
-              disabled={!isComplete}
-              onClick={handleContinue}
+          {showTimeError && (
+            <p
+              className="text-[13px] text-red-400 mt-1 text-center"
               style={{
-                fontFamily: "var(--font-arp80)",
-                fontWeight: 400,
-                lineHeight: "33px",
+                fontFamily: "var(--font-gotham)",
               }}
-              className="
-                cursor-pointer
-                hover:bg-[#F2D08CC0]
-                w-full
-                h-[60px]
-                sm:h-[67px]
-                bg-[#F2D08CE0]
-                text-black
-                rounded-[10px]
-                text-[18px]
-                sm:text-[21px]
-                transition-colors
-              "
             >
-              Next Step
-            </Button>
+              {timeValidation.message}
+            </p>
           )}
         </div>
+        <PlaceAutocomplete
+          label="Place of Birth (optional)"
+          placeholder="Search for a city or place..."
+          value={place}
+          onInputChange={(text) => {
+            setPlace(text);
+            setPlaceLat(null);
+            setPlaceLng(null);
+            setPlaceTimezone(null);
+          }}
+          onSelect={(placeName, lat, lng, timezone) => {
+            setPlace(placeName);
+            setPlaceLat(lat);
+            setPlaceLng(lng);
+            setPlaceTimezone(timezone);
+          }}
+        />
       </div>
+
+      <div className="mt-auto w-full">
+        {isPending ? (
+          <div
+            className="
+              w-full
+              h-[60px]
+              sm:h-[67px]
+              rounded-[10px]
+              flex items-center justify-center
+              bg-[#F2D08CE0]
+            "
+          >
+            <div
+              className="h-8 w-8 rounded-full border-2 border-black/20 border-t-black animate-spin"
+              aria-hidden
+            />
+          </div>
+        ) : (
+          <Button
+            disabled={!isComplete}
+            onClick={handleContinue}
+            style={{
+              fontFamily: "var(--font-arp80)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            className="
+              cursor-pointer
+              hover:bg-[#F2D08CC0]
+              w-full
+              h-[60px]
+              sm:h-[67px]
+              bg-[#F2D08CE0]
+              text-black
+              rounded-[10px]
+              text-[18px]
+              sm:text-[21px]
+              transition-colors
+            "
+          >
+            Next Step
+          </Button>
+        )}
+      </div>
+
+      <p
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "14px",
+        }}
+        className="text-[10px] font-[325] mb-2 mt-[55px]"
+      >
+        This information helps us calculate your astrological and energetic
+        profile. If you’re unsure of your exact birth time, choose “I don’t
+        know” — we’ll still give you accurate insights based on date and place.
+      </p>
     </div>
   );
 }

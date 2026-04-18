@@ -10,7 +10,6 @@ import { Strength } from "../../components/Strength";
 import { Challenge } from "../../components/Challenge";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
-
 interface CognitiveStyleScores {
   analytical: number;
   empathic: number;
@@ -22,7 +21,6 @@ interface CognitiveStyleScores {
 
 interface CognitiveStyleResultProps {
   onClose: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
   content?: TestResultResponse | null;
 }
 
@@ -48,7 +46,6 @@ const DIMENSION_LABELS: Record<string, string> = {
 
 export function CognitiveStyleResult({
   onClose,
-  shellRef,
   content,
 }: CognitiveStyleResultProps) {
   const router = useRouter();
@@ -85,108 +82,97 @@ export function CognitiveStyleResult({
   const llm = content?.llm_result_json;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
-        ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          shellRef={shellRef}
-          handleLogout={() => router.push("/welcome")}
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2 w-full">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={() => router.push("/welcome")}
+      />
+
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full text-left">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[8px] text-center"
+        >
+          Your Cognitive Style
+        </h1>
+
+        <div className="flex items-center justify-center">
+          <h1
+            style={{ fontFamily: "var(--font-gotham)" }}
+            className="text-[16px] font-[325] text-[#F2D08C] rounded-[5px] px-[8px] uppercase border border-[#F2D08C]/70 mb-[8px]"
+          >
+            {llm?.title?.replace("The ", "") ||
+              styles?.primary?.replace("The ", "")}
+          </h1>
+        </div>
+
+        <h1
+          style={{ lineHeight: "23px", fontFamily: "var(--font-gotham)" }}
+          className="text-[13px] font-[300] text-[#F2D08C] mb-[40px] text-center uppercase"
+        >
+          Secondary Influence: {styles?.secondary}
+        </h1>
+
+        {scores && (
+          <DimensionScores
+            title="Thinking Dimensions"
+            dimensions={Object.keys(scores).map((key) => ({
+              key,
+              label: DIMENSION_LABELS[key] || key,
+            }))}
+            scores={scores}
+          />
+        )}
+
+        <div className="mb-[40px] space-y-[20px] text-left">
+          {llm?.overview &&
+            llm.overview.split("\n\n").map((p: string, i: number) => (
+              <p
+                key={i}
+                style={{
+                  fontFamily: "var(--font-gotham)",
+                  lineHeight: "19px",
+                }}
+                className="border-l border-[#F2D08C] pl-[8px] py-0 m-0 text-[13px] font-[350] text-[#FFFFFF]"
+              >
+                {p}
+              </p>
+            ))}
+        </div>
+
+        <CoreTraits
+          coreTraits={Array.isArray(llm?.coreTraits) ? llm.coreTraits : []}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto text-left">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[8px] text-center"
-          >
-            Your Cognitive Style
-          </h1>
+        <Strength
+          strengths={Array.isArray(llm?.strengths) ? llm.strengths : []}
+        />
 
-          <div className="flex items-center justify-center">
-            <h1
-              style={{ fontFamily: "var(--font-gotham)" }}
-              className="text-[16px] font-[325] text-[#F2D08C] rounded-[5px] px-[8px] uppercase border border-[#F2D08C]/70 mb-[8px]"
-            >
-              {llm?.title?.replace("The ", "") ||
-                styles?.primary?.replace("The ", "")}
-            </h1>
-          </div>
+        <Challenge
+          challenges={Array.isArray(llm?.challenges) ? llm.challenges : []}
+        />
 
-          <h1
-            style={{ lineHeight: "23px", fontFamily: "var(--font-gotham)" }}
-            className="text-[13px] font-[300] text-[#F2D08C] mb-[40px] text-center uppercase"
-          >
-            Secondary Influence: {styles?.secondary}
-          </h1>
-
-          {scores && (
-            <DimensionScores
-              title="Thinking Dimensions"
-              dimensions={Object.keys(scores).map((key) => ({
-                key,
-                label: DIMENSION_LABELS[key] || key,
-              }))}
-              scores={scores}
-            />
-          )}
-
-          <div className="mb-[40px] space-y-[20px] text-left">
-            {llm?.overview &&
-              llm.overview.split("\n\n").map((p: string, i: number) => (
+        <div className="mb-[40px] text-left">
+          <h3 className="text-[#FFFFFF] text-[15px] font-[350] mb-[12px]">
+            Cognitive Signature
+          </h3>
+          <div className="space-y-4">
+            {llm?.energyBlueprint &&
+              llm.energyBlueprint.split("\n\n").map((p: string, i: number) => (
                 <p
                   key={i}
-                  style={{
-                    fontFamily: "var(--font-gotham)",
-                    lineHeight: "19px",
-                  }}
-                  className="border-l border-[#F2D08C] pl-[8px] py-0 m-0 text-[13px] font-[350] text-[#FFFFFF]"
+                  style={bodyTextStyle}
+                  className="border-l border-[#F2D08C] pl-[8px] py-0 m-0 text-[13px] font-[350] text-[#F2D08C]"
                 >
                   {p}
                 </p>
               ))}
           </div>
-
-          <CoreTraits
-            coreTraits={Array.isArray(llm?.coreTraits) ? llm.coreTraits : []}
-          />
-
-          <Strength
-            strengths={Array.isArray(llm?.strengths) ? llm.strengths : []}
-          />
-
-          <Challenge
-            challenges={Array.isArray(llm?.challenges) ? llm.challenges : []}
-          />
-
-          <div className="mb-[40px] text-left">
-            <h3 className="text-[#FFFFFF] text-[15px] font-[350] mb-[12px]">
-              Cognitive Signature
-            </h3>
-            <div className="space-y-4">
-              {llm?.energyBlueprint &&
-                llm.energyBlueprint
-                  .split("\n\n")
-                  .map((p: string, i: number) => (
-                    <p
-                      key={i}
-                      style={bodyTextStyle}
-                      className="border-l border-[#F2D08C] pl-[8px] py-0 m-0 text-[13px] font-[350] text-[#F2D08C]"
-                    >
-                      {p}
-                    </p>
-                  ))}
-            </div>
-          </div>
-
-          <TryThis tryThis={Array.isArray(llm?.tryThis) ? llm.tryThis : []} />
-
-          <AvoidThis
-            avoidThis={Array.isArray(llm?.avoidThis) ? llm.avoidThis : []}
-          />
         </div>
+
+        <TryThis tryThis={Array.isArray(llm?.tryThis) ? llm.tryThis : []} />
+
+        <AvoidThis avoidThis={Array.isArray(llm?.avoidThis) ? llm.avoidThis : []} />
       </div>
     </div>
   );

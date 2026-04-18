@@ -18,7 +18,7 @@ export function PrivacyPolicy() {
         Privacy Policy
       </h1>
 
-      <p className="text-[11px] mb-1">Last updated: [Month] [Day], [Year]</p>
+      <p className="text-[11px] mb-1">Last updated: April 18, 2026</p>
 
       <p className="text-[13px] leading-[23px] font-[400] mb-4">
         Your privacy matters to us. This policy explains how we collect, use,

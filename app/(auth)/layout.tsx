@@ -90,5 +90,9 @@ export default function AuthLayout({
     if (pathname === "/about" && !hasBirthDataInSession()) return null;
   }
 
-  return <div className="min-h-[100dvh] overflow-y-auto">{children}</div>;
+  return (
+    <div className="flex flex-col flex-1 w-full px-[35px] sm:px-[36px]">
+      {children}
+    </div>
+  );
 }

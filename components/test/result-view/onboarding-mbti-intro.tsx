@@ -9,7 +9,10 @@ interface CognitiveStyleResultProps {
 
 export function MBTITypeOnboardingTestIntro({ onClose }: CognitiveStyleResultProps) {
   return (
-    <div className="flex flex-col items-center text-center h-full px-[32px] pb-12">
+    <div
+      style={{ fontFamily: "var(--font-gotham)" }}
+      className="absolute inset-0 z-50 flex flex-col items-center text-center bg-black px-[32px] pt-4"
+    >
       <div className="flex justify-center mb-12 mt-4">
         <NuminaLogoIcon />
       </div>

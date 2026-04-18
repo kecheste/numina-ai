@@ -18,108 +18,87 @@ export function OnboardingInfoScreen({
   onStartTest,
 }: OnboardingInfoScreenProps) {
   return (
-    <div className="flex items-center justify-center bg-white px-0 sm:px-4 min-h-dvh overflow-hidden">
-      <div
-        className="
-          w-full
-          h-dvh 
-          sm:h-auto
-          sm:min-h-0
-          sm:max-w-[450px]
-          sm:aspect-[9/20]
-          bg-black
-          overflow-y-auto 
-          flex
-          flex-col
-          items-center
-          text-center
-          px-[35px]
-          sm:px-[36px]
-          pt-4
-          pb-4
-        "
-      >
-        <div className="flex justify-center mb-8">
-          <NuminaLogoIcon />
-        </div>
-
-        <h1
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "33px",
-          }}
-          className="text-[21px] font-bold text-white text-center mb-2"
-        >
-          What You’ll Receive
-        </h1>
-
-        <div className="grid grid-cols-2 gap-4 mb-4 place-items-center">
-          <InfoCard
-            icon={<SoulMapIcon />}
-            text="A preview of your unique Soul Map"
-          />
-          <InfoCard
-            icon={<PersonalityIcon />}
-            text="Insight into personality & strengths"
-          />
-          <InfoCard
-            icon={<AstrologyIcon />}
-            text="Astrological & numerological highlights"
-          />
-          <InfoCard
-            icon={<ChakraIcon />}
-            text="Chakra balance & energetic alignment"
-          />
-        </div>
-
-        <div
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "22px",
-          }}
-          className="text-center text-[15px] opacity-[0.9] font-light text-white mb-4"
-        >
-          <p className="mb-1">Want more?</p>
-          <p>Unlock your full profile anytime to reveal</p>
-          <p>💼 Career & relationship guidance</p>
-          <p>🧬 Deeper psychological layers</p>
-          <p>🌀 Past life & karmic insights</p>
-          <p className="mt-3">All in just a few minutes</p>
-        </div>
-
-        <Button
-          onClick={onStartTest}
-          style={{
-            fontFamily: "var(--font-arp80)",
-            fontWeight: 400,
-            lineHeight: "33px",
-          }}
-          className="
-              cursor-pointer
-              hover:bg-[#F2D08CC0]
-              w-full
-              h-[67px]
-              bg-[#F2D08C]
-              text-black
-              rounded-[10px]
-              text-[21px]
-              transition-colors
-              mb-auto
-            "
-        >
-          Let’s start
-        </Button>
-
-        <p
-          style={{
-            fontFamily: "var(--font-gotham)",
-            lineHeight: "22px",
-          }}
-          className="text-[10px] font-light text-[#FFFFFF] text-center"
-        >
-          By continuing, you agree to our Terms & Privacy Policy
-        </p>
+    <div className="flex flex-col items-center w-full pt-4 pb-4">
+      <div className="flex justify-center mb-8">
+        <NuminaLogoIcon />
       </div>
+
+      <h1
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "33px",
+        }}
+        className="text-[21px] font-bold text-white text-center mb-2"
+      >
+        What You’ll Receive
+      </h1>
+
+      <div className="grid grid-cols-2 gap-4 mb-4 place-items-center">
+        <InfoCard
+          icon={<SoulMapIcon />}
+          text="A preview of your unique Soul Map"
+        />
+        <InfoCard
+          icon={<PersonalityIcon />}
+          text="Insight into personality & strengths"
+        />
+        <InfoCard
+          icon={<AstrologyIcon />}
+          text="Astrological & numerological highlights"
+        />
+        <InfoCard
+          icon={<ChakraIcon />}
+          text="Chakra balance & energetic alignment"
+        />
+      </div>
+
+      <div
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "22px",
+        }}
+        className="text-center text-[15px] opacity-[0.9] font-light text-white mb-4"
+      >
+        <p className="mb-1">Want more?</p>
+        <p>Unlock your full profile anytime to reveal</p>
+        <p>💼 Career & relationship guidance</p>
+        <p>🧬 Deeper psychological layers</p>
+        <p>🌀 Past life & karmic insights</p>
+        <p className="mt-3">All in just a few minutes</p>
+      </div>
+
+      <Button
+        onClick={onStartTest}
+        style={{
+          fontFamily: "var(--font-arp80)",
+          fontWeight: 400,
+          lineHeight: "33px",
+        }}
+        className="
+            cursor-pointer
+            hover:bg-[#F2D08CC0]
+            w-full
+            h-[67px]
+            bg-[#F2D08C]
+            text-black
+            rounded-[10px]
+            text-[21px]
+            transition-colors
+            mb-auto
+          "
+      >
+        Let’s start
+      </Button>
+
+      <p
+        style={{
+          fontFamily: "var(--font-gotham)",
+          lineHeight: "22px",
+        }}
+        className="text-[10px] font-light text-[#FFFFFF] text-center"
+      >
+        By continuing, you agree to our Terms & Privacy Policy
+      </p>
     </div>
   );
 }

@@ -19,7 +19,6 @@ interface ShadowWorkScores {
 
 interface ShadowWorkResultProps {
   onClose: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
   content?: TestResultResponse | null;
 }
 
@@ -41,11 +40,7 @@ const SHADOW_LABELS: Record<keyof ShadowWorkScores, string> = {
   hidden_potential: "Hidden Potential",
 };
 
-export function ShadowWorkResult({
-  onClose,
-  shellRef,
-  content,
-}: ShadowWorkResultProps) {
+export function ShadowWorkResult({ onClose, content }: ShadowWorkResultProps) {
   const router = useRouter();
 
   const { scores, qualitative } = React.useMemo(() => {
@@ -87,7 +82,7 @@ export function ShadowWorkResult({
 
   if (content === null) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center px-8 bg-black text-[#F2D08C]">
+      <div className="absolute inset-0 z-50 flex flex-col items-center justify-center px-8 bg-black text-[#F2D08C]">
         <div className="h-10 w-10 rounded-full border-2 border-[#F2D08C] border-t-transparent animate-spin mb-4" />
         <p className="text-[14px] font-[350]">
           Preparing your shadow interpretation…
@@ -97,112 +92,106 @@ export function ShadowWorkResult({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
-        ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          handleLogout={() => router.push("/logout")}
-          shellRef={shellRef}
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={() => router.push("/logout")}
+      />
+
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+        >
+          Your Shadow Work Lens
+        </h1>
+
+        <div className="flex flex-col items-center mb-[40px]">
+          <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+            {content?.llm_result_json?.title?.replace("The ", "")}
+          </h2>
+          <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
+            {content?.llm_result_json?.oneSentenceInsight ||
+              "A strong tendency to guard vulnerability through control, distance, or overthinking."}
+          </p>
+        </div>
+
+        <SpiritualInsight
+          title=""
+          spiritualInsight={content?.llm_result_json?.shortDescription}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
-          >
-            Your Shadow Work Lens
-          </h1>
+        {scores && (
+          <DimensionScores
+            title="Core Dimensions"
+            dimensions={Object.entries(SHADOW_LABELS).map(([key, label]) => ({
+              key,
+              label,
+            }))}
+            scores={scores}
+          />
+        )}
 
-          <div className="flex flex-col items-center mb-[40px]">
-            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
-              {content?.llm_result_json?.title?.replace("The ", "")}
-            </h2>
-            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
-              {content?.llm_result_json?.oneSentenceInsight || "A strong tendency to guard vulnerability through control, distance, or overthinking."}
-            </p>
+        {qualitative && (
+          <div className="mb-6 space-y-2 text-left">
+            {qualitative.emotion_coping && (
+              <div className="rounded-xl text-[#FFFFFF] py-4">
+                <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
+                  Emotional Response Style
+                </p>
+                <p className="text-white/80 text-[13px] font-[300] italic">
+                  "{qualitative.emotion_coping}"
+                </p>
+              </div>
+            )}
+            {qualitative.inner_critic_relationship && (
+              <div className="rounded-xl text-[#FFFFFF] py-4">
+                <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
+                  Inner Critic Dialogue
+                </p>
+                <p className="text-white/80 text-[13px] font-[300] italic">
+                  "{qualitative.inner_critic_relationship}"
+                </p>
+              </div>
+            )}
+            {qualitative.shadow_check_in_frequency && (
+              <div className="rounded-xl text-[#FFFFFF] py-4">
+                <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
+                  Shadow Reflection Frequency
+                </p>
+                <p className="text-white/80 text-[13px] font-[300] italic">
+                  {qualitative.shadow_check_in_frequency}
+                </p>
+              </div>
+            )}
           </div>
+        )}
 
-          <SpiritualInsight
-            title=""
-            spiritualInsight={content?.llm_result_json?.shortDescription}
-          />
+        <SpiritualInsight
+          title=""
+          spiritualInsight={content?.llm_result_json?.summary}
+        />
 
-          {scores && (
-            <DimensionScores
-              title="Core Dimensions"
-              dimensions={Object.entries(SHADOW_LABELS).map(([key, label]) => ({
-                key,
-                label,
-              }))}
-              scores={scores}
-            />
-          )}
+        <BluePrint
+          title="Shadow Pattern"
+          blueprint={content?.llm_result_json?.shadowPattern}
+        />
+        <BluePrint
+          title="Secondary Pattern"
+          blueprint={content?.llm_result_json?.secondaryPattern}
+        />
+        <BluePrint
+          title="Hidden Strength"
+          blueprint={content?.llm_result_json?.hiddenStrength}
+        />
+        <BluePrint
+          title="Growth Edge"
+          blueprint={content?.llm_result_json?.growthEdge}
+        />
 
-          {qualitative && (
-            <div className="mb-6 space-y-2 text-left">
-              {qualitative.emotion_coping && (
-                <div className="rounded-xl text-[#FFFFFF] py-4">
-                  <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
-                    Emotional Response Style
-                  </p>
-                  <p className="text-white/80 text-[13px] font-[300] italic">
-                    "{qualitative.emotion_coping}"
-                  </p>
-                </div>
-              )}
-              {qualitative.inner_critic_relationship && (
-                <div className="rounded-xl text-[#FFFFFF] py-4">
-                  <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
-                    Inner Critic Dialogue
-                  </p>
-                  <p className="text-white/80 text-[13px] font-[300] italic">
-                    "{qualitative.inner_critic_relationship}"
-                  </p>
-                </div>
-              )}
-              {qualitative.shadow_check_in_frequency && (
-                <div className="rounded-xl text-[#FFFFFF] py-4">
-                  <p className="text-[#F2D08C] text-[10px] uppercase tracking-wider mb-1 font-[500]">
-                    Shadow Reflection Frequency
-                  </p>
-                  <p className="text-white/80 text-[13px] font-[300] italic">
-                    {qualitative.shadow_check_in_frequency}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
+        <TryThis tryThis={content?.llm_result_json?.tryThis || []} />
 
-          <SpiritualInsight
-            title=""
-            spiritualInsight={content?.llm_result_json?.summary}
-          />
-
-          <BluePrint
-            title="Shadow Pattern"
-            blueprint={content?.llm_result_json?.shadowPattern}
-          />
-          <BluePrint
-            title="Secondary Pattern"
-            blueprint={content?.llm_result_json?.secondaryPattern}
-          />
-          <BluePrint
-            title="Hidden Strength"
-            blueprint={content?.llm_result_json?.hiddenStrength}
-          />
-          <BluePrint
-            title="Growth Edge"
-            blueprint={content?.llm_result_json?.growthEdge}
-          />
-
-          <TryThis tryThis={content?.llm_result_json?.tryThis || []} />
-
-          <AvoidThis avoidThis={content?.llm_result_json?.avoidThis || []} />
-        </div>
+        <AvoidThis avoidThis={content?.llm_result_json?.avoidThis || []} />
       </div>
     </div>
   );

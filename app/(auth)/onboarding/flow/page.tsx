@@ -14,7 +14,6 @@ import AIPreparing from "@/components/custom/AIPreparing";
 import type { MbtiResultData } from "@/components/test/result-view/blueprint/mbti-blueprint-result";
 
 export default function OnboardingFlowPage() {
-  const shellRef = useRef<HTMLDivElement>(null);
   const {
     step,
     chakraResult,
@@ -48,33 +47,16 @@ export default function OnboardingFlowPage() {
       return <AIPreparing />;
     }
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-        <div
-          ref={shellRef}
-          className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col"
-        >
-          <ChakraBlueprintResult
-            onClose={handleChakraBlueprintNext}
-            shellRef={shellRef}
-            strongestChakra={chakraResult.llm_result_json?.strongestChakra ?? null}
-            needsBalance={chakraResult.llm_result_json?.needsRebalancing ?? null}
-          />
-        </div>
-      </div>
+      <ChakraBlueprintResult
+        onClose={handleChakraBlueprintNext}
+        strongestChakra={chakraResult.llm_result_json?.strongestChakra ?? null}
+        needsBalance={chakraResult.llm_result_json?.needsRebalancing ?? null}
+      />
     );
   }
 
   if (step === "mbti_intro") {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-        <div
-          ref={shellRef}
-          className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col justify-center"
-        >
-          <MBTITypeOnboardingTestIntro onClose={handleMbtiIntroNext} />
-        </div>
-      </div>
-    );
+    return <MBTITypeOnboardingTestIntro onClose={handleMbtiIntroNext} />;
   }
 
   if (step === "mbti_test") {
@@ -104,42 +86,28 @@ export default function OnboardingFlowPage() {
       extracted_json: mbtiResult.extracted_json as any,
     };
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-        <div
-          ref={shellRef}
-          className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col"
-        >
-          <MbtiBlueprintResult
-            onClose={handleMbtiBlueprintNext}
-            shellRef={shellRef}
-            resultData={mbtiData}
-          />
-        </div>
-      </div>
+      <MbtiBlueprintResult
+        onClose={handleMbtiBlueprintNext}
+        resultData={mbtiData}
+      />
     );
   }
 
   if (step === "astrology_blueprint") {
     return (
-      <div className="fixed inset-0 z-50">
-        <AstrologyBlueprintResult
-          onClose={handleAstrologyNext}
-          shellRef={shellRef}
-          content={astrologyContent}
-        />
-      </div>
+      <AstrologyBlueprintResult
+        onClose={handleAstrologyNext}
+        content={astrologyContent}
+      />
     );
   }
 
   if (step === "numerology_blueprint") {
     return (
-      <div className="fixed inset-0 z-50">
-        <NumerologyBlueprintResult
-          onClose={handleNumerologyNext}
-          shellRef={shellRef}
-          content={numerologyContent}
-        />
-      </div>
+      <NumerologyBlueprintResult
+        onClose={handleNumerologyNext}
+        content={numerologyContent}
+      />
     );
   }
 

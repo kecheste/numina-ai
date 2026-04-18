@@ -65,6 +65,13 @@ function QuoteBlock({ text }: { text: string }) {
 function PreviewSynthesis({ result }: { result: SynthesisResponse["result"] }) {
   return (
     <section className="space-y-1 px-[28px] text-left">
+      {(result.mostSureThings?.length ?? 0) > 0 && (
+        <div className="mb-6">
+          <SectionHeading label="Most Sure Things" />
+          <PillList items={result.mostSureThings!} color="gold" />
+        </div>
+      )}
+
       {result.youAre && (
         <>
           <SectionHeading label="You Are" />
@@ -76,9 +83,13 @@ function PreviewSynthesis({ result }: { result: SynthesisResponse["result"] }) {
       {(result.sureThings?.length ?? 0) > 0 && (
         <>
           <SectionHeading label="Sure Things" />
-          <p className="text-[13px] font-[300] text-[#E7E7E7] leading-relaxed">
-            {result.sureThings}
-          </p>
+          <ul className="list-disc pl-5 text-[13px] font-[300] text-[#E7E7E7] leading-relaxed">
+            {Array.isArray(result.sureThings) ? (
+              result.sureThings.map((s, i) => <li key={i}>{s}</li>)
+            ) : (
+              <li>{result.sureThings}</li>
+            )}
+          </ul>
         </>
       )}
       {result.identitySummary && (
@@ -96,7 +107,7 @@ function PreviewSynthesis({ result }: { result: SynthesisResponse["result"] }) {
       {result.nextFocus && (
         <>
           <SectionHeading label="Next Focus" />
-          <p className="text-[13px] font-[400] text-[#F2D08C]">
+          <p className="text-[13px] font-[400] text-[#F2D08C] italic">
             {result.nextFocus}
           </p>
         </>
@@ -184,9 +195,13 @@ function FullSynthesis({ result }: { result: SynthesisResponse["result"] }) {
 
       <div className="flex flex-col gap-[12px] mb-[20px]">
         <p className="text-[#FFFFFF] text-[15px] font-[350]">Sure Things</p>
-        <p className="text-[13px] font-[350] text-[#FFFFFF]">
-          {result.sureThings}
-        </p>
+        <ul className="list-disc pl-5 text-[13px] font-[350] text-[#FFFFFF]">
+          {Array.isArray(result.sureThings) ? (
+            result.sureThings.map((s, i) => <li key={i}>{s}</li>)
+          ) : (
+            <li>{result.sureThings}</li>
+          )}
+        </ul>
       </div>
 
       <div className="mb-[40px]">

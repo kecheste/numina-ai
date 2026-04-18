@@ -11,7 +11,6 @@ import { Strength } from "../../components/Strength";
 import { Challenge } from "../../components/Challenge";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
-
 export interface ChakraAlignmentChakra {
   id: string;
   name: string;
@@ -140,8 +139,6 @@ export function ChakraAlignmentResult({
   onBack: () => void;
   content?: TestResultResponse | null;
 }) {
-  const shellRef = useRef<HTMLDivElement>(null);
-
   const llm = content?.llm_result_json ?? {};
 
   const strongestChakra = llm.strongestChakra;
@@ -157,62 +154,55 @@ export function ChakraAlignmentResult({
   const avoidThis = ensureArray(llm.avoidThis);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
-        ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
-      >
-        <AppBar
-          handleBack={onBack}
-          handleLogout={() => {}}
-          shellRef={shellRef}
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2">
+      <AppBar
+        handleBack={onBack}
+        handleLogout={() => {}}
+      />
+
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[50px] text-center"
+        >
+          Your Chakra Alignment Scan
+        </h1>
+
+        <SpiritualInsight
+          title="Primary Strength"
+          spiritualInsight={strongestChakra}
+        />
+        <SpiritualInsight
+          title="Growth Priority"
+          spiritualInsight={needsRebalancing}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[50px] text-center"
-          >
-            Your Chakra Alignment Scan
-          </h1>
+        <BluePrint title="" blueprint={statusSummary} />
 
-          <SpiritualInsight
-            title="Primary Strength"
-            spiritualInsight={strongestChakra}
-          />
-          <SpiritualInsight
-            title="Growth Priority"
-            spiritualInsight={needsRebalancing}
-          />
+        <h3
+          style={{ fontFamily: "var(--font-gotham)" }}
+          className="text-[14px] font-[400] text-[#FFFFFF] mb-[40px] text-left"
+        >
+          Individual Centers
+        </h3>
 
-          <BluePrint title="" blueprint={statusSummary} />
-
-          <h3
-            style={{ fontFamily: "var(--font-gotham)" }}
-            className="text-[14px] font-[400] text-[#FFFFFF] mb-[40px] text-left"
-          >
-            Individual Centers
-          </h3>
-
-          <div className="flex flex-col gap-[30px] mb-[40px]">
-            {chakras.map((chakra) => (
-              <EnergyCard key={chakra.id} chakra={chakra} />
-            ))}
-          </div>
-
-          <BluePrint title="Energy Patterns" blueprint={narrative} />
-
-          <CoreTraits coreTraits={coreTraits} />
-
-          <Strength strengths={strengths} />
-
-          <Challenge challenges={challenges} />
-
-          <TryThis tryThis={tryThis} />
-
-          <AvoidThis avoidThis={avoidThis} />
+        <div className="flex flex-col gap-[30px] mb-[40px]">
+          {chakras.map((chakra) => (
+            <EnergyCard key={chakra.id} chakra={chakra} />
+          ))}
         </div>
+
+        <BluePrint title="Energy Patterns" blueprint={narrative} />
+
+        <CoreTraits coreTraits={coreTraits} />
+
+        <Strength strengths={strengths} />
+
+        <Challenge challenges={challenges} />
+
+        <TryThis tryThis={tryThis} />
+
+        <AvoidThis avoidThis={avoidThis} />
       </div>
     </div>
   );

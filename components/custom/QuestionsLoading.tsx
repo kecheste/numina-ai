@@ -2,7 +2,7 @@ import React from "react";
 
 function QuestionsLoading() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen -mt-20 w-full text-white">
+    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black w-full text-white">
       <div className="relative">
         <div className="relative w-12 h-12 rounded-full border border-[#F2D08C]/40 flex items-center justify-center">
           <div className="w-6 h-6 rounded-full bg-[#F2D08C] animate-[scalePulse_1.4s_ease-in-out_infinite]" />

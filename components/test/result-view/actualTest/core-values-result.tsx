@@ -11,19 +11,16 @@ import { Challenge } from "../../components/Challenge";
 import { BluePrint } from "../../components/Blueprint";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
-
 interface CoreValuesResultProps {
   result: TestResultResponse;
   onClose: () => void;
   onLogout?: () => void;
-  shellRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export function CoreValuesResult({
   result,
   onClose,
   onLogout,
-  shellRef,
 }: CoreValuesResultProps) {
   const data = (result.llm_result_json as any) || {};
   const extracted = (result.extracted_json as any) || {};
@@ -36,63 +33,57 @@ export function CoreValuesResult({
   const avoidThis = Array.isArray(data.avoidThis) ? data.avoidThis : [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white px-0 sm:px-4">
-      <div
-        ref={shellRef}
-        style={{ fontFamily: "var(--font-gotham)" }}
-        className="relative w-full h-full sm:h-auto sm:min-h-0 sm:max-w-[450px] sm:aspect-[9/20] bg-black overflow-y-auto flex flex-col pt-2"
-      >
-        <AppBar
-          handleBack={onClose}
-          handleLogout={onLogout}
-          shellRef={shellRef}
+    <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2">
+      <AppBar
+        handleBack={onClose}
+        handleLogout={onLogout}
+      />
+
+      <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
+        <h1
+          style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
+          className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
+        >
+          Your Core Value Sort
+        </h1>
+
+        <div className="flex flex-col items-center mb-[40px]">
+          <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
+            {data?.title?.replace("The ", "")}
+          </h2>
+          <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
+            {data?.oneSentenceInsight ||
+              "Stability, reliability, and control appear to be your strongest guiding needs."}
+          </p>
+        </div>
+
+        <SpiritualInsight spiritualInsight={data?.shortDescription} />
+
+        <DimensionScores
+          title="Value Resonance Scores"
+          dimensions={[
+            { key: "growth", label: "Growth" },
+            { key: "connection", label: "Connection" },
+            { key: "freedom", label: "Freedom" },
+            { key: "security", label: "Security" },
+            { key: "impact", label: "Impact" },
+            { key: "creativity", label: "Creativity" },
+            { key: "harmony", label: "Harmony" },
+            { key: "achievement", label: "Achievement" },
+          ]}
+          scores={scores}
         />
 
-        <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto">
-          <h1
-            style={{ lineHeight: "33px", fontFamily: "var(--font-gotham)" }}
-            className="text-[20px] font-[350] text-[#FFFFFF] mb-[10px] text-center"
-          >
-            Your Core Value Sort
-          </h1>
+        <CoreTraits coreTraits={traits} />
 
-          <div className="flex flex-col items-center mb-[40px]">
-            <h2 className="text-[16px] font-[325] px-2 text-[#F2D08C] uppercase border border-[#F2D08C] rounded-[5px]">
-              {data?.title?.replace("The ", "")}
-            </h2>
-            <p className="text-[#D9D9D9] text-[11px] font-[300] pt-[8px] text-center px-4">
-              {data?.oneSentenceInsight || "Stability, reliability, and control appear to be your strongest guiding needs."}
-            </p>
-          </div>
+        <Strength strengths={strengths} />
+        <Challenge challenges={challenges} />
 
-          <SpiritualInsight spiritualInsight={data?.shortDescription} />
+        <BluePrint title="Core Values Map" blueprint={data?.summary} />
 
-          <DimensionScores
-            title="Value Resonance Scores"
-            dimensions={[
-              { key: "growth", label: "Growth" },
-              { key: "connection", label: "Connection" },
-              { key: "freedom", label: "Freedom" },
-              { key: "security", label: "Security" },
-              { key: "impact", label: "Impact" },
-              { key: "creativity", label: "Creativity" },
-              { key: "harmony", label: "Harmony" },
-              { key: "achievement", label: "Achievement" },
-            ]}
-            scores={scores}
-          />
+        <TryThis tryThis={tryThis} />
 
-          <CoreTraits coreTraits={traits} />
-
-          <Strength strengths={strengths} />
-          <Challenge challenges={challenges} />
-
-          <BluePrint title="Core Values Map" blueprint={data?.summary} />
-
-          <TryThis tryThis={tryThis} />
-
-          <AvoidThis avoidThis={avoidThis} />
-        </div>
+        <AvoidThis avoidThis={avoidThis} />
       </div>
     </div>
   );
