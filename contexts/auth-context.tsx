@@ -154,6 +154,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (isLoading) return;
 
     const publicPathnames = [
+      "/",
       "/login",
       "/welcome",
       "/register",

@@ -609,7 +609,7 @@ export interface SynthesisResponse {
     // Preview keys
     youAre?: string;
     mostSureThings?: string[];
-    sureThings?: string;
+    sureThings?: string[];
     identitySummary?: string;
     growthAreas?: string[];
     nextFocus?: string;
