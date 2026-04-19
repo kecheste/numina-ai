@@ -30,6 +30,7 @@ import {
 export type ResultComponentProps = {
   result: TestResultResponse;
   onBack: () => void;
+  onRetake?: () => void;
   shellRef: RefObject<HTMLDivElement | null>;
   testTitle: string;
   onLogout?: () => void;
@@ -43,14 +44,12 @@ export const resultRegistry: Record<
     <AstrologyChartResultView
       result={props.result}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
   2: (props) => (
     <NumerologyResultView
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
       content={props.result ?? undefined}
     />
@@ -58,7 +57,6 @@ export const resultRegistry: Record<
   8: (props) => (
     <ShadowWorkResult
       onClose={props.onBack}
-      shellRef={props.shellRef}
       content={props.result ?? undefined}
     />
   ),
@@ -66,14 +64,14 @@ export const resultRegistry: Record<
     <StarseedOriginResultView
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
   13: (props) => (
     <ChakraAlignmentResult
-      testTitle={props.testTitle}
+      {...props}
       onBack={props.onBack}
+      onRetake={props.onRetake}
       content={props.result ?? undefined}
     />
   ),
@@ -81,7 +79,6 @@ export const resultRegistry: Record<
     <MbtiTypeResult
       result={props.result}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout}
     />
   ),
@@ -89,7 +86,6 @@ export const resultRegistry: Record<
     <LifePathResultView
       result={props.result}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout}
     />
   ),
@@ -97,6 +93,7 @@ export const resultRegistry: Record<
     <MindMirrorResult
       {...props}
       onClose={props.onBack}
+      onRetake={props.onRetake}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -118,7 +115,6 @@ export const resultRegistry: Record<
     <BigFiveResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -126,7 +122,6 @@ export const resultRegistry: Record<
     <CoreValuesResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -134,7 +129,7 @@ export const resultRegistry: Record<
     <EmotionalRegulationResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
+      onRetake={props.onRetake}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -142,7 +137,7 @@ export const resultRegistry: Record<
     <StressBalanceResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
+      onRetake={props.onRetake}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -150,7 +145,7 @@ export const resultRegistry: Record<
     <SomaticConnectionResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
+      onRetake={props.onRetake}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -158,7 +153,6 @@ export const resultRegistry: Record<
     <PastLifeVibesResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -166,7 +160,6 @@ export const resultRegistry: Record<
     <KarmicLessonsResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -174,7 +167,6 @@ export const resultRegistry: Record<
     <InnerChildResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -182,7 +174,7 @@ export const resultRegistry: Record<
     <SoulCompassResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
+      onRetake={props.onRetake}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -190,7 +182,7 @@ export const resultRegistry: Record<
     <TransitsResult
       result={props.result}
       onClose={props.onBack}
-      shellRef={props.shellRef}
+      onRetake={props.onRetake}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -198,14 +190,12 @@ export const resultRegistry: Record<
     <ZodiacElementModalityResultView
       result={props.result}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
   11: (props) => (
     <CognitiveStyleResult
       onClose={props.onBack}
-      shellRef={props.shellRef}
       content={props.result ?? undefined}
     />
   ),
@@ -213,7 +203,6 @@ export const resultRegistry: Record<
     <EnergySynthesisResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),
@@ -221,7 +210,6 @@ export const resultRegistry: Record<
     <SoulUrgeResult
       {...props}
       onClose={props.onBack}
-      shellRef={props.shellRef}
       onLogout={props.onLogout || (() => {})}
     />
   ),

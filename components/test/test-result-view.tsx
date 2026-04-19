@@ -11,6 +11,7 @@ interface TestResultViewProps {
   testTitle: string;
   category: string;
   onBack: () => void;
+  onRetake?: () => void;
   result?: TestResultResponse | null;
 }
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
+import { useShell } from "@/contexts/ShellContext";
 import {
   apiGetDailyMessage,
   apiListTestResults,
@@ -71,6 +72,7 @@ function getCardLabel(
 export function SoulRevealScreen() {
   const router = useRouter();
   const { user, refreshUser } = useAuth();
+  const { setShowSubscription } = useShell();
   const [resultsByTest, setResultsByTest] = useState<
     Record<number, TestResultResponse>
   >({});
@@ -92,6 +94,7 @@ export function SoulRevealScreen() {
     user?.birth_month ?? null,
     user?.birth_day ?? null,
   );
+  const zodSign = zodiacSign as keyof typeof ZODIAC_SUMMARY | undefined;
   const titleLine =
     [firstName.toUpperCase(), zodiacSign].filter(Boolean).join(" – ") ||
     "My Soul";
@@ -236,8 +239,10 @@ export function SoulRevealScreen() {
               }}
               className="border border-[#FFFFFF]/50 rounded-[7px] py-3 px-1 h-[72px] text-[14px] text-[#F2D08C]"
             >
-              {zodiacSign && ZODIAC_SUMMARY[zodiacSign]
-                ? ZODIAC_SUMMARY[zodiacSign]
+              {user?.soul_snapshot?.summary
+                ? user.soul_snapshot.summary
+                : zodSign && ZODIAC_SUMMARY[zodSign]
+                ? ZODIAC_SUMMARY[zodSign]
                 : "A grounded intuitive with cosmic insights"}
             </div>
           </div>
@@ -312,7 +317,9 @@ export function SoulRevealScreen() {
         </p>
 
         <div className="flex flex-wrap gap-[5px] justify-center">
-          {(user?.most_sure_things && user.most_sure_things.length > 0
+          {(user?.soul_snapshot?.sure_things && user.soul_snapshot.sure_things.length > 0
+            ? user.soul_snapshot.sure_things
+            : user?.most_sure_things && user.most_sure_things.length > 0
             ? user.most_sure_things
             : MOST_SURE_DEFAULT_TAGS
           )
@@ -338,7 +345,13 @@ export function SoulRevealScreen() {
           fontWeight: "400",
           lineHeight: "33px",
         }}
-        onClick={() => router.push("/home/synthesis")}
+        onClick={() => {
+          if (user?.is_premium) {
+            router.push("/home/synthesis");
+          } else {
+            setShowSubscription(true);
+          }
+        }}
         className="w-full text-[16px] rounded-[10px] bg-[#F2D08C] h-[54px] text-black"
       >
         Reveal my Full Synthesis
@@ -367,25 +380,27 @@ export function SoulRevealScreen() {
         >
           ✨ Cosmic Energy:
           <br />
-          {dailyMessageError && (
+          {dailyMessageError && !user?.soul_snapshot?.daily_message && (
             <span className="text-[#9ca3af]">Daily message unavailable.</span>
           )}
-          {!dailyMessageError && !dailyMessage && (
+          {!dailyMessageError && !dailyMessage && !user?.soul_snapshot?.daily_message && (
             <span className="text-[#9ca3af]">Loading today’s message…</span>
           )}
-          {!dailyMessageError &&
-            dailyMessage &&
-            dailyMessage.message.split("\n").map((line, i) => (
-              <span key={i}>
-                {i > 0 && <br />}
-                {line}
-              </span>
-            ))}
+          {(dailyMessage || user?.soul_snapshot) && (
+            <span>
+              {(dailyMessage?.message || user?.soul_snapshot?.daily_message)?.split("\n").map((line, i) => (
+                <span key={i}>
+                  {i > 0 && <br />}
+                  {line}
+                </span>
+              ))}
+            </span>
+          )}
         </p>
       </div>
       <p className="text-xs italic text-[#F2D08C] text-center">
-        {dailyMessage
-          ? `"${dailyMessage.quote}"`
+        {dailyMessage?.quote || user?.soul_snapshot?.daily_quote
+          ? `"${dailyMessage?.quote || user?.soul_snapshot?.daily_quote}"`
           : dailyMessageError
             ? ""
             : '"Your silence speaks in sacred language."'}

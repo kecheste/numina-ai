@@ -8,9 +8,13 @@ import { SpiritualInsight } from "../../components/SpiritualInsight";
 import { InnerMotivations } from "../../components/InnerMotivations";
 import { DimensionGrid } from "../../components/DimensionGrid";
 import { AlignmentAnalysis } from "../../components/AlignmentAnalysis";
+import { Button } from "../../../ui/button";
+import { RetakeIcon } from "@/components/icons/retake";
+
 interface SoulCompassResultProps {
   result: TestResultResponse;
   onClose: () => void;
+  onRetake?: () => void;
   onLogout: () => void;
 }
 
@@ -21,15 +25,10 @@ const DIMENSION_CONFIG = {
   soul: { label: "Soul", sublabel: "Purpose" },
 } as const;
 
-function parseParas(val: unknown): string[] {
-  if (typeof val === "string") return val.split("\n\n").filter(Boolean);
-  if (Array.isArray(val)) return val.map(String).filter(Boolean);
-  return [];
-}
-
 export function SoulCompassResult({
   result,
   onClose,
+  onRetake,
   onLogout,
 }: SoulCompassResultProps) {
   const data = (result.llm_result_json as Record<string, any>) || {};
@@ -53,10 +52,7 @@ export function SoulCompassResult({
 
   return (
     <div className="absolute inset-0 z-50 bg-black flex flex-col pt-2">
-      <AppBar
-        handleBack={onClose}
-        handleLogout={onLogout}
-      />
+      <AppBar handleBack={onClose} handleLogout={onLogout} />
 
       <div className="flex flex-col px-[32px] pt-6 pb-12 flex-1 overflow-y-auto w-full">
         <h1
@@ -72,15 +68,9 @@ export function SoulCompassResult({
           </h2>
         </div>
 
-        <DimensionGrid
-          dims={dims}
-          dimensionConfig={DIMENSION_CONFIG}
-        />
+        <DimensionGrid dims={dims} dimensionConfig={DIMENSION_CONFIG} />
 
-        <BluePrint
-          title="Decision Insight"
-          blueprint={data.decisionInsight}
-        />
+        <BluePrint title="Decision Insight" blueprint={data.decisionInsight} />
 
         <AlignmentAnalysis
           dims={dims}
@@ -97,6 +87,38 @@ export function SoulCompassResult({
           innerMotivations={reflection}
           title="Suggested Reflection"
         />
+
+        <Button
+          style={{
+            fontFamily: "var(--font-arp80)",
+            fontWeight: 400,
+            lineHeight: "33px",
+          }}
+          onClick={onRetake}
+          className="
+            flex
+            items-center
+            justify-center
+            gap-[12px]
+            sm:gap-[20px]
+            w-full
+            h-[60px]
+            sm:h-[67px]
+            bg-[#F2D08CE0]
+            hover:bg-[#F2D08CC0]
+            cursor-pointer
+            text-black
+            rounded-[10px]
+            text-[18px]
+            sm:text-[18px]
+            transition-colors
+            disabled:opacity-50
+            disabled:cursor-not-allowed
+          "
+        >
+          <div><RetakeIcon /></div>
+          <span>Retake this module</span>
+        </Button>
       </div>
     </div>
   );

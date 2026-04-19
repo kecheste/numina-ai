@@ -15,6 +15,11 @@ import { Challenge } from "../test/components/Challenge";
 import { SpiritualInsight } from "../test/components/SpiritualInsight";
 import { TryThis } from "../test/components/TryThis";
 import { AvoidThis } from "../test/components/AvoidThis";
+import { SubscriptionModal } from "@/components/modals/subscription-modal";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import ProgressBar from "../custom/progress";
+import { LockedIcon } from "../icons/locked";
 
 interface SynthesisPageProps {
   isPremium: boolean;
@@ -62,57 +67,135 @@ function QuoteBlock({ text }: { text: string }) {
   );
 }
 
-function PreviewSynthesis({ result }: { result: SynthesisResponse["result"] }) {
+function BlackSparkleIcon() {
   return (
-    <section className="space-y-1 px-[28px] text-left">
-      {(result.mostSureThings?.length ?? 0) > 0 && (
-        <div className="mb-6">
-          <SectionHeading label="Most Sure Things" />
-          <PillList items={result.mostSureThings!} color="gold" />
+    <svg
+      width="13"
+      height="15"
+      viewBox="0 0 13 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12.4402 7.0601C11.6601 7.1501 10.9101 7.4201 10.2501 7.8401C9.1701 8.5201 8.3501 9.5401 7.9401 10.7401C7.6401 11.6001 7.5201 12.5101 7.5801 13.4301C7.4001 13.1901 7.2101 12.9601 7.0001 12.7401C6.2501 11.9701 5.3401 11.3901 4.3101 11.0301C3.1401 10.6101 1.88014 10.5501 0.670141 10.8401C1.27014 10.2301 1.7601 9.5101 2.1101 8.7201C2.4701 7.9101 2.6801 7.0401 2.7301 6.1601C2.7601 5.5101 2.6801 4.8701 2.4901 4.2501L2.4801 4.2301C2.3101 3.6501 2.0501 3.1001 1.7101 2.6001C2.2601 2.9201 2.8701 3.1401 3.5101 3.2501C4.6901 3.4501 5.9201 3.2701 6.9901 2.7201C7.7501 2.3401 8.3901 1.7901 8.8701 1.1101C9.2801 2.1201 9.9401 3.0101 10.8001 3.6901C11.5201 4.2601 12.4001 4.6001 13.0001 4.7501C12.7801 5.1401 12.6001 5.5601 12.4802 5.9901C12.3902 6.3401 12.3702 6.7001 12.4402 7.0601Z"
+        fill="black"
+      />
+    </svg>
+  );
+}
+
+function LockedSynthesis({
+  completedCount,
+  isPremium,
+  onUnlock,
+  onMaybeLater,
+}: {
+  completedCount: number;
+  isPremium: boolean;
+  onUnlock: () => void;
+  onMaybeLater: () => void;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 px-8 text-center space-y-8">
+      <h2
+        className="text-[20px] font-[350] text-white mb-[40px]"
+        style={{ fontFamily: "var(--font-gotham)" }}
+      >
+        Your Full Synthesis
+      </h2>
+
+      <div className="mb-4">
+        <LockedIcon />
+      </div>
+
+      <div className="max-w-[300px] flex flex-col items-center gap-[23px]">
+        {isPremium ? (
+          <>
+            <h2
+              className="text-[16px] font-[325] text-[#F2D08C] uppercase mt-[35px]"
+              style={{ fontFamily: "var(--font-gotham)" }}
+            >
+              Fill at least 12 tests to unlock full synthesis
+            </h2>
+          </>
+        ) : (
+          <>
+            <h2
+              className="text-[17px] font-[400] text-[#F2D08C] uppercase tracking-[0.08em]"
+              style={{ fontFamily: "var(--font-gotham)" }}
+            >
+              YOUR SOUL PROFILE IS READY
+            </h2>
+          </>
+        )}
+      </div>
+
+      <div className="pt-4 w-full">
+        <ProgressBar
+          value={completedCount}
+          max={isPremium ? 24 : 16}
+          type="text"
+          text={`${completedCount}/${isPremium ? 24 : 16}`}
+          textPosition="inside"
+          fillColor="#282828"
+        />
+      </div>
+
+      {!isPremium && (
+        <div className="w-full max-w-[350px] flex flex-col gap-[9px] pt-4">
+          <Button
+            onClick={onUnlock}
+            style={{
+              fontFamily: "var(--font-arp80)",
+              fontWeight: 400,
+              lineHeight: "33px",
+            }}
+            className="
+                w-full
+                h-[67px]
+                bg-[#F2D08C]
+                text-black
+                rounded-[10px]
+                text-[16px]
+                sm:text-[18px]
+                cursor-pointer
+                hover:bg-[#F2D08CC0]
+                transition-colors
+                disabled:opacity-70
+                disabled:cursor-not-allowed
+              "
+          >
+            <span className="flex items-center gap-2">
+              <BlackSparkleIcon /> Unlock for $9.99 / month
+            </span>
+          </Button>
+          <Button
+            onClick={onMaybeLater}
+            style={{
+              fontFamily: "var(--font-arp80)",
+              lineHeight: "33px",
+            }}
+            className="
+                w-full
+                h-[67px]
+                border
+                border-[#F2D08C]
+                cursor-pointer
+                bg-transparent
+                rounded-[10px]
+                text-[#F2D08C]
+                text-[16px]
+                sm:text-[18px]
+                hover:bg-[#F2D08C]/10
+                transition-colors
+                disabled:opacity-50
+              "
+          >
+            Maybe later
+          </Button>
         </div>
       )}
-
-      {result.youAre && (
-        <>
-          <SectionHeading label="You Are" />
-          <p className="text-[13px] font-[400] text-[#F2D08C]">
-            {result.youAre}
-          </p>
-        </>
-      )}
-      {(result.sureThings?.length ?? 0) > 0 && (
-        <>
-          <SectionHeading label="Sure Things" />
-          <ul className="list-disc pl-5 text-[13px] font-[300] text-[#E7E7E7] leading-relaxed">
-            {Array.isArray(result.sureThings) ? (
-              result.sureThings.map((s, i) => <li key={i}>{s}</li>)
-            ) : (
-              <li>{result.sureThings}</li>
-            )}
-          </ul>
-        </>
-      )}
-      {result.identitySummary && (
-        <>
-          <SectionHeading label="Your Identity" />
-          <QuoteBlock text={result.identitySummary} />
-        </>
-      )}
-      {(result.growthAreas?.length ?? 0) > 0 && (
-        <>
-          <SectionHeading label="Growth Areas" />
-          <PillList items={result.growthAreas!} color="silver" />
-        </>
-      )}
-      {result.nextFocus && (
-        <>
-          <SectionHeading label="Next Focus" />
-          <p className="text-[13px] font-[400] text-[#F2D08C] italic">
-            {result.nextFocus}
-          </p>
-        </>
-      )}
-    </section>
+    </div>
   );
 }
 
@@ -204,7 +287,7 @@ function FullSynthesis({ result }: { result: SynthesisResponse["result"] }) {
         </ul>
       </div>
 
-      <div className="mb-[40px]">
+      <div className="mb-[40px] flex flex-col gap-[12px]">
         {(result.dominantPatterns?.length ?? 0) > 0 && (
           <div className="flex flex-col gap-[12px]">
             {result.dominantPatterns!.slice(0, 5).map((item, i) => (
@@ -281,7 +364,8 @@ function FullSynthesis({ result }: { result: SynthesisResponse["result"] }) {
   );
 }
 
-export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
+export function SynthesisPage({ isPremium }: SynthesisPageProps) {
+  const router = useRouter();
   const [synthesis, setSynthesis] = useState<
     SynthesisResponse | null | undefined
   >(undefined);
@@ -300,7 +384,11 @@ export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
       .catch((e) => {
         if (!cancelled) {
           setSynthesis(null);
-          setError(e instanceof Error ? e.message : "Failed to load synthesis");
+          if (!(e instanceof Error && e.message.includes("404"))) {
+            setError(
+              e instanceof Error ? e.message : "Failed to load synthesis",
+            );
+          }
         }
       });
     return () => {
@@ -349,97 +437,107 @@ export function SynthesisPage({ isPremium: _isPremium }: SynthesisPageProps) {
     [results],
   );
 
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+
   const completedCount =
     synthesis?.completed_count ?? (results.length > 0 ? results.length : 0);
-  const isFull = synthesis?.type === "full";
-  const progress =
-    TOTAL_TEST_COUNT > 0 ? Math.min(completedCount / TOTAL_TEST_COUNT, 1) : 0;
+  const showFull =
+    isPremium && completedCount >= 12 && synthesis?.type === "full";
   const result = synthesis?.result ?? {};
 
   return (
     <div
-      className="pb-16 space-y-4 text-white"
+      className="pb-16 space-y-[40px] text-white"
       style={{ fontFamily: "var(--font-gotham)" }}
     >
-      <div className="mb-3 px-[28px] relative">
-        <div className="h-[15px] rounded-full bg-transparent border border-[#F2D08C]/50 overflow-hidden">
-          <div
-            className="h-full rounded-full transition-[width] duration-300"
-            style={{ width: `${progress * 100}%`, backgroundColor: "#F2D08C" }}
+      {showFull && (
+        <div className="px-[28px] pt-4">
+          <ProgressBar
+            value={completedCount}
+            max={isPremium ? 24 : 16}
+            type="text"
+            text={`${completedCount}/${isPremium ? 24 : 16}`}
+            textPosition="inside"
+            fillColor="#282828"
           />
         </div>
-        <p className="absolute right-10 top-1/2 -translate-y-1/2 text-white text-[10px] font-[400] z-10 pointer-events-none">
-          {completedCount}/{TOTAL_TEST_COUNT}
-        </p>
-      </div>
+      )}
+      {showFull && (
+        <div className="text-center">
+          <h1 className="text-[21px] font-[400] text-[#FFFFFF]">
+            Your Full synthesis
+          </h1>
 
-      <div className="text-center space-y-3">
-        <h1 className="text-[21px] font-[300] text-[#FFFFFF]">
-          {isFull ? "Your Full Synthesis" : "Your Synthesis"}
-        </h1>
-        {synthesis && completedTests.length > 0 && (
-          <div className="w-full overflow-x-auto no-scrollbar">
-            <div className="flex items-center justify-center gap-[9px] min-w-max snap-x snap-mandatory">
-              {completedTests.map((test) => (
-                <div key={test.id} className="flex-shrink-0 snap-start h-auto">
-                  <TestCard
-                    test={{
-                      id: test.id,
-                      title: test.title,
-                      category: test.category,
-                      locked: test.locked,
-                      alreadyTaken: true,
-                      questions: test.questions,
-                      completed: true,
-                      icon: test.icon,
-                      autoGenerated: test.auto_generated,
-                    }}
-                    isSelected={false}
-                    onSelect={() => {}}
-                  />
-                </div>
-              ))}
+          {completedTests.length > 0 && (
+            <div className="w-full overflow-x-auto no-scrollbar">
+              <div className="flex items-center justify-center gap-[9px] min-w-max snap-x snap-mandatory px-8">
+                {completedTests.map((test) => (
+                  <div
+                    key={test.id}
+                    className="flex-shrink-0 snap-start h-auto"
+                  >
+                    <TestCard
+                      test={{
+                        id: test.id,
+                        title: test.title,
+                        category: test.category,
+                        locked: test.locked,
+                        alreadyTaken: true,
+                        questions: test.questions,
+                        completed: true,
+                        icon: test.icon,
+                        autoGenerated: test.auto_generated,
+                      }}
+                      isSelected={false}
+                      onSelect={() => {}}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {synthesis === undefined && !error && (
-        <div className="px-[28px] py-8 text-center text-[#F2D08C] font-[325]">
-          Loading your synthesis…
+        <div className="px-[28px] py-12 flex flex-col items-center justify-center min-h-[400px]">
+          <div className="w-12 h-12 rounded-full border border-[#F2D08C]/40 flex items-center justify-center animate-spin mb-4">
+            <div className="w-6 h-6 rounded-full bg-[#F2D08C] opacity-60" />
+          </div>
+          <p className="text-[#F2D08C] font-[325] text-sm tracking-widest uppercase">
+            Synthesizing your soul data…
+          </p>
         </div>
       )}
 
       {error && (
-        <div className="px-[28px] py-4 text-center text-red-400 text-sm">
+        <div className="px-[28px] py-8 text-center text-red-400 text-sm">
           {error}
         </div>
       )}
 
-      {synthesis === null && !error && (
-        <section className="space-y-4 px-[28px] text-left">
-          <h2 className="font-[400] text-[15px] text-[#FFFFFF] pt-2">
-            Unlock your synthesis
-          </h2>
-          <p className="text-[13px] font-[400] text-[#F2D08C]">
-            Complete at least 3 onboarding tests to generate a preview
-            synthesis. It will be stored and shown here when you return.
-            Complete 6 tests and upgrade to premium to unlock your full
-            portrait.
-          </p>
-          <p className="text-[13px] font-[300] text-[#9ca3af]">
-            Go to Explore to take more tests.
-          </p>
-        </section>
+      {!showFull && synthesis !== undefined && !error && (
+        <LockedSynthesis
+          completedCount={completedCount}
+          isPremium={isPremium}
+          onUnlock={() => setShowSubscriptionModal(true)}
+          onMaybeLater={() => router.push("/home/soul")}
+        />
       )}
 
-      {synthesis &&
-        result &&
-        (isFull ? (
-          <FullSynthesis result={result} />
-        ) : (
-          <PreviewSynthesis result={result} />
-        ))}
+      {showFull && synthesis !== undefined && result && (
+        <FullSynthesis result={result} />
+      )}
+
+      {showSubscriptionModal && (
+        <SubscriptionModal
+          onClose={() => setShowSubscriptionModal(false)}
+          onUpgrade={() => {
+            setShowSubscriptionModal(false);
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 }

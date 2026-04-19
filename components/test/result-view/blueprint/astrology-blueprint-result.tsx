@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { NuminaLogoIcon } from "@/components/icons/logo/numina-normal";
-import { AppDrawer } from "@/components/navigation/app-drawer";
 import { SunIcon } from "@/components/icons/sun-icon";
 import { MoonIcon } from "@/components/icons/moon-icon";
 import { RisingIcon } from "@/components/icons/rising-icon";
 import type { AstrologyBlueprintResponse } from "@/lib/api-client";
 import AppBar from "@/components/navigation/appBar";
 import { useRouter } from "next/navigation";
+
 interface AstrologyBlueprintResultProps {
   onClose: () => void;
   content?: AstrologyBlueprintResponse | null;
@@ -20,8 +20,12 @@ const DEFAULT_MOON =
   "Your moon sign reveals how you process emotions and seek comfort.";
 const DEFAULT_RISING =
   "Your rising sign reflects how others see you and your outward style.";
-const DEFAULT_COSMIC =
-  "🜂 Element: —\n☌ Modality: —\n♇ Ruling Planet: —\n🌠 Most active house: —";
+const DEFAULT_COSMIC = {
+  element: "—",
+  modality: "—",
+  rulingPlanet: "—",
+  mostActiveHouse: "—",
+};
 
 export function AstrologyBlueprintResult({
   onClose,
@@ -34,6 +38,17 @@ export function AstrologyBlueprintResult({
     content?.rising_description?.split(". ")[0] ?? DEFAULT_RISING;
   const cosmicSummary = content?.cosmic_traits_summary ?? DEFAULT_COSMIC;
   const isLoading = content === null;
+
+  const TraitRow = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex items-center gap-[8px] border-b border-white/5 last:border-0 ">
+      <span className="text-[13px] font-[325] text-[#FFFFFF]">{label}</span>
+      <div className="border border-[#F2D08C] rounded-[5px] px-2 flex items-center justify-center">
+        <span className="text-[#F2D08C] text-[13px] font-[325] uppercase">
+          {value}
+        </span>
+      </div>
+    </div>
+  );
 
   if (isLoading) {
     return (
@@ -172,27 +187,27 @@ export function AstrologyBlueprintResult({
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-2 w-full text-left mt-2 mb-4">
-          <div className="col-span-1" />
-          <div className="col-span-4">
-            <h3
-              style={{
-                fontFamily: "var(--font-gotham)",
-                lineHeight: "33px",
-              }}
-              className="text-[21px] font-[400] text-[#F2D08C] mb-2"
-            >
-              Cosmic Traits Summary:
-            </h3>
-            <p
-              style={{
-                fontFamily: "var(--font-gotham)",
-                lineHeight: "21px",
-              }}
-              className="text-[13px] font-[350] text-white whitespace-pre-line"
-            >
-              {cosmicSummary}
-            </p>
+        <div className="w-full text-left mt-4 mb-6">
+          <h3
+            style={{
+              fontFamily: "var(--font-gotham)",
+              lineHeight: "33px",
+            }}
+            className="text-[21px] font-[400] text-[#F2D08C] mb-3"
+          >
+            Cosmic Traits Summary:
+          </h3>
+          <div className="space-y-[6px] text-white">
+            <TraitRow label="Element" value={cosmicSummary.element} />
+            <TraitRow label="Modality" value={cosmicSummary.modality} />
+            <TraitRow
+              label="Ruling planet"
+              value={cosmicSummary.rulingPlanet}
+            />
+            <TraitRow
+              label="Most active house"
+              value={cosmicSummary.mostActiveHouse}
+            />
           </div>
         </div>
 

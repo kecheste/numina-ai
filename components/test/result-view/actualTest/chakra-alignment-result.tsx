@@ -11,6 +11,8 @@ import { Strength } from "../../components/Strength";
 import { Challenge } from "../../components/Challenge";
 import { TryThis } from "../../components/TryThis";
 import { AvoidThis } from "../../components/AvoidThis";
+import { Button } from "../../../ui/button";
+import { RetakeIcon } from "@/components/icons/retake";
 export interface ChakraAlignmentChakra {
   id: string;
   name: string;
@@ -134,9 +136,11 @@ const ensureArray = (val: any) =>
 
 export function ChakraAlignmentResult({
   onBack,
+  onRetake,
   content,
 }: {
   onBack: () => void;
+  onRetake?: () => void;
   content?: TestResultResponse | null;
 }) {
   const llm = content?.llm_result_json ?? {};
@@ -203,6 +207,39 @@ export function ChakraAlignmentResult({
         <TryThis tryThis={tryThis} />
 
         <AvoidThis avoidThis={avoidThis} />
+
+        <Button
+          style={{
+            fontFamily: "var(--font-arp80)",
+            fontWeight: 400,
+            lineHeight: "33px",
+          }}
+          onClick={onRetake}
+          className="
+            mt-8
+            flex
+            items-center
+            justify-center
+            gap-[12px]
+            sm:gap-[20px]
+            w-full
+            h-[60px]
+            sm:h-[67px]
+            bg-[#F2D08CE0]
+            hover:bg-[#F2D08CC0]
+            cursor-pointer
+            text-black
+            rounded-[10px]
+            text-[18px]
+            sm:text-[18px]
+            transition-colors
+            disabled:opacity-50
+            disabled:cursor-not-allowed
+          "
+        >
+          <div><RetakeIcon /></div>
+          <span>Retake this module</span>
+        </Button>
       </div>
     </div>
   );
