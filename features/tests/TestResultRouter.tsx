@@ -9,6 +9,7 @@ export type TestResultRouterProps = {
   category: string;
   result: TestResultResponse;
   onBack: () => void;
+  onRetake?: () => void;
   shellRef: RefObject<HTMLDivElement | null>;
   onboardingNext?: () => void;
   onLogout?: () => void;
@@ -20,6 +21,7 @@ export function TestResultRouter({
   category,
   result,
   onBack,
+  onRetake,
   shellRef,
   onLogout,
 }: TestResultRouterProps) {
@@ -29,6 +31,7 @@ export function TestResultRouter({
       <CustomScreen
         result={result}
         onBack={onBack}
+        onRetake={onRetake}
         shellRef={shellRef}
         testTitle={testTitle}
         onLogout={onLogout}
@@ -42,6 +45,7 @@ export function TestResultRouter({
       testTitle={testTitle}
       category={category}
       onBack={onBack}
+      onRetake={onRetake}
       result={result}
     />
   );

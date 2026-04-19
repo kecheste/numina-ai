@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { SparkleIcon } from "../icons/sparkle-icon";
@@ -9,7 +10,15 @@ import { SynthesisIcon } from "../icons/synthesis-icon";
 const ACTIVE_COLOR = "#F2D08C";
 const INACTIVE_COLOR = "#D9D9D999";
 
-export function BottomNavigation() {
+interface BottomNavigationProps {
+  isPremium?: boolean;
+  onSynthesisClick?: () => void;
+}
+
+export function BottomNavigation({
+  isPremium,
+  onSynthesisClick,
+}: BottomNavigationProps) {
   const pathname = usePathname();
 
   const navItems = [
@@ -49,10 +58,10 @@ export function BottomNavigation() {
         const isActive = activeTab === id;
         const color = isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
 
-        return (
-          <Link
-            key={id}
-            href={href}
+        const isSynthesis = id === "synthesis";
+
+        const content = (
+          <div
             className={`flex flex-col cursor-pointer ${
               index !== navItems.length - 1
                 ? "border-r border-[#D9D9D999]/20"
@@ -67,6 +76,27 @@ export function BottomNavigation() {
             >
               {label}
             </span>
+          </div>
+        );
+
+        if (isSynthesis) {
+          return (
+            <div
+              key={id}
+              className="w-full h-full"
+              onClick={(e) => {
+                e.preventDefault();
+                onSynthesisClick?.();
+              }}
+            >
+              {content}
+            </div>
+          );
+        }
+
+        return (
+          <Link key={id} href={href} className="w-full">
+            {content}
           </Link>
         );
       })}

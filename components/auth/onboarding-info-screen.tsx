@@ -61,9 +61,9 @@ export function OnboardingInfoScreen({
       >
         <p className="mb-1">Want more?</p>
         <p>Unlock your full profile anytime to reveal</p>
-        <p>💼 Career & relationship guidance</p>
-        <p>🧬 Deeper psychological layers</p>
-        <p>🌀 Past life & karmic insights</p>
+        <p>Career & relationship guidance</p>
+        <p>Deeper psychological layers</p>
+        <p>Past life & karmic insights</p>
         <p className="mt-3">All in just a few minutes</p>
       </div>
 

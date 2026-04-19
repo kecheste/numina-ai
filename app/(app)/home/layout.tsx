@@ -14,10 +14,9 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading, logout } = useAuth();
-  const { setScrollable } = useShell();
+  const { user, isAuthenticated, isLoading, logout, refreshUser } = useAuth();
+  const { setScrollable, showSubscription, setShowSubscription } = useShell();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [showSubscription, setShowSubscription] = useState(false);
 
   useEffect(() => {
     setScrollable(false);
@@ -34,6 +33,14 @@ export default function HomeLayout({
   const handleLogout = () => {
     logout();
     router.replace("/welcome");
+  };
+
+  const handleSynthesisClick = () => {
+    if (user?.is_premium) {
+      router.push("/home/synthesis");
+    } else {
+      setShowSubscription(true);
+    }
   };
 
   if (isLoading || !isAuthenticated) {
@@ -54,14 +61,22 @@ export default function HomeLayout({
         </div>
 
         <div className="w-full shrink-0">
-          <BottomNavigation />
+          <BottomNavigation
+            isPremium={!!user?.is_premium}
+            onSynthesisClick={handleSynthesisClick}
+          />
         </div>
       </div>
 
       {showSubscription && (
         <SubscriptionModal
           onClose={() => setShowSubscription(false)}
-          onUpgrade={() => setShowSubscription(false)}
+          onUpgrade={() => {
+            setShowSubscription(false);
+            refreshUser().then(() => {
+              router.refresh();
+            });
+          }}
         />
       )}
     </>

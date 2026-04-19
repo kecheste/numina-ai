@@ -117,6 +117,15 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   }, [tests]);
 
   const handleTestSelect = (test: TestWithUi) => {
+    // 8-test limit check for non-premium users
+    if (!userIsPremium && !test.alreadyTaken) {
+      const completedCount = tests.filter((t) => t.completed).length;
+      if (completedCount >= 8) {
+        setShowSubscriptionModal(true);
+        return;
+      }
+    }
+
     if (test.locked) {
       setLockedTestForIntro({
         title: test.title,
@@ -131,6 +140,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
     return (
       <ExploreTestOrchestrator
         test={activeTest}
+        isPremium={userIsPremium}
         onClose={() => {
           setActiveTest(null);
           refetchTests();

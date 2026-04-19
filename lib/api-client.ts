@@ -171,11 +171,24 @@ export interface UserProfile {
   moon_description: string | null;
   rising_sign: string | null;
   rising_description: string | null;
-  cosmic_traits_summary: string | null;
+  cosmic_traits_summary: {
+    element: string;
+    modality: string;
+    rulingPlanet: string;
+    mostActiveHouse: string;
+  } | null;
   astrology_blueprint: any | null;
   numerology_blueprint: any[] | null;
   onboarding_complete: boolean;
   most_sure_things: string[] | null;
+  soul_snapshot: {
+    summary: string;
+    sure_things: string[];
+    daily_message: string;
+    daily_quote: string;
+    daily_date: string;
+    updated_at: string;
+  } | null;
   created_at: string;
   updated_at: string;
 }
@@ -335,7 +348,12 @@ export interface AstrologyChartResponse {
   sun_description: string | null;
   moon_description: string | null;
   rising_description: string | null;
-  cosmic_traits_summary: string | null;
+  cosmic_traits_summary: {
+    element: string;
+    modality: string;
+    rulingPlanet: string;
+    mostActiveHouse: string;
+  } | null;
 }
 
 /** Fetch current user's astrology chart. Auth required. 404 if birth data incomplete. */
@@ -388,7 +406,12 @@ export interface AstrologyBlueprintResponse {
   sun_description?: string;
   moon_description?: string;
   rising_description?: string;
-  cosmic_traits_summary?: string;
+  cosmic_traits_summary?: {
+    element: string;
+    modality: string;
+    rulingPlanet: string;
+    mostActiveHouse: string;
+  };
   strengths?: string[];
   challenges?: string[];
   avoid_this?: string[];
@@ -433,7 +456,12 @@ export interface AstrologyChartNarrativeResponse {
   overlaps?: AstrologyChartNarrativeOverlap[];
   try_this?: string[];
   spiritual_insight?: string;
-  cosmic_traits_summary?: string;
+  cosmic_traits_summary?: {
+    element: string;
+    modality: string;
+    rulingPlanet: string;
+    mostActiveHouse: string;
+  };
 }
 
 export async function apiFetchAstrologyChartNarrative(): Promise<AstrologyChartNarrativeResponse> {
