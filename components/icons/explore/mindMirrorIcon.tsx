@@ -9,49 +9,40 @@ interface IconProps {
 export const MindMirrorIcon: React.FC<IconProps> = ({ color }) => {
   return (
     <svg
-      width="51"
-      height="51"
-      viewBox="0 0 51 51"
+      width="348"
+      height="348"
+      viewBox="0 0 348 348"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_2123_1313)">
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M25.5 2.43051C12.7587 2.43051 2.43051 12.7587 2.43051 25.5C2.43051 38.2413 12.7587 48.5695 25.5 48.5695C38.2413 48.5695 48.5695 38.2413 48.5695 25.5C48.5695 12.7587 38.2413 2.43051 25.5 2.43051ZM0 25.5C0 11.4182 11.4182 0 25.5 0C39.5818 0 51 11.4182 51 25.5C51 39.5818 39.5818 51 25.5 51C11.4182 51 0 39.5818 0 25.5Z"
-          fill={color || "#F2D08C"}
-        />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M1.21191 24.2877H25.4996V26.7123H1.21191V24.2877Z"
-          fill={color || "#F2D08C"}
-        />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M3.64258 32.7857H25.4997V35.2162H3.64258V32.7857Z"
-          fill={color || "#F2D08C"}
-        />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M3.64258 18.2143H25.4997V15.7838H3.64258V18.2143Z"
-          fill={color || "#F2D08C"}
-        />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M8.49805 9.71622H25.5V7.28571H8.49805V9.71622Z"
-          fill={color || "#F2D08C"}
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0_2123_1313">
-          <rect width="51" height="51" fill="white" />
-        </clipPath>
-      </defs>
+      <path
+        d="M347.234 173.812C347.234 77.9825 269.339 0 173.617 0C77.895 0 0 77.9825 0 173.812C0 269.641 77.895 347.624 173.617 347.624C269.339 347.624 347.234 269.641 347.234 173.812ZM173.617 339.011C82.623 339.011 8.60322 264.908 8.60322 173.812C8.60322 82.7158 82.623 8.613 173.617 8.613C264.611 8.613 338.63 82.7158 338.63 173.812C338.63 264.908 264.611 339.011 173.617 339.011Z"
+        fill="#F2D08C"
+      />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M2.3252 171.794H166.641V182.27H2.3252V171.794Z"
+        fill="#F2D08C"
+      />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M14.2617 224.714H166.642V234.724H14.2617V224.714Z"
+        fill="#F2D08C"
+      />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M14.2617 122.987H166.642V113.288H14.2617V122.987Z"
+        fill="#F2D08C"
+      />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M48.1318 63.7051H166.641V55.7129H48.1318V63.7051Z"
+        fill="#F2D08C"
+      />
     </svg>
   );
 };

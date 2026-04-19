@@ -239,11 +239,13 @@ export function SoulRevealScreen() {
               }}
               className="border border-[#FFFFFF]/50 rounded-[7px] py-3 px-1 h-[72px] text-[14px] text-[#F2D08C]"
             >
-              {user?.soul_snapshot?.summary
-                ? user.soul_snapshot.summary
-                : zodSign && ZODIAC_SUMMARY[zodSign]
-                ? ZODIAC_SUMMARY[zodSign]
-                : "A grounded intuitive with cosmic insights"}
+              {(() => {
+                const raw = user?.soul_snapshot?.summary
+                  ?? (zodSign && ZODIAC_SUMMARY[zodSign] ? ZODIAC_SUMMARY[zodSign] : null)
+                  ?? "A grounded intuitive with cosmic insights";
+                const words = raw.split(" ");
+                return words.length > 8 ? words.slice(0, 8).join(" ") : raw;
+              })()}
             </div>
           </div>
         </div>
