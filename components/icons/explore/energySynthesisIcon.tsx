@@ -9,8 +9,8 @@ interface IconProps {
 export const EnergySynthesisIcon: React.FC<IconProps> = ({ color }) => {
   return (
     <svg
-      width="325"
-      height="325"
+      width="71"
+      height="62"
       viewBox="0 0 325 325"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

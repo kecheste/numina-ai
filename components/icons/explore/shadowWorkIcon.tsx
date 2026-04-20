@@ -9,8 +9,8 @@ interface IconProps {
 export const ShadowWorkIcon: React.FC<IconProps> = ({ color }) => {
   return (
     <svg
-      width="378"
-      height="380"
+      width="71"
+      height="62"
       viewBox="0 0 378 380"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

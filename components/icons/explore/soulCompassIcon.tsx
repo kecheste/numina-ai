@@ -9,8 +9,8 @@ interface IconProps {
 export const SoulCompassIcon: React.FC<IconProps> = ({ color }) => {
   return (
     <svg
-      width="373"
-      height="373"
+      width="71"
+      height="62"
       viewBox="0 0 373 373"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

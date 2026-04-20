@@ -9,8 +9,8 @@ interface IconProps {
 export const MBTITypeIcon: React.FC<IconProps> = ({ color }) => {
   return (
     <svg
-      width="344"
-      height="382"
+      width="71"
+      height="62"
       viewBox="0 0 344 382"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

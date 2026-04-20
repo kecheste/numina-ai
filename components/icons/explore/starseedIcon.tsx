@@ -9,8 +9,8 @@ interface IconProps {
 export const StarseedIcon: React.FC<IconProps> = ({ color }) => {
   return (
     <svg
-      width="365"
-      height="367"
+      width="71"
+      height="62"
       viewBox="0 0 365 367"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

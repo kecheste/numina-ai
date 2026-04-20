@@ -9,8 +9,8 @@ interface IconProps {
 export const CognitiveStyleIcon: React.FC<IconProps> = ({ color }) => {
   return (
     <svg
-      width="378"
-      height="311"
+      width="71"
+      height="62"
       viewBox="0 0 378 311"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
