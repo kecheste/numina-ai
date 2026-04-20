@@ -36,10 +36,12 @@ export function AppDrawer({
 
   const menuItems = [
     { label: "Manage Subscription", href: "/home/subscription" },
+    { label: "Pricing", href: "/home/pricing" },
     { label: "Help / FAQ", href: "/home/faq" },
     { label: "Contact Support", href: "/home/contact" },
     { label: "Terms & Conditions", href: "/home/terms-and-conditions" },
     { label: "Privacy Policy", href: "/home/privacy-policy" },
+    { label: "Refund Policy", href: "/home/refund-policy" },
   ];
 
   return (
