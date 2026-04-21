@@ -13,8 +13,8 @@ export const PersonalityIcon: React.FC<IconProps> = ({
 }) => {
   return (
     <svg
-      width="409"
-      height="353"
+      width={61}
+      height={53}
       viewBox="0 0 409 353"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

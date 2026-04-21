@@ -13,8 +13,8 @@ export const ChakraIcon: React.FC<IconProps> = ({
 }) => {
   return (
     <svg
-      width="383"
-      height="384"
+      width={61}
+      height={53}
       viewBox="0 0 383 384"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

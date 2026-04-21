@@ -12,7 +12,7 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onStartJourney, onLogin }: WelcomeScreenProps) {
   return (
-    <>
+    <div className="w-full">
       <div className="flex items-center justify-center mt-auto">
         <NuminaLogoIcon />
       </div>
@@ -72,6 +72,6 @@ export function WelcomeScreen({ onStartJourney, onLogin }: WelcomeScreenProps) {
           </p>
         )}
       </div>
-    </>
+    </div>
   );
 }
