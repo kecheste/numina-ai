@@ -46,10 +46,7 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
     TestResultResponse | null | undefined
   >(undefined);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [lockedTestForIntro, setLockedTestForIntro] = useState<{
-    title: string;
-    description: string;
-  } | null>(null);
+  const [introTest, setIntroTest] = useState<TestWithUi | null>(null);
 
   const refetchTests = useCallback(() => {
     setTestsError(null);
@@ -105,6 +102,10 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
     });
   }, [testsResponse, userIsPremium]);
 
+  const testsTakenCount = useMemo(() => {
+    return tests.filter((t) => t.alreadyTaken).length;
+  }, [tests]);
+
   const categories = useMemo(() => {
     return Array.from(
       new Map(
@@ -117,23 +118,12 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
   }, [tests]);
 
   const handleTestSelect = (test: TestWithUi) => {
-    // 8-test limit check for non-premium users
-    if (!userIsPremium && !test.alreadyTaken) {
-      const completedCount = tests.filter((t) => t.completed).length;
-      if (completedCount >= 8) {
-        setShowSubscriptionModal(true);
-        return;
-      }
-    }
-
-    if (test.locked) {
-      setLockedTestForIntro({
-        title: test.title,
-        description: test.description,
-      });
+    if (test.alreadyTaken) {
+      setActiveTest(test);
       return;
     }
-    setActiveTest(test);
+
+    setIntroTest(test);
   };
 
   if (activeTest) {
@@ -232,17 +222,21 @@ export function ExplorePage({ isPremium }: ExplorePageProps) {
         );
       })}
 
-      {lockedTestForIntro && (
+      {introTest && (
         <TestIntro
           isPremium={userIsPremium}
-          testTitle={lockedTestForIntro.title}
-          testDescription={lockedTestForIntro.description}
-          onClose={() => setLockedTestForIntro(null)}
+          testsTaken={testsTakenCount}
+          testTitle={introTest.title}
+          testDescription={introTest.description}
+          onClose={() => setIntroTest(null)}
           onUpgrade={() => {
-            setLockedTestForIntro(null);
+            setIntroTest(null);
             setShowSubscriptionModal(true);
           }}
-          onStart={() => setLockedTestForIntro(null)}
+          onStart={() => {
+            setActiveTest(introTest);
+            setIntroTest(null);
+          }}
         />
       )}
 

@@ -5,6 +5,7 @@ import { BlackSparkleIcon } from "../icons/sparclesIcon";
 
 interface TestIntroProps {
   isPremium: boolean;
+  testsTaken?: number;
   testTitle: string;
   testDescription?: string;
   onUpgrade: () => void;
@@ -14,12 +15,15 @@ interface TestIntroProps {
 
 export function TestIntro({
   isPremium,
+  testsTaken = 0,
   testTitle,
   testDescription,
   onUpgrade,
   onClose,
   onStart,
 }: TestIntroProps) {
+  const canStart = isPremium || testsTaken < 8;
+
   return (
     <div className="absolute inset-0 z-50 flex justify-center bg-[#F2D08CE5]">
       <div
@@ -38,7 +42,7 @@ export function TestIntro({
               fontFamily: "var(--font-fangsong)",
               lineHeight: "100%",
             }}
-            className="text-[45px] text-[#F2D08C] mb-6"
+            className="text-[40px] text-[#F2D08C] mb-6 text-left"
           >
             {testTitle}
           </h1>
@@ -58,7 +62,7 @@ export function TestIntro({
             )}
           </div>
 
-          {isPremium ? (
+          {canStart ? (
             <Button
               onClick={onStart}
               style={{
