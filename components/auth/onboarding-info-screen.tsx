@@ -7,6 +7,7 @@ import { AstrologyIcon } from "../icons/astrology";
 import { ChakraIcon } from "../icons/chakra";
 import { ReactNode } from "react";
 import { NuminaLogoIcon } from "../icons/logo/numina-normal";
+import Link from "next/link";
 
 interface OnboardingInfoScreenProps {
   userName: string;
@@ -97,7 +98,14 @@ export function OnboardingInfoScreen({
         }}
         className="text-[10px] font-light text-[#FFFFFF] text-center"
       >
-        By continuing, you agree to our Terms & Privacy Policy
+        By continuing, you agree to our{" "}
+        <Link href="/legal/terms-and-conditions" className="underline hover:text-[#F2D08C] transition-colors">
+          Terms
+        </Link>{" "}
+        &{" "}
+        <Link href="/legal/privacy-policy" className="underline hover:text-[#F2D08C] transition-colors">
+          Privacy Policy
+        </Link>
       </p>
     </div>
   );

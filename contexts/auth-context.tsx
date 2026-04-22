@@ -164,7 +164,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       "/dob",
     ];
 
-    const isPublicPage = publicPathnames.some((path) => pathname === path);
+    const isPublicPage =
+      publicPathnames.some((path) => pathname === path) ||
+      pathname.startsWith("/legal/");
+
     const isAuthenticated = !!token && !!user;
 
     if (!isAuthenticated && !isPublicPage) {

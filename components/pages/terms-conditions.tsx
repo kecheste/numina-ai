@@ -19,81 +19,74 @@ export function TermsAndConditions() {
       </h1>
 
       <p className="text-[11px] text-[#F2D08C] mb-1">
-        Last updated: Apr 14, 2026
+        Last updated: April 21, 2026
       </p>
 
       <p className="text-[13px] leading-[23px] text-white font-[400] mb-4">
-        Welcome to NuminaAI. By accessing or using our app, you agree to be
-        bound by these Terms and Conditions. If you do not agree, please do not
-        use the app.
+        Welcome to Numina. These Terms & Conditions govern your access to and use of the Numina website and services.
+        By accessing or using Numina, you agree to these Terms. If you do not agree, please do not use the website or services.
       </p>
 
       <div className="space-y-4 text-white">
-        <div>
-          <h2 className="text-[13px] font-[700] leading-[23px]">
-            1. Use of the App
-          </h2>
-          <p className="text-[13px] font-[300] leading-[23px]">
-            You agree to use the app for personal, non-commercial purposes only.
-            Misuse, hacking, or unauthorized access is prohibited.
-          </p>
-        </div>
+        <Section num="1" title="About the Service">
+          Numina provides digital self-discovery content, personalized reports, and reflective guidance for personal use only.
+        </Section>
 
-        <div>
-          <h2 className="text-[13px] font-[700] leading-[23px]">
-            2. Intellectual Property
-          </h2>
-          <p className="text-[13px] font-[300] leading-[23px]">
-            All content, including visuals, text, and software, is owned by
-            NuminaAI or licensed to us. You may not reproduce or redistribute
-            content without permission.
-          </p>
-        </div>
+        <Section num="2" title="Eligibility">
+          By using Numina, you confirm that you are legally able to agree to these Terms and that the information you provide is accurate.
+        </Section>
 
-        <div>
-          <h2 className="text-[13px] font-[700] leading-[23px]">
-            3. Subscription & Billing
-          </h2>
-          <p className="text-[13px] font-[300] leading-[23px]">
-            Premium access is billed monthly. You may cancel at any time via
-            your profile. No partial refunds are given for unused time.
-          </p>
-        </div>
+        <Section num="3" title="Purchases">
+          Numina may offer free preview content and paid digital products. At this stage, the paid offering is: **Premium Full Synthesis — $9.99 one-time**. All prices are shown in USD unless otherwise stated.
+        </Section>
 
-        <div>
-          <h2 className="text-[13px] font-[700] leading-[23px]">
-            4. Limitations of Insight
-          </h2>
-          <p className="text-[13px] font-[300] leading-[23px]">
-            Our app provides reflective guidance and does not replace
-            professional medical, psychological, or legal advice.
-          </p>
-        </div>
+        <Section num="4" title="Digital Delivery">
+          Paid products are delivered digitally through the Numina website/app after successful purchase and access to the required product flow.
+        </Section>
 
-        <div>
-          <h2 className="text-[13px] font-[700] leading-[23px]">
-            5. Termination
-          </h2>
-          <p className="text-[13px] font-[300] leading-[23px]">
-            We reserve the right to suspend or terminate accounts for violating
-            these terms.
-          </p>
-        </div>
+        <Section num="5" title="Refunds">
+          Refunds are handled according to the Refund Policy. By purchasing through Numina, you agree to that policy.
+        </Section>
 
-        <div>
-          <h2 className="text-[13px] font-[700] leading-[23px]">
-            6. Changes to Terms
-          </h2>
-          <p className="text-[13px] font-[300] leading-[23px]">
-            We may update these Terms periodically. Continued use of the app
-            implies acceptance of the updated terms.
-          </p>
-        </div>
+        <Section num="6" title="Acceptable Use">
+          You agree not to misuse the service, interfere with its operation, attempt unauthorized access, copy protected content, or use the platform for unlawful purposes.
+        </Section>
+
+        <Section num="7" title="Intel Property">
+          All content on Numina, including branding, visuals, text, reports, interfaces, and software, is owned by or licensed to Numina and may not be copied, resold, distributed, or exploited without prior written permission.
+        </Section>
+
+        <Section num="8" title="Informational Nature of the Service">
+          Numina provides reflective, personal, and spiritual-style guidance for informational purposes only. It is not medical, psychological, legal, financial, or therapeutic advice and should not be treated as a substitute for professional services.
+        </Section>
+
+        <Section num="9" title="Suspension or Termination">
+          Numina reserves the right to suspend or terminate access where there is misuse, abuse, fraud, or violation of these Terms.
+        </Section>
+
+        <Section num="10" title="Changes">
+          Numina may update the service, pricing, features, or these Terms from time to time. Continued use of the service after updates means you accept the revised Terms.
+        </Section>
+
+        <Section num="11" title="Contact">
+          For questions about these Terms, contact: <a href="mailto:numina@numinaapp.com" className="text-[#F2D08C] underline">numina@numinaapp.com</a>.
+          <br /><br />
+          Operator details: Numina is operated by a sole trader in Georgia. Full legal details are available on request where required for billing or compliance purposes.
+        </Section>
       </div>
+    </div>
+  );
+}
 
-      <p className="text-[13px] leading-[23px] text-white font-[400] mt-6">
-        For any questions, contact: support@numina.ai
-      </p>
+function Section({ num, title, children }: { num: string; title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <h2 className="text-[13px] font-[700] leading-[23px]">
+        {num}. {title}
+      </h2>
+      <div className="text-[13px] font-[300] leading-[23px]">
+        {children}
+      </div>
     </div>
   );
 }
