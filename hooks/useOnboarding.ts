@@ -108,7 +108,12 @@ export function useOnboarding() {
           sun_description: "Your sun sign shapes your core personality and life direction.",
           moon_description: "Your moon sign reveals how you process emotions and seek comfort.",
           rising_description: "Your rising sign reflects how others see you and your outward style.",
-          cosmic_traits_summary: "🜂 Element: —\n☌ Modality: —\n♇ Ruling Planet: —\n🌠 Most active house: —",
+          cosmic_traits_summary: {
+            element: "—",
+            modality: "—",
+            rulingPlanet: "—",
+            mostActiveHouse: "—",
+          },
         });
       });
     }
