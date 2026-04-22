@@ -16,6 +16,8 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install
+      - name: Run ESLint
+        run: npm run lint
       - name: Run TypeScript check
         run: npx tsc --noEmit
 
@@ -28,7 +30,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/numina/frontend
             git pull origin main
